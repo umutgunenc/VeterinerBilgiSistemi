@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Veteriner Bilgi Sistemi</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="~/jquery/jquery.min.js"></script>
+    <script src="~/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <link href="~/css/sticky.css" rel="stylesheet" />
+    <link href="~/css/fotoInput.css" rel="stylesheet" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet" />
+
+</head>
+<body class="bg-secondary">
+
+    @await Html.PartialAsync("_navbarPartialView")
+    @*<partial name="_navbarPartialView" />*@
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Html.PartialAsync("_topBarPartialView")
+        @*<partial name="_topBarPartialView" />*@
+    }
+    <div class="container-md mt-3">
+        @if (IsSectionDefined("AdminMenu"))
+        {<div class="d-flex flex-column flex-md-row">
+                <div class="col-md-3 p-0">
+                    @await RenderSectionAsync("AdminMenu")
+                </div>
+                <div class="col-md-9 p-1">
+                    @RenderBody()
+                </div>
+            </div>
+
+        }
+        else
+        { <div class="col-md-12 p-0">
+
+                @RenderBody()
+                @await RenderSectionAsync("badRequest", required: false)
+
+            </div>
+        }
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7cc8b9dbd2.js" crossorigin="anonymous"></script>
+
+
+    @RenderSection("scripts", false)
+</body>
+</html>

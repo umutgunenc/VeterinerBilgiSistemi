@@ -266,7 +266,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             };
         }
 
-
+        //TODO kontrol et-test yap, gereksiz ise sil
         public async Task<(bool,List<Hayvan>)> CocuklariGetirAsync(Hayvan parent, VeterinerDBContext context)
         {
             var CocukListesi = new List<Hayvan>();

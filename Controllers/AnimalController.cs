@@ -38,12 +38,7 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             AddAnimalViewModel model = new();
 
-            model.HayvanAnneListesi = await model.AnnelerListesiOlusturAsync(_context);
-            model.HayvanBabaListesi = await model.BabalarListesiOlusturAsync(_context);
-            model.RenklerListesi = await model.RenkListesiOlusturAsync(_context);
-            model.TurlerListesi = await model.TurListesiOlusturAsync(_context);
-            model.CinslerListesi = await model.CinsListesiOlusturAsync(_context);
-            model.CinsiyetListesi = model.CinsiyetListesiOlustur();
+            await model.ModeliOlusturAsync(_context);
 
             return View(model);
 
@@ -79,34 +74,16 @@ namespace VeterinerBilgiSistemi.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                model.HayvanAnneListesi = await model.AnnelerListesiOlusturAsync(_context);
-                model.HayvanBabaListesi = await model.BabalarListesiOlusturAsync(_context);
-                model.RenklerListesi = await model.RenkListesiOlusturAsync(_context);
-                model.TurlerListesi = await model.TurListesiOlusturAsync(_context);
-                model.CinslerListesi = await model.CinsListesiOlusturAsync(_context);
-                model.CinsiyetListesi = model.CinsiyetListesiOlustur();
+                model = await model.GeriDonusModeliOlusturAsync(_context, model);
 
                 return View(model);
 
             };
 
-            Hayvan hayvan = new Hayvan();
-
-
-            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
-            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
-            hayvan.HayvanKilo = model.HayvanKilo;
-            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
-            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
-            hayvan.HayvanAnneId = model.HayvanAnneId;
-            hayvan.HayvanBabaId = model.HayvanBabaId;
-            var cinsTur = await _context.CinsTur
-                                    .Where(ct => ct.CinsId == model.SecilenCinsId && ct.TurId == model.SecilenTurId)
-                                    .FirstOrDefaultAsync();
-            hayvan.CinsTur = cinsTur;
-            hayvan.RenkId = model.RenkId;
-
-
+            var hayvan = await model.KaydedilecekHayvaniOlusturAsync(_context, model);
+            //hayvanın id degerine ulasabilmek için öncelikle onu db'ye kaydetmek gerekiyor.
+            await _context.Hayvanlar.AddAsync(hayvan);
+            await _context.SaveChangesAsync();
 
 
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
@@ -136,9 +113,9 @@ namespace VeterinerBilgiSistemi.Controllers
             else
             {
                 hayvan.ImgUrl = null;
-
             }
-            await _context.Hayvanlar.AddAsync(hayvan);
+
+            _context.Hayvanlar.Update(hayvan);
             await _context.SaveChangesAsync();
 
             var user = await _userManager.GetUserAsync(User);
@@ -280,7 +257,6 @@ namespace VeterinerBilgiSistemi.Controllers
 
                 var sahipSayisi = _context.SahipHayvan.Count(sh => sh.HayvanId == model.HayvanId);
 
-
                 _context.SahipHayvan.Remove(hayvanSahibi);
                 await _context.SaveChangesAsync();
 
@@ -307,7 +283,7 @@ namespace VeterinerBilgiSistemi.Controllers
             hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
             hayvan.HayvanAnneId = model.HayvanAnneId;
             hayvan.HayvanBabaId = model.HayvanBabaId;
-            hayvan.ImgUrl = model.ImgUrl;
+            hayvan.ImgUrl = hayvan.ImgUrl;
             _context.Hayvanlar.Update(hayvan);
             await _context.SaveChangesAsync();
             TempData["Edit"] = "Hayvan bilgileri başarıyla güncellendi.";

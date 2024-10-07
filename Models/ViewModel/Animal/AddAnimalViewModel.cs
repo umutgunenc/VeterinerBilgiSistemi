@@ -31,7 +31,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 
         public DateTime SahiplenmeTarihi { get; set; }
 
-        public async Task<List<SelectListItem>> AnnelerListesiOlusturAsync(VeterinerDBContext context)
+        private async Task<List<SelectListItem>> AnnelerListesiOlusturAsync(VeterinerDBContext context)
         {
             HayvanAnneListesi = new();
             bool disiHayvanVarMi = context.Hayvanlar.Any(h => h.HayvanCinsiyet == Cinsiyet.Dişi);
@@ -66,7 +66,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 
 
         }
-        public async Task<List<SelectListItem>> BabalarListesiOlusturAsync(VeterinerDBContext context)
+        private async Task<List<SelectListItem>> BabalarListesiOlusturAsync(VeterinerDBContext context)
         {
             HayvanBabaListesi = new();
             bool erkekHayvanVarMi = context.Hayvanlar.Any(h => h.HayvanCinsiyet == Cinsiyet.Erkek);
@@ -98,7 +98,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 
             return HayvanBabaListesi;
         }
-        public List<SelectListItem> CinsiyetListesiOlustur()
+        private List<SelectListItem> CinsiyetListesiOlustur()
         {
             return new List<SelectListItem>
             {
@@ -106,7 +106,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 new SelectListItem { Text = "Dişi", Value = Cinsiyet.Dişi.ToString() }
             };
         }
-        public async Task<List<SelectListItem>> TurListesiOlusturAsync(VeterinerDBContext context)
+        private async Task<List<SelectListItem>> TurListesiOlusturAsync(VeterinerDBContext context)
         {
             return await context.Turler.Select(t => new SelectListItem
             {
@@ -114,7 +114,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 Value = t.TurId.ToString()
             }).ToListAsync();
         }
-        public async Task<List<SelectListItem>> CinsListesiOlusturAsync(VeterinerDBContext context)
+        private async Task<List<SelectListItem>> CinsListesiOlusturAsync(VeterinerDBContext context)
         {
             return await context.Cinsler.Select(c => new SelectListItem
             {
@@ -122,13 +122,64 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 Value = c.CinsId.ToString()
             }).ToListAsync();
         }
-        public async Task<List<SelectListItem>> RenkListesiOlusturAsync(VeterinerDBContext context)
+        private async Task<List<SelectListItem>> RenkListesiOlusturAsync(VeterinerDBContext context)
         {
             return await context.Renkler.Select(Renk => new SelectListItem
             {
                 Value = Renk.RenkId.ToString(),
                 Text = Renk.RenkAdi
             }).ToListAsync();
+        }
+
+        public async Task<AddAnimalViewModel> ModeliOlusturAsync(VeterinerDBContext context)
+        {
+            HayvanBabaListesi = await BabalarListesiOlusturAsync(context);
+            HayvanAnneListesi = await AnnelerListesiOlusturAsync(context);
+            RenklerListesi = await RenkListesiOlusturAsync(context);
+            TurlerListesi = await TurListesiOlusturAsync(context);
+            CinslerListesi = await CinsListesiOlusturAsync(context);
+            CinsiyetListesi = CinsiyetListesiOlustur();
+
+            return this;
+        }
+
+        public async Task<AddAnimalViewModel> GeriDonusModeliOlusturAsync(VeterinerDBContext context, AddAnimalViewModel model)
+        {
+            var Model = await ModeliOlusturAsync(context);
+
+            Model.ImgUrl = model.ImgUrl;
+            Model.HayvanAdi = model.HayvanAdi;
+            Model.HayvanKilo = model.HayvanKilo;
+            Model.SecilenCinsId = model.SecilenCinsId;
+            Model.SecilenTurId = model.SecilenTurId;
+            Model.RenkId = model.RenkId;
+            Model.HayvanDogumTarihi = model.HayvanDogumTarihi;
+            Model.HayvanCinsiyet = model.HayvanCinsiyet;
+            Model.SahiplenmeTarihi = model.SahiplenmeTarihi;
+            Model.HayvanAnneId = model.HayvanAnneId;
+            Model.HayvanBabaId = model.HayvanBabaId;
+
+            return Model;
+        }
+
+        public async Task<Hayvan> KaydedilecekHayvaniOlusturAsync(VeterinerDBContext context, AddAnimalViewModel model)
+        {
+            Hayvan hayvan = new Hayvan();
+
+            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
+            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
+            hayvan.HayvanKilo = model.HayvanKilo;
+            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
+            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
+            hayvan.HayvanAnneId = model.HayvanAnneId;
+            hayvan.HayvanBabaId = model.HayvanBabaId;
+            var cinsTur = await context.CinsTur
+                                    .Where(ct => ct.CinsId == model.SecilenCinsId && ct.TurId == model.SecilenTurId)
+                                    .FirstOrDefaultAsync();
+            hayvan.CinsTur = cinsTur;
+            hayvan.RenkId = model.RenkId;
+
+            return hayvan;
         }
     }
 }

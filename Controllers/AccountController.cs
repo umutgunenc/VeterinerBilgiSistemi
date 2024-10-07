@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using FaceRecognitionDotNet;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Text;
 
 namespace VeterinerBilgiSistemi.Controllers
 {

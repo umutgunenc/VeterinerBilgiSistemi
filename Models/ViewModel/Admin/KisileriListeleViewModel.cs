@@ -3,21 +3,23 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Admin
+namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class KisileriListeleViewModel : AppUser
     {
- 
+
         public string RolAdi { get; set; }
-        public AppUser SecilenKisi { get;set; }
+        public AppUser SecilenKisi { get; set; }
+
+        public IQueryable<KisileriListeleViewModel> Kisiler { get; set; }
 
 
         public async Task<KisileriListeleViewModel> SecilenKisiyiGetirAsync(string tckn, VeterinerDBContext context)
         {
-            return await context.AppUsers.Where(x => x.InsanTckn == tckn).Select(kisi=>new KisileriListeleViewModel
+            return await context.AppUsers.Where(x => x.InsanTckn == tckn).Select(kisi => new KisileriListeleViewModel
             {
                 InsanAdi = kisi.InsanAdi,
                 InsanSoyadi = kisi.InsanSoyadi,
@@ -39,7 +41,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
 
         public IQueryable<KisileriListeleViewModel> KisiListesiniGetir(VeterinerDBContext context)
         {
-            var kisiler = context.Users.Select(kisi => new KisileriListeleViewModel
+            Kisiler = context.Users.Select(kisi => new KisileriListeleViewModel
             {
                 InsanTckn = kisi.InsanTckn,
                 InsanAdi = kisi.InsanAdi,
@@ -56,7 +58,7 @@ namespace VeterinerApp.Models.ViewModel.Admin
                         .FirstOrDefault()
             });
 
-            return kisiler;
+            return Kisiler;
 
         }
     }

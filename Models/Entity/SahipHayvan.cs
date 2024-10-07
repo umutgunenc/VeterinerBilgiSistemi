@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace VeterinerApp.Models.Entity
+namespace VeterinerBilgiSistemi.Models.Entity
 {
     public class SahipHayvan
     {

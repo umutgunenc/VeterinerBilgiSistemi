@@ -9,13 +9,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Enum;
-using VeterinerApp.Models.ViewModel.Admin;
-using VeterinerApp.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Enum;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
 
-namespace VeterinerApp.Models.Validators.ValidateFunctions
+namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
 {
     public static class FunctionsValidator
     {
@@ -228,6 +228,11 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
             return true;
         }
 
+        public static bool BeHastalik(int hastalikId)
+        {
+            return _context.Hastaliklar.Any(h => h.HastalikId == hastalikId);
+        }
+
 
         public static bool SeacrhInStock(string arananMetin)
         {
@@ -415,6 +420,17 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
                 return true;
             return !_context.Stoklar.Any(x => x.StokAdi == stokAdi && x.Id != stokId);
         }
+        public static bool BeUniqueHastalikAdi(string hastalikAdi)
+        {
+            if (string.IsNullOrEmpty(hastalikAdi))
+                return true;
+
+            return !_context.Hastaliklar.Any(x => x.HastalikAdi.ToUpper() == hastalikAdi.ToUpper());
+        }
+
+
+
+
 
 
         /// <summary>
@@ -470,6 +486,12 @@ namespace VeterinerApp.Models.Validators.ValidateFunctions
                 return true;
             return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
         }
+
+        public static bool BeNotUsedHastalik(int hastalikId)
+        {
+            return !_context.HastalikMuayene.Any(x => x.HastalikId == hastalikId);
+        }
+
 
 
 

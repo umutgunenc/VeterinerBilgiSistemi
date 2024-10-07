@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [Authorize(Roles = "VETERİNER")]
     public class VeterinerController : Controller

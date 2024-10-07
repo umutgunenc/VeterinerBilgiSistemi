@@ -1,0 +1,35 @@
+﻿@model HastalikSilViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+<form asp-action="HastalikSil" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <div class="col">
+            <select asp-for="HastalikId" class="form-control" id="mySelect" asp-items="Model.HastalikListesi">
+                <option value="@Model.HastalikId" disabled selected>Silinecek Hastalığı Seçiniz</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-dark rounded mb-2">Sil</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HastalikId">
+        </span>
+    </div>
+</form>
+
+@if (TempData["HastalikSilindi"] != null)
+{
+    <div class="alert alert-success" id="HastalikSilindi">@TempData["HastalikSilindi"]</div>
+
+}
+
+@section scripts{
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("HastalikSilindi");
+            successMessage.remove();
+        }, 2500);
+    </script>
+}

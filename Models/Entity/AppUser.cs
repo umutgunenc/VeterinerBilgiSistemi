@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Entity
+namespace VeterinerBilgiSistemi.Models.Entity
 {
     public partial class AppUser : IdentityUser<int>
     {

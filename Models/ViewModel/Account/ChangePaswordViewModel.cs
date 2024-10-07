@@ -1,7 +1,7 @@
-﻿using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+﻿using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Account
+namespace VeterinerBilgiSistemi.Models.ViewModel.Account
 {
     public class ChangePaswordViewModel : AppUser
     {

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-using VeterinerApp.Models.Entity;
+﻿using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Admin
+namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class RenkEkleViewModel :Renk
     {

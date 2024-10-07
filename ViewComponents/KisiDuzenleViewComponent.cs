@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeterinerApp.Models.ViewModel.Admin;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace VeterinerApp.ViewComponents
+namespace VeterinerBilgiSistemi.ViewComponents
 {
     public class KisiDuzenleViewComponent : ViewComponent
     {   private readonly VeterinerDBContext _context;

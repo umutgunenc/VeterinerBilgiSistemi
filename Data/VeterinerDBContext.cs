@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Data
+namespace VeterinerBilgiSistemi.Data
 {
     public class VeterinerDBContext : IdentityDbContext<AppUser, AppRole, int>
     {
@@ -37,6 +37,7 @@ namespace VeterinerApp.Data
         //Ara tablolar
         public virtual DbSet<CinsTur> CinsTur { get; set; }
         public virtual DbSet<SahipHayvan> SahipHayvan { get; set; }
+        public virtual DbSet<HastalikMuayene> HastalikMuayene { get; set; }
 
 
 
@@ -90,6 +91,29 @@ namespace VeterinerApp.Data
                 .IsRequired();
 
 
+
+            modelBuilder.Entity<HastalikMuayene>()
+                .HasKey(hm => new { hm.MuayeneId, hm.HastalikId });
+
+            modelBuilder.Entity<HastalikMuayene>()
+                .HasOne(hm => hm.Hastalik)
+                .WithMany(m => m.Muayeneler)
+                .HasForeignKey(hm => hm.HastalikId);
+
+            modelBuilder.Entity<HastalikMuayene>()
+                .HasOne(hm => hm.Muayene)
+                .WithMany(m => m.Hastaliklar)
+                .HasForeignKey(hm => hm.MuayeneId);
+
+            modelBuilder.Entity<HastalikMuayene>()
+                .Property(hm => hm.MuayeneId)
+                .HasColumnName("MuayeneId");
+
+            modelBuilder.Entity<HastalikMuayene>()
+                .Property(hm => hm.HastalikId)
+                .HasColumnName("HastalikId");
+
+
             modelBuilder.Entity<AppRole>()
                 .HasData(new AppRole { Id = 1, Name = "ADMIN", NormalizedName = "ADMIN" });
 
@@ -107,7 +131,7 @@ namespace VeterinerApp.Data
                 TermOfUse = true,
                 PhoneNumber = "05300000000",
                 NormalizedUserName = "ADMIN",
-                NormalizedEmail = "UMUTGUNENC@GMAİL.COM",
+                NormalizedEmail = "UMUTGUNENC@GMAIL.COM",
 
             };
             var passwordHasher = new PasswordHasher<AppUser>();

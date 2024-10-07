@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using System.Linq;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
-namespace VeterinerApp.Models.Validators.Admin
+namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
     public partial class RolSilValidators : AbstractValidator<RolSilViewModel>
     {

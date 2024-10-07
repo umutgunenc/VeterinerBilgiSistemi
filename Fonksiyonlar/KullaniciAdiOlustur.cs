@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace VeterinerApp.Fonksiyonlar
+namespace VeterinerBilgiSistemi.Fonksiyonlar
 {
     public static class KullaniciAdiOlustur
     {

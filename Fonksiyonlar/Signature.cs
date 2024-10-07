@@ -2,7 +2,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace VeterinerApp.Fonksiyonlar
+namespace VeterinerBilgiSistemi.Fonksiyonlar
 {
     public static class Signature
     {

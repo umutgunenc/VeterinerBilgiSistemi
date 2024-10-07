@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace VeterinerApp.Models.Entity
+namespace VeterinerBilgiSistemi.Models.Entity
 {
     public class AppRole :IdentityRole<int>
     {

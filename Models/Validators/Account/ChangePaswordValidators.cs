@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Account;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Account;
 
-namespace VeterinerApp.Models.Validators.Account
+namespace VeterinerBilgiSistemi.Models.Validators.Account
 {
     public class ChangePaswordValidators : AbstractValidator<ChangePaswordViewModel>
     {

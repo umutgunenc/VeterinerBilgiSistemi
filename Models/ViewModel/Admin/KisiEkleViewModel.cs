@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Admin
+namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class KisiEkleViewModel : AppUser
     {
@@ -40,8 +40,8 @@ namespace VeterinerApp.Models.ViewModel.Admin
         public async Task<KisiEkleViewModel> KisiOlusturAsync(VeterinerDBContext context, KisiEkleViewModel model)
         {
             UserName = await KullaniciAdiOlustur.GenerateUserNameAsync(model.InsanAdi, model.InsanSoyadi, model.Email, context);
-            InsanAdi = model.InsanAdi;
-            InsanSoyadi = model.InsanSoyadi;
+            InsanAdi = model.InsanAdi.ToUpper();
+            InsanSoyadi = model.InsanSoyadi.ToUpper();
             InsanTckn = model.InsanTckn;
             Email = model.Email;
             PhoneNumber = model.PhoneNumber;

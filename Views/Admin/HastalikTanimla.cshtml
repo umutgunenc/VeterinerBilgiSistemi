@@ -1,0 +1,36 @@
+﻿@model HastalikTanimlaViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="HastalikTanimla" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <div class="col">
+            <input asp-for="HastalikAdi" class="form-control" placeholder="Hastalık Adı">
+        </div>
+        <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HastalikAdi">
+        </span>
+    </div>
+</form>
+
+@if (TempData["HastalikEklendi"] != null)
+{
+    <div class="alert alert-success" id="HastalikEklendi">@TempData["HastalikEklendi"]</div>
+
+}
+
+@section scripts {
+    <script>setTimeout(function () {
+    var successMessage = document.getElementById("HastalikEklendi");
+            successMessage.remove();
+        }, 2500);</script>
+}
+
+
+

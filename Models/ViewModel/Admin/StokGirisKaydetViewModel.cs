@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Admin
+namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class StokGirisKaydetViewModel : StokHareket
     {

@@ -3,19 +3,19 @@ using FluentValidation.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using VeterinerApp.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
 using Microsoft.EntityFrameworkCore;
-using VeterinerApp.Models.Enum;
+using VeterinerBilgiSistemi.Models.Enum;
 
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators.Animal
+namespace VeterinerBilgiSistemi.Models.Validators.Animal
 {
     public partial class HayvanEkleValidator : AbstractValidator<AddAnimalViewModel>
     {

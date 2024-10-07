@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.User
+namespace VeterinerBilgiSistemi.Models.ViewModel.User
 {
     public class FaceIdViewModel :AppUser
     {

@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators.Account;
-using VeterinerApp.Models.ViewModel.Account;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Validators.Account;
+using VeterinerBilgiSistemi.Models.ViewModel.Account;
 using System;
-using VeterinerApp.Fonksiyonlar;
+using VeterinerBilgiSistemi.Fonksiyonlar;
 using System.IO;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Text;
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [AllowAnonymous]
     public class AccountController : Controller

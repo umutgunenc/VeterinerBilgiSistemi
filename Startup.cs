@@ -12,9 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Entity;
 
 
 public class Startup

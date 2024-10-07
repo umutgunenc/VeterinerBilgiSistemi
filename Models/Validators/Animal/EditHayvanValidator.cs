@@ -1,17 +1,17 @@
 ﻿using FluentValidation;
 using System.Linq;
 using System;
-using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Animal;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Models.Entity;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using VeterinerApp.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
 using System.Runtime.InteropServices;
 
 
-namespace VeterinerApp.Models.Validators.Animal
+namespace VeterinerBilgiSistemi.Models.Validators.Animal
 {
     public class EditHayvanValidator : AbstractValidator<EditAnimalViewModel>
     {

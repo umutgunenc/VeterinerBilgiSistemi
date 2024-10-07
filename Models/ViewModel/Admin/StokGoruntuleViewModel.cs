@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Admin
+namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class StokGoruntuleViewModel : Stok
     {

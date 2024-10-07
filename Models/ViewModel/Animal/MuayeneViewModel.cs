@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Animal
+namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 {
     public class MuayeneViewModel : Muayene
     {

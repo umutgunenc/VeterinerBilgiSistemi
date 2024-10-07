@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeterinerApp.Models.Validators;
-using VeterinerApp.Data;
+using VeterinerBilgiSistemi.Models.Validators;
+using VeterinerBilgiSistemi.Data;
 using FluentValidation.Results;
 using System.Linq;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Models.Entity;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
 
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     public class HomeController : Controller
     {

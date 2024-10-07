@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Enum;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Enum;
 
-namespace VeterinerApp.Models.ViewModel.Animal
+namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 {
     public class AddAnimalViewModel : Hayvan
     {

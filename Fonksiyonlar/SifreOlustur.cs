@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace VeterinerApp.Fonksiyonlar
+namespace VeterinerBilgiSistemi.Fonksiyonlar
 {
     public static class SifreOlustur
     {

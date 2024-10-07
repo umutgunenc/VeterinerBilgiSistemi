@@ -29,7 +29,6 @@
                             <td class="text-center">@item.InsanSoyadi</td>
                             <td class="text-center">@item.PhoneNumber</td>
                             <td class="text-center">@item.Email</td>
-
                             <td class="text-center">
                                 @if (item.CalisiyorMu)
                                 {
@@ -54,10 +53,8 @@
                             <td class="text-center">-</td>
                             <td class="text-center">-</td>
                             <td class="text-center">-</td>
-
                         </tr>
                     }
-
                 </tbody>
 
             </table>
@@ -72,10 +69,10 @@
                         @if (Model.OncekiSayfaVar)
                         {
                             <li class="page-item">
-                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="1">İlk</a>
+                                <a class="page-link text-light bg-dark border-dark" asp-action="KisileriListele" asp-route-sayfaNumarasi="1">İlk</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi - 1)">Önceki</a>
+                                <a class="page-link text-light bg-dark border-dark" asp-action="KisileriListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi - 1)">Önceki</a>
                             </li>
                         }
 
@@ -84,7 +81,7 @@
                             @if (i > 0 && i <= Model.ToplamSayfa)
                             {
                                 <li class="page-item @(i == Model.SayfaNumarasi ? "active" : "")">
-                                    <a class="page-link text-light bg-dark border-dark @(i == Model.SayfaNumarasi ? "bg-primary text-white" : "")" asp-action="CalisanListele" asp-route-sayfaNumarasi="@i">@i</a>
+                                    <a class="page-link text-light bg-dark border-dark @(i == Model.SayfaNumarasi ? "bg-primary text-white" : "")" asp-action="KisileriListele" asp-route-sayfaNumarasi="@i">@i</a>
                                 </li>
                             }
                         }
@@ -92,10 +89,10 @@
                         @if (Model.SonrakiSayfaVar)
                         {
                             <li class="page-item">
-                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi + 1)">Sonraki</a>
+                                <a class="page-link text-light bg-dark border-dark" asp-action="KisileriListele" asp-route-sayfaNumarasi="@(Model.SayfaNumarasi + 1)">Sonraki</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link text-light bg-dark border-dark" asp-action="CalisanListele" asp-route-sayfaNumarasi="@(Model.ToplamSayfa)">Son</a>
+                                <a class="page-link text-light bg-dark border-dark" asp-action="KisileriListele" asp-route-sayfaNumarasi="@(Model.ToplamSayfa)">Son</a>
                             </li>
                         }
                     </ul>

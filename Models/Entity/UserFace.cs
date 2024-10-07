@@ -1,6 +1,6 @@
 ﻿
 
-namespace VeterinerApp.Models.Entity
+namespace VeterinerBilgiSistemi.Models.Entity
 {
     public class UserFace
     {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
-namespace VeterinerApp.ViewComponents
+namespace VeterinerBilgiSistemi.ViewComponents
 {
     public class StokCikisDetayGetirViewComponent : ViewComponent
     {

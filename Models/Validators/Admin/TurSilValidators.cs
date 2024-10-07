@@ -1,13 +1,8 @@
 ﻿using FluentValidation;
-using System;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
-namespace VeterinerApp.Models.Validators.Admin
+namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
     public class TurSilValidator : AbstractValidator<TurSilViewModel>
     {

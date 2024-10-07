@@ -1,6 +1,6 @@
-﻿using VeterinerApp.Models.Entity;
+﻿using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Account
+namespace VeterinerBilgiSistemi.Models.ViewModel.Account
 {
     public class ForgotPasswordViewModel :AppUser
     {

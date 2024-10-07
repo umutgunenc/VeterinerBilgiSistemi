@@ -10,22 +10,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators.Account;
-using VeterinerApp.Models.Validators.User;
-using VeterinerApp.Models.ViewModel.Account;
-using VeterinerApp.Models.ViewModel.Animal;
-using VeterinerApp.Models.ViewModel.User;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Validators.Account;
+using VeterinerBilgiSistemi.Models.Validators.User;
+using VeterinerBilgiSistemi.Models.ViewModel.Account;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Models.ViewModel.User;
 using FaceRecognitionDotNet;
 using System.Drawing;
-using VeterinerApp.Fonksiyonlar;
+using VeterinerBilgiSistemi.Fonksiyonlar;
 
 
 
 
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [Authorize]
     public class UserController : Controller

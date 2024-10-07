@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.User;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.User;
 
-namespace VeterinerApp.Models.Validators.User
+namespace VeterinerBilgiSistemi.Models.Validators.User
 {
     public class UserEditValidator : AbstractValidator<EditUserViewModel>
     {

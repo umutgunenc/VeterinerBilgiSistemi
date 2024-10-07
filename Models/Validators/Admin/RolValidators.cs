@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using System.Linq;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators.Admin
+namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
     public partial class RolValidators : AbstractValidator<RolEkleViewModel>
     {

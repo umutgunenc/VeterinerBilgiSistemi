@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
 using System.Collections.Generic;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Data;
 using System;
 using System.Linq;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 using Microsoft.AspNetCore.Identity;
-using VeterinerApp.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Validators.Admin
+namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
     public partial class KisiDuzenleValidators : AbstractValidator<KisiDuzenleViewModel>
     {

@@ -11,14 +11,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Models.Enum;
-using VeterinerApp.Models.Validators.Animal;
-using VeterinerApp.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.Enum;
+using VeterinerBilgiSistemi.Models.Validators.Animal;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [Authorize]
     public class AnimalController : Controller

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using VeterinerApp.Models.Enum;
+using VeterinerBilgiSistemi.Models.Enum;
 
 #nullable disable
 
-namespace VeterinerApp.Models.Entity
+namespace VeterinerBilgiSistemi.Models.Entity
 {
     public partial class Hayvan
     {

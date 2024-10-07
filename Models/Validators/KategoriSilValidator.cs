@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
-namespace VeterinerApp.Models.Validators
+namespace VeterinerBilgiSistemi.Models.Validators
 {
     public class KategoriSilValidator : AbstractValidator<KategoriSilViewModel>
     {

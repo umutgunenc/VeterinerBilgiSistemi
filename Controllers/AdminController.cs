@@ -2,22 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
-using VeterinerApp.Models.Entity;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
 using FluentValidation;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using VeterinerApp.Models.Validators.Admin;
+using VeterinerBilgiSistemi.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using VeterinerApp.Models.Validators;
+using VeterinerBilgiSistemi.Models.Validators;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
     public class AdminController : Controller
@@ -543,7 +544,6 @@ namespace VeterinerApp.Controllers
                 }
                 catch (Exception ex)
                 {
-
                     ViewBag.Hata = "Mail Gönderme işlemi başarısız oldu. Kayıt işlemi tamamlanamadı." + " " + ex.Message;
 
                     _veterinerDbContext.Users.Remove(model.Kullanici);
@@ -628,10 +628,12 @@ namespace VeterinerApp.Controllers
         {
             int sayfadaGosterilecekKayitSayisi = 4;
 
-            var kisiler = new KisileriListeleViewModel();
+            var model = new KisileriListeleViewModel();
+            model.Kisiler = model.KisiListesiniGetir(_veterinerDbContext);
 
-            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(kisiler.KisiListesiniGetir(_veterinerDbContext), sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
-            ViewBag.ToplamKayit = kisiler;
+
+            var viewModel = SayfalamaListesi<KisileriListeleViewModel>.Olustur(model.Kisiler, sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
+            ViewBag.ToplamKayit = model.Kisiler.Count();
             return View(viewModel);
         }
         [HttpPost]
@@ -655,8 +657,7 @@ namespace VeterinerApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult 
-            Ekle()
+        public IActionResult KategoriEkle()
         {
             return View();
         }
@@ -944,7 +945,7 @@ namespace VeterinerApp.Controllers
                 ModelState.AddModelError("StokId", "Aradığınız stoğa ait bir kayıt bulunamadı");
                 return View("StokGiris", model);
             }
-            TempData["ArananMetin"] =  model.ArananMetin;
+            TempData["ArananMetin"] = model.ArananMetin;
 
             ViewBag.AramaSonucu = aramaSonucu;
 
@@ -972,7 +973,7 @@ namespace VeterinerApp.Controllers
 
                 ViewBag.AramaSonucu = aramaSonucu;
 
-                return View("StokGiris",girisModel);
+                return View("StokGiris", girisModel);
 
             }
 
@@ -1080,6 +1081,68 @@ namespace VeterinerApp.Controllers
             TempData["StokCikisiYapildi"] = "Stok çıkışı başarılı bir şekilde yapıldı.";
 
             return View("StokCikis");
+        }
+
+        [HttpGet]
+        public IActionResult HastalikTanimla()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> HastalikTanimla(HastalikTanimlaViewModel model)
+        {
+
+            HastalikTanimlaValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+
+                return View(model);
+            }
+            model.HastalikAdi = model.HastalikAdi.ToUpper();
+            _veterinerDbContext.Hastaliklar.Add(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["HastalikEklendi"] = $"{model.HastalikAdi.ToUpper()} isimli hastalik sisteme kaydedildi.";
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HastalikSil()
+        {
+            HastalikSilViewModel model = new();
+            model.HastalikListesi = await model.HastalikListesiniGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+
+        public async Task<IActionResult> HastalikSil(HastalikSilViewModel model)
+        {
+            HastalikSilValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                model.HastalikListesi = await model.HastalikListesiniGetirAsync(_veterinerDbContext);
+                return View(model);
+            }
+
+            var hastalik = await model.SilinecekHastaligiGetirAsnyc(_veterinerDbContext, model);
+            _veterinerDbContext.Hastaliklar.Remove(hastalik);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["HastalikSilindi"] = $"{hastalik.HastalikAdi} isimli hastalik başarı ile silindi.";
+
+            model.HastalikListesi = await model.HastalikListesiniGetirAsync(_veterinerDbContext);
+            return View(model);
         }
     }
 

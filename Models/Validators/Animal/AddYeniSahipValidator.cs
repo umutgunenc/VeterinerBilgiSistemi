@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Animal;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Animal;
 
-namespace VeterinerApp.Models.Validators.Animal
+namespace VeterinerBilgiSistemi.Models.Validators.Animal
 {
     public class AddYeniSahipValidator : AbstractValidator<AddNewSahipViewModel>
     {

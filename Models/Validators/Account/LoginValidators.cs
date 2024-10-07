@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Account;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Account;
 
 
-namespace VeterinerApp.Models.Validators.Account
+namespace VeterinerBilgiSistemi.Models.Validators.Account
 {
     public class LoginValidators : AbstractValidator<LoginViewModel>
     {

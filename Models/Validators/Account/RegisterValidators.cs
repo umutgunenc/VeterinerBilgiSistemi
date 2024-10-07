@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Linq;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Validators.ValidateFunctions;
-using VeterinerApp.Models.ViewModel.Account;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Validators.ValidateFunctions;
+using VeterinerBilgiSistemi.Models.ViewModel.Account;
 
-namespace VeterinerApp.Models.Validators.Account
+namespace VeterinerBilgiSistemi.Models.Validators.Account
 {
     public class RegisterValidators : AbstractValidator<RegisterViewModel>
     {

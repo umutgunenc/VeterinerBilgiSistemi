@@ -1,7 +1,7 @@
-﻿using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+﻿using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 
-namespace VeterinerApp.Models.ViewModel.Animal
+namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 {
     public class AddNewSahipViewModel : Hayvan
     {

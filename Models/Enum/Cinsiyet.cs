@@ -1,4 +1,4 @@
-﻿namespace VeterinerApp.Models.Enum
+﻿namespace VeterinerBilgiSistemi.Models.Enum
 {
     public enum Cinsiyet
     {

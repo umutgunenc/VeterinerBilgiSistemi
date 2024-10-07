@@ -6,11 +6,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.Entity;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.Entity;
 using Image = FaceRecognitionDotNet.Image;
 
-namespace VeterinerApp.Fonksiyonlar
+namespace VeterinerBilgiSistemi.Fonksiyonlar
 {
 
     //TODO daha hızlı çalıştır

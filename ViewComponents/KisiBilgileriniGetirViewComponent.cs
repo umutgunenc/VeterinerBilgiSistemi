@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 public class KisiBilgileriniGetirViewComponent : ViewComponent
 {

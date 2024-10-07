@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VeterinerApp.Data;
+using VeterinerBilgiSistemi.Data;
 
-namespace VeterinerApp.Controllers
+namespace VeterinerBilgiSistemi.Controllers
 {
     [Authorize(Roles = "ÇALIŞAN")]
     public class CalisanController : Controller

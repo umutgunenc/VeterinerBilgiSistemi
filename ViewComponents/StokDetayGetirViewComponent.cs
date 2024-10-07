@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using VeterinerApp.Data;
-using VeterinerApp.Fonksiyonlar;
-using VeterinerApp.Models.ViewModel.Admin;
+using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
-namespace VeterinerApp.ViewComponents
+namespace VeterinerBilgiSistemi.ViewComponents
 {
     public class StokDetayGetirViewComponent : ViewComponent
     {

@@ -6,16 +6,37 @@
 
 
 <form asp-action="KategoriEkle" asp-controller="Admin" method="post">
-    <div class="form-row">
-        <div class="col">
-            <input asp-for="KategoriAdi" class="form-control" placeholder="Kategori Adı">
+    <div>
+        <div class="form-group row mb-3">
+            <label asp-for="KategoriAdi" class="col-md-2 col-form-label font-weight-bold text-white">Kategori Adı</label>
+            <div class="col-md-10">
+                <input type="text" asp-for="KategoriAdi" class="form-control" placeholder="Kategori Adı">
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="KategoriAdi">
+                    </span>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-dark rounded mb-2">Ekle</button>
     </div>
-    <div class="col">
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="KategoriAdi">
-        </span>
+    <div class="form-group row mb-3">
+        <label asp-for="IlacMi" class="col-md-2 col-form-label font-weight-bold text-white">İlaç Mı ?</label>
+        <div class="col-md-10">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio1" class="custom-control-input" asp-for="IlacMi" value="true">
+                <label class="custom-control-label font-weight-bold text-white" for="customRadio1">EVET</label>
+            </div>
+            <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio2" class="custom-control-input" asp-for="IlacMi" value="false">
+                <label class="custom-control-label font-weight-bold text-white" for="customRadio2">HAYIR</label>
+            </div>
+            <div class="my-1">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="IlacMi">
+                </span>
+            </div>
+        </div>
     </div>
+
+    <button type="submit" class="col btn btn-dark rounded mb-2">Ekle</button>
 </form>
 
 @if (TempData["KategoriEklendi"] != null)

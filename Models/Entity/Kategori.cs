@@ -10,7 +10,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         }
         public int KategoriId { get; set; }
         public string KategoriAdi { get; set; }
-        public bool IlacMi { get; set; }
+        public bool? IlacMi { get; set; }
         public virtual ICollection<Stok> Stoklar { get; set; }
     }
 }

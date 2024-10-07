@@ -67,7 +67,7 @@ namespace VeterinerBilgiSistemi.Controllers
             await _veterinerDbContext.SaveChangesAsync();
             TempData["Success"] = $"{model.RenkAdi} rengi eklendi";
 
-            return View();
+            return RedirectToAction();
         }
 
         [HttpGet]
@@ -682,7 +682,7 @@ namespace VeterinerBilgiSistemi.Controllers
             await _veterinerDbContext.SaveChangesAsync();
             TempData["KategoriEklendi"] = $" {model.KategoriAdi} isimli kategori başarı ile eklendi";
 
-            return View();
+            return RedirectToAction();
         }
 
         [HttpGet]

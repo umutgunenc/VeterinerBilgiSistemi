@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using FaceRecognitionDotNet;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Controllers
 {
@@ -258,7 +259,7 @@ namespace VeterinerBilgiSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string ReturnUrl)
         {
             LoginValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -272,53 +273,55 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View();
             }
 
-            if (ModelState.IsValid)
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
             {
-                var user = await _userManager.FindByNameAsync(model.UserName);
-
-                if (user == null)
-                {
-                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
-                    return View(model);
-                }
-
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if (user.CalisiyorMu == false && (roles.Contains("ÇALIŞAN") || roles.Contains("VETERİNER") || roles.Contains("ADMIN")))
-                {
-                    ModelState.AddModelError("PasswordHash", "Kullanıcı aktif değil. Lütfen yöneticinizle iletişime geçiniz.");
-                    return View(model);
-                }
-
-                var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: false, lockoutOnFailure: true);
-
-                if (signInResult.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                else if (signInResult.IsLockedOut)
-                {
-                    if (user.LockoutEnd.HasValue && user.LockoutEnd.Value.ToLocalTime() > DateTime.Now)
-                    {
-                        ModelState.AddModelError("LockoutEnd", $"Hesabınız kilitlenmiştir. Hesabınızın kilidi {user.LockoutEnd.Value.ToLocalTime().ToString("g")} 'de açılacaktır.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("LockoutEnd", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyiniz.");
-                    }
-                }
-                else if (user.AccessFailedCount >= 0)
-                {
-                    ModelState.AddModelError("AccessFailedCount", $"Hesabınıza 3 defa yanlış giriş yaptığınızda kitlenecektir. {user.AccessFailedCount} kere yanlış giriş yapıldı.");
-                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
-                }
-                else
-                {
-                    ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
-                }
+                ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+                return View(model);
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (user.CalisiyorMu == false && (roles.Contains("ÇALIŞAN") || roles.Contains("VETERİNER") || roles.Contains("ADMIN")))
+            {
+                ModelState.AddModelError("PasswordHash", "Kullanıcı aktif değil. Lütfen yöneticinizle iletişime geçiniz.");
+                return View(model);
+            }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: false, lockoutOnFailure: true);
+
+            if (signInResult.Succeeded)
+            {
+                if (string.IsNullOrEmpty(ReturnUrl))
+                    return RedirectToAction("Index", "Home");
+                else
+                    return Redirect(ReturnUrl);
+            }
+
+
+
+
+            if (signInResult.IsLockedOut)
+            {
+                if (user.LockoutEnd.HasValue && user.LockoutEnd.Value.ToLocalTime() > DateTime.Now)
+                    ModelState.AddModelError("LockoutEnd", $"Hesabınız kilitlenmiştir. Hesabınızın kilidi {user.LockoutEnd.Value.ToLocalTime().ToString("g")} 'de açılacaktır.");
+
+                else
+                    ModelState.AddModelError("LockoutEnd", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyiniz.");
+
+            }
+            if (user.AccessFailedCount >= 0)
+            {
+                ModelState.AddModelError("AccessFailedCount", $"Hesabınıza 3 defa yanlış giriş yaptığınızda kitlenecektir. {user.AccessFailedCount} kere yanlış giriş yapıldı.");
+                ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+            }
+            ModelState.AddModelError("PasswordHash", "Kullanıcı adı veya şifre hatalı.");
+
             return View(model);
+
+
 
         }
 

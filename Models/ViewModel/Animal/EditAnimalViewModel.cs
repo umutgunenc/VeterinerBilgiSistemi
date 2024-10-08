@@ -20,7 +20,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
         private string Cinsi { get; set; }
         public int CinsId { get; set; }
         private string Turu { get; set; }
-        public int TurId { get; set; }  
+        public int TurId { get; set; }
         public bool IsDeath { get; set; }
         public string PhotoOption { get; set; }
         public List<SelectListItem> Turler { get; set; }
@@ -135,7 +135,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 
             return HayvanBabaList;
         }
-
         private async Task<string> RenkAdiniGetirAsync(Hayvan hayvan, VeterinerDBContext context)
         {
             return await context.Renkler.Where(r => r.RenkId == hayvan.RenkId).Select(r => r.RenkAdi).FirstOrDefaultAsync();
@@ -192,7 +191,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             return Signature.CreateSignature(hayvanId.ToString(), TCKN);
         }
 
-
         public async Task<EditAnimalViewModel> ModelOlusturAsync(Hayvan hayvan, AppUser user, VeterinerDBContext context)
         {
             return new EditAnimalViewModel()
@@ -202,15 +200,15 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 Rengi = await RenkAdiniGetirAsync(hayvan, context),
                 RenkId = hayvan.RenkId,
                 Cinsi = await CinsAdiniGetirAsync(hayvan, context),
-                CinsId = await CinsIdGetirAsync(hayvan,context),
+                CinsId = await CinsIdGetirAsync(hayvan, context),
                 Turu = await TurAdiniGetirAsync(hayvan, context),
                 TurId = await TurIdGetirAsync(hayvan, context),
                 HayvanKilo = hayvan.HayvanKilo,
                 HayvanCinsiyet = hayvan.HayvanCinsiyet,
                 HayvanDogumTarihi = hayvan.HayvanDogumTarihi,
                 HayvanOlumTarihi = hayvan.HayvanOlumTarihi,
-                SahiplikTarihi= await SahiplikTarihiniGetirAsync(hayvan,context,user),
-                SahiplikCikisTarihi = await SahiplikCikisTarihiniGetirAsync(hayvan,context,user),                
+                SahiplikTarihi = await SahiplikTarihiniGetirAsync(hayvan, context, user),
+                SahiplikCikisTarihi = await SahiplikCikisTarihiniGetirAsync(hayvan, context, user),
                 IsDeath = hayvan.HayvanOlumTarihi == null ? false : true,
                 HayvanAnneId = hayvan.HayvanAnneId,
                 HayvanBabaId = hayvan.HayvanBabaId,
@@ -221,12 +219,11 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 Renkler = await RenkleriGetirAsync(context),
                 CinsiyetListesi = CinsiyetleriGetir(),
                 ImgUrl = hayvan.ImgUrl,
-                Imza = SignatureOlustur(hayvan.HayvanId, hayvan.Sahipler.Where(h=>h.HayvanId==hayvan.HayvanId).Select(s=>s.AppUser.InsanTckn).FirstOrDefault()),
+                Imza = SignatureOlustur(hayvan.HayvanId, hayvan.Sahipler.Where(h => h.HayvanId == hayvan.HayvanId).Select(s => s.AppUser.InsanTckn).FirstOrDefault()),
                 Sahip = user,
                 SahipTckn = user.InsanTckn,
             };
         }
-
 
         /// <summary>
         /// Viewden gelen modeli olusturur. View i tekrardan geriye dondurmek icin kullanilir.
@@ -269,15 +266,32 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             };
         }
 
-        //TODO kontrol et-test yap, gereksiz ise sil
-        public async Task<(bool,List<Hayvan>)> CocuklariGetirAsync(Hayvan parent, VeterinerDBContext context)
+        public async Task<SahipHayvan> SahipHayvanGetirAsync(AppUser user, VeterinerDBContext context, Hayvan hayvan)
         {
-            var CocukListesi = new List<Hayvan>();
-            CocukListesi = await context.Hayvanlar.Where(h => h.HayvanAnneId == parent.HayvanId || h.HayvanBabaId == parent.HayvanId).ToListAsync();
-            if (CocukListesi.Count==0)
-                return (false, CocukListesi);
-            return (true, CocukListesi);
+            return await context.SahipHayvan.Where(sh => sh.SahipId == user.Id && sh.HayvanId == hayvan.HayvanId).FirstOrDefaultAsync();
+        }
+        public async Task<Hayvan> HayvaniGetirAsync(VeterinerDBContext context, EditAnimalViewModel model)
+        {
+            return await context.Hayvanlar.FindAsync(model.HayvanId);
+        }
+        public async Task<Hayvan> GuncelHayvanBilgileriniGetirAsnyc(VeterinerDBContext context, EditAnimalViewModel model, Hayvan hayvan)
+        {
+            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
+            int cinsTurId = await context.CinsTur
+                .Where(ct => ct.CinsId == model.CinsId && ct.TurId == model.TurId)
+                .Select(ct => ct.Id)
+                .FirstOrDefaultAsync();
+            hayvan.CinsTurId = cinsTurId;
+            hayvan.RenkId = model.RenkId;
+            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
+            hayvan.HayvanKilo = model.HayvanKilo;
+            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
+            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
+            hayvan.HayvanAnneId = model.HayvanAnneId;
+            hayvan.HayvanBabaId = model.HayvanBabaId;
+            hayvan.ImgUrl = hayvan.ImgUrl;
 
+            return hayvan;
         }
 
     }

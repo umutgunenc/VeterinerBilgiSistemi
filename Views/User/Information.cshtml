@@ -7,9 +7,6 @@
 
 }
 
-
-
-
 <div class="card text-white bg-dark mb-3">
     <div class="row no-gutters">
         <div class="col-md-4">
@@ -83,7 +80,6 @@
                                     }
                                 </tbody>
                             </table>
-
                         </div>
 
                     }
@@ -147,10 +143,7 @@
 {
     <div class="alert alert-success" id="YeniHayvanEklendi">@TempData["YeniHayvanEklendi"]</div>
 }
-@if (TempData["YeniHayvanEklendiHata"] != null)
-{
-    <div class="alert alert-danger" id="YeniHayvanEklendiHata">@TempData["YeniHayvanEklendiHata"]</div>
-}
+
 @if (TempData["HayvanSahibisiniz"] != null)
 {
     <div class="alert alert-danger" id="HayvanSahibisiniz">@TempData["HayvanSahibisiniz"]</div>

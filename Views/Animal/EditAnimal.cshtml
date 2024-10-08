@@ -200,24 +200,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/
             perjs/1.5.12/cropper.min.js"></script>
     <script>
-        //function Onayla(event) {
-        //    var sahiplikCikisTarihi = document.getElementById('SahiplikCikisTarihi');
-        //    var button = document.getElementById('button');
-        //    var form = document.getElementById('editAnimalForm');
-        //    console.log(sahiplikCikisTarihi.value);
-        //    if (sahiplikCikisTarihi.value != '') {
-        //        button.type = 'button';
-        //        event.preventDefault();
-        //        if (window.confirm('Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.')) {
-        //            form.submit();
-        //        }
-        //        else {
-        //            sahiplikCikisTarihi.value = '';
-        //            button.type = 'submit';
-        //        };
+        function Onayla(event) {
+            var sahiplikCikisTarihi = document.getElementById('SahiplikCikisTarihi');
+            if (sahiplikCikisTarihi.value) {
+                var button = document.getElementById('button');
+                var form = document.getElementById('editAnimalForm');
+                console.log(sahiplikCikisTarihi.value);
+                if (sahiplikCikisTarihi.value != '') {
+                    button.type = 'button';
+                    event.preventDefault();
+                    if (window.confirm('Evcil hayvanınıza, sizden başka bir sahip tanımlı değil ise, evcil hayvanınız sistemden silinecektir. Bu işlem geri alınamaz.')) {
+                        form.submit();
+                    }
+                    else {
+                        sahiplikCikisTarihi.value = '';
+                        button.type = 'submit';
+                    };
 
-        //    }
-        //}
+                }
+            }
+
+        }
     </script>
 
     <script>
@@ -226,7 +229,7 @@
             var turSelect = $('#tur');
 
             $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
-                turSelect.empty(); 
+                turSelect.empty();
                 turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
 
                 $.each(data, function (index, item) {
@@ -240,14 +243,14 @@
             });
         }
 
-        var CinsId = $('#cins').val(); 
+        var CinsId = $('#cins').val();
         var TurId = $('#tur').val();
 
         turleriYukle(CinsId, TurId);
 
         $('#cins').change(function () {
             CinsId = $(this).val();
-            turleriYukle(cinsId, null); 
+            turleriYukle(cinsId, null);
         });
     });
     </script>

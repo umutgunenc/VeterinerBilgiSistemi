@@ -50,7 +50,8 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 .Where(c => c.CinsId == context.CinsTur
                     .Where(ct => ct.Id == hayvan.CinsTurId)
                     .Select(ct => ct.CinsId).FirstOrDefault())
-                .Select(c => c.CinsAdi).FirstOrDefaultAsync();
+                .Select(c => c.CinsAdi)
+                .FirstOrDefaultAsync();
         }
         private async Task<string> TurAdiniGetirAsync(Hayvan hayvan, VeterinerDBContext context)
         {
@@ -58,7 +59,8 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                  .Where(t => t.TurId == context.CinsTur
                      .Where(ct => ct.Id == hayvan.CinsTurId)
                      .Select(ct => ct.TurId).FirstOrDefault())
-                 .Select(t => t.TurAdi).FirstOrDefaultAsync();
+                 .Select(t => t.TurAdi)
+                 .FirstOrDefaultAsync();
         }
 
         public async Task<HayvanlarBilgiViewModel> HayvanBilgileriniGetirAsync(Hayvan hayvan, AppUser user, VeterinerDBContext context)
@@ -100,8 +102,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 }).ToList(),
 
             };
-
-
 
         }
 

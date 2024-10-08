@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal.Account.Manage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -124,7 +123,9 @@ namespace VeterinerBilgiSistemi.Controllers
             {
                 SahipId = user.Id,
                 SahiplenmeTarihi = model.SahiplenmeTarihi,
-                HayvanId = hayvan.HayvanId
+                HayvanId = hayvan.HayvanId,
+                AktifMi = true
+
             };
 
             await _context.SahipHayvan.AddAsync(sahipHayvan);
@@ -143,7 +144,7 @@ namespace VeterinerBilgiSistemi.Controllers
             var kullanici = await _userManager.GetUserAsync(User);
 
             var kullaniciHayvanlari = await _context.SahipHayvan
-                .Where(sh => sh.HayvanId == hayvanId && sh.SahipId == kullanici.Id)
+                .Where(sh => sh.HayvanId == hayvanId && sh.SahipId == kullanici.Id && sh.AktifMi == true)
                 .FirstOrDefaultAsync();
 
             if (kullaniciHayvanlari == null)
@@ -179,6 +180,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
         }
 
+        //TODO kontrol et
         [HttpPost]
         public async Task<IActionResult> EditAnimal(EditAnimalViewModel model)
         {
@@ -204,7 +206,8 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
 
-            var hayvan = await _context.Hayvanlar.FindAsync(model.HayvanId);
+            var hayvan = await model.HayvaniGetirAsync(_context, model);
+
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
                 var dosyaUzantısı = Path.GetExtension(model.filePhoto.FileName);
@@ -225,7 +228,6 @@ namespace VeterinerBilgiSistemi.Controllers
                     }
                 }
 
-
                 var filePath = Path.Combine(hayvanKlasoru, dosyaAdi);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -240,52 +242,27 @@ namespace VeterinerBilgiSistemi.Controllers
 
             }
             else if (model.PhotoOption == "changePhoto" && model.filePhoto == null)
-                hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
+                hayvan.ImgUrl = (await _context.Hayvanlar.FindAsync(model.HayvanId)).ImgUrl;
             else if (model.PhotoOption == "deletePhoto")
                 hayvan.ImgUrl = null;
             else if (model.PhotoOption == "keepPhoto")
-                hayvan.ImgUrl = _context.Hayvanlar.Find(model.HayvanId).ImgUrl;
+                hayvan.ImgUrl = (await _context.Hayvanlar.FindAsync(model.HayvanId)).ImgUrl;
 
 
 
             if (model.SahiplikCikisTarihi != null)
             {
-                var hayvanSahibi = await _context.SahipHayvan
-                    .Where(sh => sh.HayvanId == model.HayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
-                    .FirstOrDefaultAsync();
-
-                var CocukListesi = await model.CocuklariGetirAsync(hayvan, _context);
-
-                var sahipSayisi = _context.SahipHayvan.Count(sh => sh.HayvanId == model.HayvanId);
-
-                _context.SahipHayvan.Remove(hayvanSahibi);
+                var sahipHayvan = await model.SahipHayvanGetirAsync(user, _context, hayvan);
+                sahipHayvan.AktifMi = false;
+                _context.SahipHayvan.Update(sahipHayvan);
                 await _context.SaveChangesAsync();
 
-                if (sahipSayisi == 1)
-                {
-                    _context.Hayvanlar.Remove(hayvan);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Information", "User");
-                }
                 return RedirectToAction("Information", "User");
-
             }
 
-            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
-            int cinsTurId = await _context.CinsTur
-                .Where(ct => ct.CinsId == model.CinsId && ct.TurId == model.TurId)
-                .Select(ct => ct.Id)
-                .FirstOrDefaultAsync();
-            hayvan.CinsTurId = cinsTurId;
-            hayvan.RenkId = model.RenkId;
-            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
-            hayvan.HayvanKilo = model.HayvanKilo;
-            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
-            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
-            hayvan.HayvanAnneId = model.HayvanAnneId;
-            hayvan.HayvanBabaId = model.HayvanBabaId;
-            hayvan.ImgUrl = hayvan.ImgUrl;
-            _context.Hayvanlar.Update(hayvan);
+            var guncelHayvan = await model.GuncelHayvanBilgileriniGetirAsnyc(_context, model, hayvan);
+
+            _context.Hayvanlar.Update(guncelHayvan);
             await _context.SaveChangesAsync();
             TempData["Edit"] = "Hayvan bilgileri başarıyla güncellendi.";
 
@@ -297,24 +274,20 @@ namespace VeterinerBilgiSistemi.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddSahip(int hayvanId)
+        public async Task<IActionResult> AddSahip(int hayvanId)
         {
-            var hayvan = _context.Hayvanlar.Find(hayvanId);
-            var user = _userManager.GetUserAsync(User).Result;
+            var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+            var user = await _userManager.GetUserAsync(User);
 
-            var userHayvan = _context.SahipHayvan
+            var userHayvan = await _context.SahipHayvan
                 .Where(sh => sh.HayvanId == hayvanId && sh.AppUser.InsanTckn == user.InsanTckn)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (userHayvan == null)
-            {
                 return View("BadRequest");
-            }
-            var signature = Signature.CreateSignature(hayvanId.ToString(), user.InsanTckn);
 
-            AddNewSahipViewModel ViewModel = new(_context);
-            ViewModel = ViewModel.ViewModelOlustur(hayvan, signature, user);
-
+            AddNewSahipViewModel ViewModel = new();
+            ViewModel = await ViewModel.ViewModelOlusturAsync(hayvan, user, _context);
 
             return View(ViewModel);
         }
@@ -324,38 +297,40 @@ namespace VeterinerBilgiSistemi.Controllers
         {
 
             if (!Signature.VerifySignature(model.HayvanId.ToString(), model.UserTCKN, model.Signature))
-            {
                 return View("Badrequest");
-            }
+
 
             AddYeniSahipValidator validator = new AddYeniSahipValidator();
             ValidationResult result = validator.Validate(model);
 
-            var hayvan = _context.Hayvanlar.Find(model.HayvanId);
+            var hayvan = await _context.Hayvanlar.FindAsync(model.HayvanId);
 
-            AddNewSahipViewModel returnModel = new(_context);
-            returnModel = returnModel.ViewModelOlustur(hayvan, model.Signature, _userManager.GetUserAsync(User).Result);
+            AddNewSahipViewModel returnModel = new();
+            returnModel = await returnModel.ViewModelOlusturAsync(hayvan, _userManager.GetUserAsync(User).Result, _context);
             returnModel.YeniSahipTCKN = model.YeniSahipTCKN;
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
+                    return View(returnModel);
                 }
-
-                return View(returnModel);
             }
 
-            var yeniSahip = _context.Users.Where(u => u.InsanTckn == model.YeniSahipTCKN).FirstOrDefault();
-            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.UserTCKN) }, Request.Scheme, Request.Host.Value);
-            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.UserTCKN) }, Request.Scheme, Request.Host.Value);
+            var yeniSahip = await _context.Users
+                .Where(u => u.InsanTckn == model.YeniSahipTCKN)
+                .FirstOrDefaultAsync();
+
+            var acceptUrl = Url.Action("EmailConfirmYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.YeniSahipTCKN) }, Request.Scheme, Request.Host.Value);
+            var declineUrl = Url.Action("EmailRejectYeniSahip", "Animal", new { hayvanId = model.HayvanId, yeniSahipTCKN = model.YeniSahipTCKN, imza = Signature.CreateSignature(model.HayvanId.ToString(), model.YeniSahipTCKN) }, Request.Scheme, Request.Host.Value);
             var cinsiyet = hayvan.HayvanCinsiyet == Cinsiyet.Erkek ? "Erkek" : "Dişi";
             var dogumTarihi = hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy");
             var olumTarihi = hayvan.HayvanOlumTarihi != null ? hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy") : "Hayatta";
             var sahipAdSoyad = _userManager.GetUserAsync(User).Result.InsanAdi + " " + _userManager.GetUserAsync(User).Result.InsanSoyadi;
-            var turAdi = hayvan.CinsTur.Tur.TurAdi;
-            var cinsAdi = hayvan.CinsTur.Cins.CinsAdi;
-            var renkAdi = hayvan.Renk.RenkAdi;
+            var turAdi = await model.TurAdiniGetirAsync(_context, hayvan);
+            var cinsAdi = await model.CinsAdiniGetirAsync(_context, hayvan);
+            var renkAdi = await model.RenkAdiniGetirAsync(_context, hayvan);
             var hayvanAdi = hayvan.HayvanAdi;
             // Uygulamanızın geçerli URL'sini almak için
             string baseUrl = $"{Request.Scheme}://{Request.Host}";
@@ -489,13 +464,11 @@ namespace VeterinerBilgiSistemi.Controllers
             {
                 await _emailSender.SendEmailAsync(yeniSahip.Email, "Hayvan Sahiplenme", mailBody);
                 ViewBag.Mail = "Yeni sahip ekleme talebi, kişinin mail adresine başarıyla gönderildi.";
-
             }
             catch (Exception ex)
             {
                 ViewBag.MailHata = "Mail gönderilirken bir hata oluştu. Hata: " + ex.Message;
                 return View(returnModel);
-
             }
 
             return View(returnModel);
@@ -503,65 +476,47 @@ namespace VeterinerBilgiSistemi.Controllers
 
         public async Task<IActionResult> EmailConfirmYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
         {
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
             if (user.InsanTckn != yeniSahipTCKN)
-            {
                 return View("BadRequest");
+
+            if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
+                return View("BadRequest");
+
+            var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+            var yeniSahip = await _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefaultAsync();
+            if (!_context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.SahipId == yeniSahip.Id))
+            {
+                await _context.SahipHayvan.AddAsync(new SahipHayvan
+                {
+                    HayvanId = hayvanId,
+                    SahipId = yeniSahip.Id,
+                    SahiplenmeTarihi = DateTime.Now,
+                    AktifMi = true
+                });
+                await _context.SaveChangesAsync();
+                TempData["YeniHayvanEklendi"] = $"{hayvan.HayvanAdi.ToUpper()} isimli yeni evcil hayvanınız hesabınıza başarı ile eklendi.";
             }
             else
-            {
-                if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
-                {
-                    return View("BadRequest");
-                }
+                TempData["HayvanSahibisiniz"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanın zaten sahibisiniz.";
 
-                var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
-                var yeniSahip = await _context.Users.Where(u => u.InsanTckn == yeniSahipTCKN).FirstOrDefaultAsync();
-                if (!_context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.SahipId == yeniSahip.Id))
-                {
-                    await _context.SahipHayvan.AddAsync(new SahipHayvan
-                    {
-                        HayvanId = hayvanId,
-                        SahipId = yeniSahip.Id,
-                        SahiplenmeTarihi = DateTime.Now
-                    });
-                    if (_context.SaveChanges() > 0)
-                    {
-                        TempData["YeniHayvanEklendi"] = $"{hayvan.HayvanAdi.ToUpper()} isimli yeni evcil hayvanınız hesabınıza başarı ile eklendi.";
-                    }
-                    else
-                    {
-                        TempData["YeniHayvanEklendiHata"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvan hesabınıza eklenirken bir hata oluştu.";
-                    }
-                }
-                else
-                {
-                    TempData["HayvanSahibisiniz"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanın zaten sahibisiniz.";
-                }
-
-                return RedirectToAction("Information", "User");
-            }
-
+            return RedirectToAction("Information", "User");
         }
 
         public async Task<IActionResult> EmailRejectYeniSahip(int hayvanId, string yeniSahipTCKN, string imza)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user.InsanTckn != yeniSahipTCKN)
-            {
                 return View("BadRequest");
-            }
-            else
-            {
-                if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
-                {
-                    return View("BadRequest");
-                }
-                var hayvan = _context.Hayvanlar.Find(hayvanId);
 
-                TempData["EvcilHayvanRed"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanı hesabınıza eklemek istemediniz.";
-                return RedirectToAction("Information", "User");
-            }
+            if (!Signature.VerifySignature(hayvanId.ToString(), yeniSahipTCKN, imza))
+                return View("BadRequest");
+
+            var hayvan = await _context.Hayvanlar.FindAsync(hayvanId);
+
+            TempData["EvcilHayvanRed"] = $"{hayvan.HayvanAdi.ToUpper()} isimli evcil hayvanı hesabınıza eklemek istemediniz.";
+            return RedirectToAction("Information", "User");
+
         }
     }
 }

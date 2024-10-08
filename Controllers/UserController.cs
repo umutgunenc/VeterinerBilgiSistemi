@@ -20,6 +20,7 @@ using VeterinerBilgiSistemi.Models.ViewModel.User;
 using FaceRecognitionDotNet;
 using System.Drawing;
 using VeterinerBilgiSistemi.Fonksiyonlar;
+using System.Runtime.InteropServices;
 
 
 
@@ -52,31 +53,31 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Kullanıcının sahip olduğu hayvanların ID'lerini al
-            var hayvanIdler = _context.SahipHayvan
-                .Where(s => s.AppUser.InsanTckn == user.InsanTckn)
-                .Select(h => h.HayvanId)
-                .ToList();
-
-            // Hayvanların detaylarını al
-            List<HayvanlarBilgiViewModel> hayvanlar = await _context.Hayvanlar
-                .Where(h => hayvanIdler.Contains(h.HayvanId))
-                .Select(h => new HayvanlarBilgiViewModel()
-                {
-                    HayvanId = h.HayvanId,
-                    HayvanAdi = h.HayvanAdi,
-                    HayvanCinsiyet = h.HayvanCinsiyet,
-                    HayvanKilo = h.HayvanKilo,
-                    HayvanDogumTarihi = h.HayvanDogumTarihi,
-                    HayvanOlumTarihi = h.HayvanOlumTarihi,
-                    HayvanAnneAdi = _context.Hayvanlar.Where(ha => ha.HayvanId == h.HayvanAnneId).Select(ha => ha.HayvanAdi).FirstOrDefault(),
-                    HayvanBabaAdi = _context.Hayvanlar.Where(hb => hb.HayvanId == h.HayvanBabaId).Select(hb => hb.HayvanAdi).FirstOrDefault(),
-                    TurAdi = h.CinsTur.Tur.TurAdi,
-                    CinsAdi = h.CinsTur.Cins.CinsAdi,
-                    RenkAdi = _context.Renkler.Where(r => r.RenkId == h.RenkId).Select(r => r.RenkAdi).FirstOrDefault(),
-
-                })
+            var sahipOlunanHayvanlar = await _context.Hayvanlar
+                .Join(_context.SahipHayvan,
+                      hayvan => hayvan.HayvanId,
+                      sahipHayvan => sahipHayvan.HayvanId,
+                      (hayvan, sahipHayvan) => new { Hayvan = hayvan, SahipHayvan = sahipHayvan })
+                .Where(joined => joined.SahipHayvan.SahipId == user.Id && joined.SahipHayvan.AktifMi == true)
+                .Select(joined => joined.Hayvan)
                 .ToListAsync();
+
+
+            //var sahipOlunanHayvanlar = await _context.Hayvanlar
+            //    .Where(h => _context.SahipHayvan
+            //                       .Where(sh => sh.SahipId == user.Id && sh.AktifMi == true)
+            //                       .Select(sh => sh.HayvanId)
+            //                       .Contains(h.HayvanId))
+            //    .ToListAsync();
+
+            HayvanlarBilgiViewModel model = new();
+
+            
+            List<HayvanlarBilgiViewModel> hayvanlar = new();
+            foreach (var hayvan in sahipOlunanHayvanlar)
+            {
+                hayvanlar.Add(await model.HayvanBilgileriniGetirAsync(hayvan,user,_context));
+            }
 
             var tuplle = (user, hayvanlar);
             return View(tuplle);

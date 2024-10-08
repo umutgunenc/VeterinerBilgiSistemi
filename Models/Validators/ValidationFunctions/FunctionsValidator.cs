@@ -468,7 +468,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(yeniSahipTCKN))
                 return true;
-            return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId).Any();
+            return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId && x.AktifMi==true).Any();
         }
 
         public static bool BeNotUsedHastalik(int hastalikId)

@@ -22,6 +22,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public int StokId { get; set; }
         public virtual Hayvan Hayvan { get; set; }
         public virtual AppUser Hekim { get; set; }
+        public virtual KanDegerleri KanDegerleri { get; set; }
         public virtual ICollection<Stok> Stoklar { get; set; }
         public virtual ICollection<HastalikMuayene> Hastaliklar { get; set; }
     }

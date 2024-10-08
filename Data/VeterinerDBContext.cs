@@ -33,6 +33,7 @@ namespace VeterinerBilgiSistemi.Data
         public virtual DbSet<Tur> Turler { get; set; }
         public virtual DbSet<UserFace> UserFaces { get; set; }
         public virtual DbSet<Hastalik> Hastaliklar { get; set; }
+        public virtual DbSet<KanDegerleri> KanDegerleri { get; set; }
 
         //Ara tablolar
         public virtual DbSet<CinsTur> CinsTur { get; set; }

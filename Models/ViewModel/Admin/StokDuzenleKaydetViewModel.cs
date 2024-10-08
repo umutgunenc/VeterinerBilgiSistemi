@@ -10,17 +10,16 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class StokDuzenleKaydetViewModel : Stok
     {
-        private readonly VeterinerDBContext _context;
 
         //TODO _contex'i D.I yapınca controlerda birimlistesinigetir ve katergorilistesini getir fonksiyonları çalışmıyor ?
         public string Signature { get; set; }
         private StokDetayViewModel Model { get; set; }
         public List<SelectListItem> KategoriListesi { get; set; }
         public List<SelectListItem> BirimListesi { get; set; }
-        public async Task<List<SelectListItem>> KategoriListesiniGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> KategoriListesiniGetirAsync(VeterinerDBContext context)
         {
             KategoriListesi = new();
-            var kategoriler = await _context.Kategoriler.ToListAsync();
+            var kategoriler = await context.Kategoriler.ToListAsync();
 
             foreach (var kategori in kategoriler)
             {
@@ -34,10 +33,10 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 
             return KategoriListesi;
         }
-        public async Task<List<SelectListItem>> BirimListesiniGetirAsync(VeterinerDBContext _context)
+        public async Task<List<SelectListItem>> BirimListesiniGetirAsync(VeterinerDBContext context)
         {
             BirimListesi = new();
-            var birimler = await _context.Birimler.ToListAsync();
+            var birimler = await context.Birimler.ToListAsync();
 
             foreach (var birim in birimler)
             {
@@ -51,9 +50,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 
             return BirimListesi;
         }
-        public async Task<StokDuzenleKaydetViewModel> ModeliOlusturAsync(VeterinerDBContext _context,StokDuzenleStokSecViewModel model)
+        public async Task<StokDuzenleKaydetViewModel> ModeliOlusturAsync(VeterinerDBContext context, StokDuzenleStokSecViewModel model)
         {
-            var stok = await _context.Stoklar
+            var stok = await context.Stoklar
                 .Where(x => x.StokBarkod.ToUpper() == model.GirilenBarkodNo.ToUpper())
                 .FirstOrDefaultAsync();
 
@@ -64,8 +63,8 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             AktifMi = stok.AktifMi;
             BirimId = stok.BirimId;
             KategoriId = stok.KategoriId;
-            KategoriListesi = await KategoriListesiniGetirAsync(_context);
-            BirimListesi = await BirimListesiniGetirAsync(_context);
+            KategoriListesi = await KategoriListesiniGetirAsync(context);
+            BirimListesi = await BirimListesiniGetirAsync(context);
             return this;
 
         }

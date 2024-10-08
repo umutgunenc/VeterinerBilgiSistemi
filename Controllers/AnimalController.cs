@@ -198,8 +198,9 @@ namespace VeterinerBilgiSistemi.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
                 EditAnimalViewModel returnModel = new();
+                returnModel = await returnModel.ModelOlusturAsync(model, user, _context);
 
-                return View("EditAnimal", await returnModel.ModelOlusturAsync(model, user, _context));
+                return View("EditAnimal", returnModel);
             }
 
 

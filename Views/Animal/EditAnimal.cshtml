@@ -95,7 +95,7 @@
                             <option value="">Baba Seçin</option>
                         </select>
                         <div class="mt-2">
-                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanAnneId">
+                            <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HayvanBabaId">
                             </span>
                         </div>
                     </div>
@@ -219,57 +219,37 @@
         //    }
         //}
     </script>
-    <script>
-         $(document).ready(function () {
-            function turleriGetir(cinsId, seciliTurId) {
-                $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (veri) {
-                    var turSecim = $('#tur');
-                    turSecim.empty();
-                    turSecim.append('<option value="" disabled selected>Tür Seçin</option>');
-        
-                    // Gelen veriler ile 'tur' dropdown'ını doldur
-                    $.each(veri, function (index, item) {
-                        turSecim.append($('<option>', {
-                            value: item.value,
-                            text: item.text
-                        }));
-                    });
-        
-                    // Eğer seciliTurId varsa dropdown'ı bu değere set et
-                    if (seciliTurId) {
-                        turSecim.val(seciliTurId);
-                    }
-        
-                    // Tür dropdown'ını etkinleştir
-                    turSecim.prop('disabled', veri.length === 0);
-                });
-            }
-        
-            var cinsSecim = $('#cins');
-            var turSecim = $('#tur');
-        
-            // Başlangıçta tür dropdown'ını boşalt ve devre dışı bırak
-            turSecim.empty().append('<option value="" disabled selected>Tür Seçin</option>').prop('disabled', true);
-        
-            // Form yüklendiğinde seçili bir cins var ise tür listesini getir
-            var seciliCinsId = cinsSecim.val(); // Seçili cinsId
-            var seciliTurId = '@Model.TurId'; // Seçili türId
-            if (seciliCinsId) {
-                turleriGetir(seciliCinsId, seciliTurId);
-            }
-        
-            // Cins dropdown'ı değiştiğinde tür listesini güncelle
-            cinsSecim.change(function () {
-                var cinsId = $(this).val();
-                if (cinsId) {
-                    turleriGetir(cinsId); // Yeni cinsId'ye göre türleri getir
-                } else {
-                    // Cins seçilmemişse tür dropdown'ını temizle ve devre dışı bırak
-                    turSecim.empty().append('<option value="" disabled selected>Tür Seçin</option>').prop('disabled', true);
-                }
-            });
-        });
 
+    <script>
+    $(document).ready(function () {
+        function turleriYukle(cinsId, selectedTurId) {
+            var turSelect = $('#tur');
+
+            $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
+                turSelect.empty(); 
+                turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
+
+                $.each(data, function (index, item) {
+                    turSelect.append($('<option>', {
+                        value: item.value,
+                        text: item.text
+                    }));
+                });
+
+                turSelect.val(selectedTurId);
+            });
+        }
+
+        var CinsId = $('#cins').val(); 
+        var TurId = $('#tur').val();
+
+        turleriYukle(CinsId, TurId);
+
+        $('#cins').change(function () {
+            CinsId = $(this).val();
+            turleriYukle(cinsId, null); 
+        });
+    });
     </script>
 
     <script>

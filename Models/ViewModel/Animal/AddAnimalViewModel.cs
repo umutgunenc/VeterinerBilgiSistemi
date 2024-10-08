@@ -72,7 +72,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             bool erkekHayvanVarMi = context.Hayvanlar.Any(h => h.HayvanCinsiyet == Cinsiyet.Erkek);
             if (erkekHayvanVarMi)
             {
-                var erkekHayvanlar = await context.Hayvanlar.Where(h => h.HayvanCinsiyet == Cinsiyet.Dişi)
+                var erkekHayvanlar = await context.Hayvanlar.Where(h => h.HayvanCinsiyet == Cinsiyet.Erkek)
                      .Select(h => new
                      {
                          sahipTckn = context.SahipHayvan.Where(sh => sh.HayvanId == h.HayvanId).Select(sh => sh.AppUser.InsanTckn).FirstOrDefault(),

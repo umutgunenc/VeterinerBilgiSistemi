@@ -10,7 +10,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 {
     public class RenkSilViewModel :Renk
     {
-
         public List<SelectListItem> RenklerListesi { get; set; }
 
         public async Task<List<SelectListItem>> RenklerListesiniGetirAsync(VeterinerDBContext context)
@@ -32,7 +31,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
         public async Task<Renk> SilinecekRengiGetirAsync(RenkSilViewModel model,VeterinerDBContext context)
         {
             return await context.Renkler.FindAsync(model.RenkId);
-
         }
 
 

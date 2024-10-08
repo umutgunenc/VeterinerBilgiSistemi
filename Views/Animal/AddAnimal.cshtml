@@ -168,34 +168,37 @@
     <script>
 
         $(document).ready(function () {
-            // Cins seçildiğinde türleri yükle
-            $('#cins').change(function () {
-                var cinsId = $(this).val(); // Seçilen cinsin ID'sini al
-
-                if (cinsId) { // Cins seçilmişse
+            function turleriYukle(cinsId) {
+                var turSelect = $('#tur');
+                if (cinsId) {
                     $.getJSON('@Url.Action("TurleriGetir", "Animal")', { cinsId: cinsId }, function (data) {
-                        var turSelect = $('#tur');
-                        turSelect.empty();
+                        turSelect.empty(); // Eski seçenekleri temizle
                         turSelect.append('<option value="" disabled selected>Tür Seçin</option>');
-
+        
                         $.each(data, function (index, item) {
                             turSelect.append($('<option>', {
                                 value: item.value,
                                 text: item.text
                             }));
                         });
-
-                        $('#tur').prop('disabled', false); // Cins seçildiğinde türü aktif hale getir
+        
+                        $('#tur').prop('disabled', false);
                     });
                 } else {
-                    $('#tur').empty(); // Cins seçilmemişse türü temizle
-                    $('#tur').prop('disabled', true); // Cins seçilmediğinde türü devre dışı bırak
-                    $('#tur').append('<option value="" disabled selected>Tür Seçin</option>'); // Varsayılan seçenek ekle
+                    turSelect.empty();
+                    turSelect.prop('disabled', true);
+                    turSelect.append('<option value="" disabled selected>Tür Seçin</option>'); // Varsayılan seçenek ekle
                 }
+            }
+        
+            var initialCinsId = $('#cins').val();
+            turleriYukle(initialCinsId);
+        
+            $('#cins').change(function () {
+                var cinsId = $(this).val();
+                turleriYukle(cinsId);
             });
         });
-
-
 
     </script>
 

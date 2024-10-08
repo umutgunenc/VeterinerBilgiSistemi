@@ -236,20 +236,23 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
         /// <returns>EditAnimalView şeklinde viewden denen modeli olusturur.</returns>
         public async Task<EditAnimalViewModel> ModelOlusturAsync(EditAnimalViewModel model, AppUser user, VeterinerDBContext context)
         {
+            var hayvan = await context.Hayvanlar.FindAsync(model.HayvanId);
             return new EditAnimalViewModel()
             {
                 HayvanAdi = model.HayvanAdi,
                 HayvanId = model.HayvanId,
-                Rengi = model.Renk.RenkAdi,
+                Rengi = await RenkAdiniGetirAsync(hayvan, context),
                 RenkId = model.RenkId,
-                Cinsi = model.CinsTur.Cins.CinsAdi,
-                CinsId = model.CinsTur.CinsId,
-                Turu = model.CinsTur.Tur.TurAdi,
-                TurId = model.CinsTur.TurId,
+                Cinsi = await CinsAdiniGetirAsync(hayvan, context),
+                CinsId = await CinsIdGetirAsync(hayvan, context),
+                Turu = await TurAdiniGetirAsync(hayvan, context),
+                TurId = await TurIdGetirAsync(hayvan, context),
                 HayvanKilo = model.HayvanKilo,
                 HayvanCinsiyet = model.HayvanCinsiyet,
                 HayvanDogumTarihi = model.HayvanDogumTarihi,
                 HayvanOlumTarihi = model.HayvanOlumTarihi,
+                SahiplikTarihi = await SahiplikTarihiniGetirAsync(hayvan, context, user),
+                SahiplikCikisTarihi = await SahiplikCikisTarihiniGetirAsync(hayvan, context, user),
                 IsDeath = model.HayvanOlumTarihi == null ? false : true,
                 HayvanAnneId = model.HayvanAnneId,
                 HayvanBabaId = model.HayvanBabaId,
@@ -260,7 +263,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                 Renkler = await RenkleriGetirAsync(context),
                 CinsiyetListesi = CinsiyetleriGetir(),
                 ImgUrl = model.ImgUrl,
-                Imza = SignatureOlustur(model.HayvanId, model.Sahipler.Where(h => h.HayvanId == model.HayvanId).Select(s => s.AppUser.InsanTckn).FirstOrDefault()),
+                Imza = SignatureOlustur(hayvan.HayvanId, hayvan.Sahipler.Where(h => h.HayvanId == hayvan.HayvanId).Select(s => s.AppUser.InsanTckn).FirstOrDefault()),
                 Sahip = user,
                 SahipTckn = user.InsanTckn,
             };

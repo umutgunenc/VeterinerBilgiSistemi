@@ -63,6 +63,25 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
                  .FirstOrDefaultAsync();
         }
 
+        public async Task<List<Hayvan>> SahipOlunanHayvanlarinListesiniGetirAsnyc(VeterinerDBContext context, AppUser user)
+        {
+            return await context.Hayvanlar
+                .Join(context.SahipHayvan,
+                      hayvan => hayvan.HayvanId,
+                      sahipHayvan => sahipHayvan.HayvanId,
+                      (hayvan, sahipHayvan) => new { Hayvan = hayvan, SahipHayvan = sahipHayvan })
+                .Where(joined => joined.SahipHayvan.SahipId == user.Id && joined.SahipHayvan.AktifMi == true)
+                .Select(joined => joined.Hayvan)
+                .ToListAsync();
+
+            //return await context.Hayvanlar
+            //    .Where(h => context.SahipHayvan
+            //                       .Where(sh => sh.SahipId == user.Id && sh.AktifMi == true)
+            //                       .Select(sh => sh.HayvanId)
+            //                       .Contains(h.HayvanId))
+            //    .ToListAsync();
+        }
+
         public async Task<HayvanlarBilgiViewModel> HayvanBilgileriniGetirAsync(Hayvan hayvan, AppUser user, VeterinerDBContext context)
         {
             var muayeneler = context.Muayeneler

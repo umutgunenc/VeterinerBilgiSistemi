@@ -356,7 +356,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 if (!await _signInManager.CanSignInAsync(copareResault.Item2))
                     return Json(new { success = false, message = "Login işlemi başarısız oldu" });
 
-                await _signInManager.SignInAsync(copareResault.Item2, false);
+                await _signInManager.SignInAsync(copareResault.Item2,false);
                 return Json(new { success = true, message = "Başarıyla giriş yaptınız, ana sayfaya yönlendiriliyorsunuz. Lütfen bekleyin..." });
             }
             catch (Exception ex)

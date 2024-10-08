@@ -53,25 +53,8 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            var sahipOlunanHayvanlar = await _context.Hayvanlar
-                .Join(_context.SahipHayvan,
-                      hayvan => hayvan.HayvanId,
-                      sahipHayvan => sahipHayvan.HayvanId,
-                      (hayvan, sahipHayvan) => new { Hayvan = hayvan, SahipHayvan = sahipHayvan })
-                .Where(joined => joined.SahipHayvan.SahipId == user.Id && joined.SahipHayvan.AktifMi == true)
-                .Select(joined => joined.Hayvan)
-                .ToListAsync();
-
-
-            //var sahipOlunanHayvanlar = await _context.Hayvanlar
-            //    .Where(h => _context.SahipHayvan
-            //                       .Where(sh => sh.SahipId == user.Id && sh.AktifMi == true)
-            //                       .Select(sh => sh.HayvanId)
-            //                       .Contains(h.HayvanId))
-            //    .ToListAsync();
-
             HayvanlarBilgiViewModel model = new();
-
+            var sahipOlunanHayvanlar = await model.SahipOlunanHayvanlarinListesiniGetirAsnyc(_context, user);
             
             List<HayvanlarBilgiViewModel> hayvanlar = new();
             foreach (var hayvan in sahipOlunanHayvanlar)
@@ -323,6 +306,9 @@ namespace VeterinerBilgiSistemi.Controllers
 
         }
 
+        //TODO kullanıcı silinmeyecek, kullanıcı için aktifMi seklinde bir alan tanımlanacak
+        //Kullanıcı hesabı deaktif yapılacak.
+        //Bu işlemlerden sonra şifremi unuttum ve login işlemleri düzenlenecek, aktif olan kullanıcılar login olabiliecek.
         public async Task<IActionResult> DeleteAccount(string userId, string code)
         {
             if (userId == null || code == null)

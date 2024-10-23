@@ -5,9 +5,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class StokGirisKaydetValidator : AbstractValidator<StokGirisKaydetViewModel>
+    public class StokGirisKaydetValidators : AbstractValidator<StokGirisKaydetViewModel>
     {
-        public StokGirisKaydetValidator()
+        public StokGirisKaydetValidators()
         {
 
             RuleFor(x => x.StokId)

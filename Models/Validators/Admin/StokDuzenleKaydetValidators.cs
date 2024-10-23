@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class StokDuzenleKaydetValidator :AbstractValidator<StokDuzenleKaydetViewModel>
+    public class StokDuzenleKaydetValidators :AbstractValidator<StokDuzenleKaydetViewModel>
     {
-        public StokDuzenleKaydetValidator()
+        public StokDuzenleKaydetValidators()
         {
             RuleFor(x => x.StokAdi)
                 .NotEmpty().WithMessage("Stok adı boş olamaz.")

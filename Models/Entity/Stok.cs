@@ -10,7 +10,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public Stok()
         {
             StokHareketleri = new HashSet<StokHareket>();
-            Muayeneler = new HashSet<Muayene>();
+            Muayeneler = new HashSet<StokMuayene>();
         }
         public int Id { get; set; }
         public string StokBarkod { get; set; }
@@ -24,6 +24,6 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public virtual Birim Birim { get; set; }
 
         public virtual ICollection<StokHareket> StokHareketleri { get; set; }
-        public virtual ICollection<Muayene> Muayeneler { get; set; }
+        public virtual ICollection<StokMuayene> Muayeneler { get; set; }
     }
 }

@@ -217,6 +217,11 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
             return _context.Hastaliklar.Any(h => h.HastalikId == hastalikId);
         }
 
+        public static bool BeKanTahlili(int tahlilId)
+        {
+            return _context.KanDegerleri.Any(x => x.KanDegerleriId == tahlilId);
+        }
+
 
         public static bool SeacrhInStock(string arananMetin)
         {
@@ -413,7 +418,24 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         }
 
 
-
+        public static bool BeUniqueKanTathlilAdi(string tathlilAdi)
+        {
+            if (string.IsNullOrEmpty(tathlilAdi))
+                return true;
+            return !_context.KanDegerleri.Any(x => x.KanTestiAdi == tathlilAdi);
+        }
+        /// <summary>
+        /// Girilen kan tahlili ismi benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tathlilAdi"></param>
+        /// <returns></returns>
+        public static bool BeUniqueKanTathlilAdi(int id, string tathlilAdi)
+        {
+            if (string.IsNullOrEmpty(tathlilAdi))
+                return true;
+            return !_context.KanDegerleri.Any(x => x.KanTestiAdi == tathlilAdi && x.KanDegerleriId != id);
+        }
 
 
 
@@ -474,6 +496,11 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         public static bool BeNotUsedHastalik(int hastalikId)
         {
             return !_context.HastalikMuayene.Any(x => x.HastalikId == hastalikId);
+        }
+
+        public static bool BeNotUsedKanTahlili(int tahlilId)
+        {
+            return !_context.KanTestiMuayene.Any(x => x.KanDegerleriId == tahlilId);
         }
 
 

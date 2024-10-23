@@ -13,9 +13,9 @@ namespace VeterinerBilgiSistemi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: false),
-                    NormalizedName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(50)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,15 +37,15 @@ namespace VeterinerBilgiSistemi.Migrations
                     DiplomaNo = table.Column<string>(type: "nvarchar(11)", nullable: true),
                     CalisiyorMu = table.Column<bool>(type: "bit", nullable: false),
                     TermOfUse = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(11)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -94,6 +94,23 @@ namespace VeterinerBilgiSistemi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hastalik", x => x.HastalikId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "KanDegerleri",
+                columns: table => new
+                {
+                    KanDegerleriId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    KanTestiAdi = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    KanTestiBirimi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    AltLimit = table.Column<double>(type: "float", nullable: true),
+                    UstLimit = table.Column<double>(type: "float", nullable: true),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KanDegerleri", x => x.KanDegerleriId);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,7 +266,7 @@ namespace VeterinerBilgiSistemi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    FaceData = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    FaceData = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -268,8 +285,8 @@ namespace VeterinerBilgiSistemi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StokBarkod = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    StokAdi = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    StokBarkod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StokAdi = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirimId = table.Column<int>(type: "int", nullable: false),
                     Aciklama = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AktifMi = table.Column<bool>(type: "bit", nullable: false),
@@ -324,7 +341,7 @@ namespace VeterinerBilgiSistemi.Migrations
                 {
                     StokHareketId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StokHareketTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StokHareketTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StokId = table.Column<int>(type: "int", nullable: false),
                     SatisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AlisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -432,6 +449,7 @@ namespace VeterinerBilgiSistemi.Migrations
                 {
                     HayvanId = table.Column<int>(type: "int", nullable: false),
                     SahiplerId = table.Column<int>(type: "int", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: false),
                     SahiplenmeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SahiplenmeCikisTarihi = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -477,24 +495,48 @@ namespace VeterinerBilgiSistemi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MuayeneStok",
+                name: "KanTestiMuayene",
                 columns: table => new
                 {
-                    MuayenelerMuayeneId = table.Column<int>(type: "int", nullable: false),
-                    StoklarId = table.Column<int>(type: "int", nullable: false)
+                    MuayeneId = table.Column<int>(type: "int", nullable: false),
+                    KanDegerleriId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MuayeneStok", x => new { x.MuayenelerMuayeneId, x.StoklarId });
+                    table.PrimaryKey("PK_KanTestiMuayene", x => new { x.MuayeneId, x.KanDegerleriId });
                     table.ForeignKey(
-                        name: "FK_MuayeneStok_Muayeneler_MuayenelerMuayeneId",
-                        column: x => x.MuayenelerMuayeneId,
+                        name: "FK_KanTestiMuayene_KanDegerleri_KanDegerleriId",
+                        column: x => x.KanDegerleriId,
+                        principalTable: "KanDegerleri",
+                        principalColumn: "KanDegerleriId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KanTestiMuayene_Muayeneler_MuayeneId",
+                        column: x => x.MuayeneId,
+                        principalTable: "Muayeneler",
+                        principalColumn: "MuayeneId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StokMuayane",
+                columns: table => new
+                {
+                    MuayeneId = table.Column<int>(type: "int", nullable: false),
+                    StokId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StokMuayane", x => new { x.MuayeneId, x.StokId });
+                    table.ForeignKey(
+                        name: "FK_StokMuayane_Muayeneler_MuayeneId",
+                        column: x => x.MuayeneId,
                         principalTable: "Muayeneler",
                         principalColumn: "MuayeneId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MuayeneStok_Stoklar_StoklarId",
-                        column: x => x.StoklarId,
+                        name: "FK_StokMuayane_Stoklar_StokId",
+                        column: x => x.StokId,
                         principalTable: "Stoklar",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -503,12 +545,12 @@ namespace VeterinerBilgiSistemi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "66bdefd7-69bb-469b-a373-c2cd2be93b96", "ADMIN", "ADMIN" });
+                values: new object[] { 1, "c9ad05e7-1557-4430-859c-a487463aca05", "ADMIN", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "CalisiyorMu", "ConcurrencyStamp", "DiplomaNo", "Email", "EmailConfirmed", "ImgURL", "InsanAdi", "InsanSoyadi", "InsanTckn", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SifreGecerlilikTarihi", "SifreOlusturmaTarihi", "TermOfUse", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, true, "3f012a85-67a4-457a-aeac-3f8a71032dde", null, "umutgunenc@gmail.com", false, null, "Umut", "Günenç", "24413435860", false, null, "UMUTGUNENC@GMAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAELC1vSvQzR0H7C+958YKpmOs+FurXoK/kghyGIpBNNyjrJVbHNdDVkGGHVUa9ssoqg==", "05300000000", false, "2cf785bd-659d-42ff-9b5e-5192ad5f7a16", new DateTime(3023, 10, 7, 0, 31, 48, 95, DateTimeKind.Local).AddTicks(9630), new DateTime(2024, 10, 7, 0, 31, 48, 94, DateTimeKind.Local).AddTicks(9664), true, false, "ADMIN" });
+                values: new object[] { 1, 0, true, "550d3f72-b289-4446-82a2-134cbbf23bb5", null, "umutgunenc@gmail.com", false, null, "Umut", "Günenç", "24413435860", false, null, "UMUTGUNENC@GMAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAECsh+qOUig12PIz0O5ZJeXdkiEChkUYlBzO5hQodFrVMX55xpuxjAlRL2hgdHwNOhg==", "05300000000", false, "8f587d09-5a43-4cd7-a6b2-5228cedcdf30", new DateTime(3023, 10, 21, 14, 7, 9, 440, DateTimeKind.Local).AddTicks(4935), new DateTime(2024, 10, 21, 14, 7, 9, 439, DateTimeKind.Local).AddTicks(2332), true, false, "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -590,6 +632,11 @@ namespace VeterinerBilgiSistemi.Migrations
                 column: "RenkId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_KanTestiMuayene_KanDegerleriId",
+                table: "KanTestiMuayene",
+                column: "KanDegerleriId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Muayeneler_HayvanId",
                 table: "Muayeneler",
                 column: "HayvanId");
@@ -598,11 +645,6 @@ namespace VeterinerBilgiSistemi.Migrations
                 name: "IX_Muayeneler_HekimId",
                 table: "Muayeneler",
                 column: "HekimId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MuayeneStok_StoklarId",
-                table: "MuayeneStok",
-                column: "StoklarId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SahipHayvan_HayvanId",
@@ -628,6 +670,11 @@ namespace VeterinerBilgiSistemi.Migrations
                 name: "IX_Stoklar_KategoriId",
                 table: "Stoklar",
                 column: "KategoriId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StokMuayane_StokId",
+                table: "StokMuayane",
+                column: "StokId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserFaces_UserId",
@@ -656,13 +703,16 @@ namespace VeterinerBilgiSistemi.Migrations
                 name: "HastalikMuayene");
 
             migrationBuilder.DropTable(
-                name: "MuayeneStok");
+                name: "KanTestiMuayene");
 
             migrationBuilder.DropTable(
                 name: "SahipHayvan");
 
             migrationBuilder.DropTable(
                 name: "StokHareketler");
+
+            migrationBuilder.DropTable(
+                name: "StokMuayane");
 
             migrationBuilder.DropTable(
                 name: "UserFaces");
@@ -672,6 +722,9 @@ namespace VeterinerBilgiSistemi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Hastalik");
+
+            migrationBuilder.DropTable(
+                name: "KanDegerleri");
 
             migrationBuilder.DropTable(
                 name: "Muayeneler");

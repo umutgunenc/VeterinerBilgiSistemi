@@ -15,11 +15,17 @@ using VeterinerBilgiSistemi.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerBilgiSistemi.Models.Validators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 
 
 namespace VeterinerBilgiSistemi.Controllers
 {
+    //TODO  stok detaylarında ortalama alış fiyatı ve stok fiyatı görünüyor
+    //bu alanları kaldır
+    //stokhareketdetay listesinde ortalama alış fiyatını sil
+    //Stok ile ilgili viewlerde kategori listesi şeklinde bir ifade var, onu kategoriler olarak değiştir
+
     [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
     public class AdminController : Controller
     {
@@ -726,7 +732,7 @@ namespace VeterinerBilgiSistemi.Controllers
         public async Task<IActionResult> BirimEkle(BirimEkleViewModel model)
         {
 
-            BirimEkleValidator validator = new();
+            BirimEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -755,7 +761,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> BirimSil(BirimSilViewModel model)
         {
-            BirimSilValidator validator = new();
+            BirimSilValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -787,7 +793,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokKartiOlustur(StokKartiOlusturViewModel model)
         {
-            StokKartiOlusturValidator validator = new();
+            StokKartiOlusturValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -862,7 +868,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokDuzenle(StokDuzenleStokSecViewModel model)
         {
-            StokDuzenleStokSecValidator validator = new();
+            StokDuzenleStokSecValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -891,7 +897,7 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
 
-            StokDuzenleKaydetValidator validator = new();
+            StokDuzenleKaydetValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -927,7 +933,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokGiris(StokGirisViewModel model)
         {
-            StokGirisValidator validator = new();
+            StokGirisValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -954,7 +960,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokGirisKaydet(StokGirisKaydetViewModel model)
         {
-            StokGirisKaydetValidator validator = new();
+            StokGirisKaydetValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -1009,7 +1015,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokCikis(StokCikisViewModel model)
         {
-            StokCikisValidator validator = new();
+            StokCikisValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
             {
@@ -1036,7 +1042,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> StokCikisKaydet(StokCikisKaydetViewModel model)
         {
-            StokCikisKaydetValidator validator = new();
+            StokCikisKaydetValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -1092,7 +1098,7 @@ namespace VeterinerBilgiSistemi.Controllers
         public async Task<IActionResult> HastalikTanimla(HastalikTanimlaViewModel model)
         {
 
-            HastalikTanimlaValidator validator = new();
+            HastalikTanimlaValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
             if (!result.IsValid)
@@ -1143,6 +1149,130 @@ namespace VeterinerBilgiSistemi.Controllers
 
             model.HastalikListesi = await model.HastalikListesiniGetirAsync(_veterinerDbContext);
             return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult KanTahliliTanimla()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KanTahliliTanimla(KanTahliliTanimlaViewModel model)
+        {
+            KanTahliliTanimlaValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+            model.AktifMi = true;
+            model.KanTestiAdi = model.KanTestiAdi.ToUpper();
+            await _veterinerDbContext.KanDegerleri.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+            TempData["TahlilEklendi"] = $"{model.KanTestiAdi} isimli kan tahlili sisteme eklendi.";
+            return RedirectToAction();
+        }
+
+        [HttpGet]
+        async public Task<IActionResult> KanTahliliDuzenle()
+        {
+            KanTahlilleriniGetirViewModel model = new();
+            model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        async public Task<IActionResult> KanTahliliDuzenle(KanTahlilleriniGetirViewModel model)
+        {
+            SecilenKanTahlilDetayiValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+            model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
+            if (!result.IsValid)
+            {
+                foreach (var erros in result.Errors)
+                {
+                    ModelState.AddModelError("", erros.ErrorMessage);
+                }
+
+                return View(model);
+            }
+            model = await model.SecilenKanTahlilDetayınıGetirAsync(model, _veterinerDbContext);
+
+            ViewBag.SecilenKanTahlili = model;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KanTahliliDuzenleKaydet(KanTahlilleriniGetirViewModel model)
+        {
+            if (!Signature.VerifySignature(model.KanDegerleriId.ToString(), model.KanDegerleriId.ToString(), model.Imza))
+                return View("BadRequest");
+            KanTahliliDuzenleKaydetValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
+
+            //TODO validasyon hata mesajları default view e gitmiyor
+            if (!result.IsValid)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError("", errors.ErrorMessage);
+                }
+                ViewBag.SecilenKanTahlili = model;
+                return View("KanTahliliDuzenle", model);
+            }
+
+            var duzenlenmisKanTahlili = await model.KanTahlilBilgileriniDuzenle(model, _veterinerDbContext);
+
+            _veterinerDbContext.Update(duzenlenmisKanTahlili);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["TahlilDuzenlendi"] = "Seçilen Kan Tahlili Başarı İle Düzenlendi.";
+
+
+            return View("KanTahliliDuzenle", model);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> KanTahliliSil()
+        {
+            KanTahlilleriniGetirViewModel model = new();
+            model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KanTahliliSil(KanTahlilleriniGetirViewModel model)
+        {
+            KanTahliliSilValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View();
+            }
+
+            var silinecekKanTahlili = await model.SilinecekKanTahliliniGetirAsync(model, _veterinerDbContext);
+            _veterinerDbContext.Remove(silinecekKanTahlili);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["KanTahliliSilindi"] = $"{silinecekKanTahlili.KanTestiAdi.ToUpper()} isimli kan tahlili sistemden silindi";
+            return RedirectToAction();
         }
     }
 

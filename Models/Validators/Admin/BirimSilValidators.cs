@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class BirimSilValidator :AbstractValidator<BirimSilViewModel>
+    public class BirimSilValidators :AbstractValidator<BirimSilViewModel>
     {
-        public BirimSilValidator()
+        public BirimSilValidators()
         {
             RuleFor(x=>x.BirimId)
                 .NotNull().WithMessage("Birim seçimi yapılmalıdır.")

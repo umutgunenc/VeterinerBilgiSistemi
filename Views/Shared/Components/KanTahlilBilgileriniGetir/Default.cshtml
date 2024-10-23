@@ -1,0 +1,73 @@
+﻿@model KanTahlilleriniGetirViewModel
+
+
+<form asp-action="KanTahliliDuzenleKaydet" asp-controller="Admin" method="post">
+
+    <div class="form-col">
+        <div class="form-group row mb-3">
+            <label asp-for="KanTestiAdi" class="col-sm-2 col-form-label font-weight-bold text-white">Tahlil Adı</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="KanTestiAdi" class="form-control" placeholder="Tahlil Adı">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="KanTestiAdi">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="KanTestiBirimi" class="col-sm-2 col-form-label font-weight-bold text-white">Tahlil Birimi</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="KanTestiBirimi" class="form-control" placeholder="Tahlil Birimi">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="KanTestiBirimi">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="AltLimit" class="col-sm-2 col-form-label font-weight-bold text-white">Alt Limit</label>
+            <div class="col-sm-10">
+                <input type="number" asp-for="AltLimit" class="form-control" placeholder="Alt Limit">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AltLimit">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="UstLimit" class="col-sm-2 col-form-label font-weight-bold text-white">Alt Limit</label>
+            <div class="col-sm-10">
+                <input type="number" asp-for="UstLimit" class="form-control" placeholder="Üst Limit">
+                <div class="mt-2">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="UstLimit">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="AktifMi" class="col-sm-2 col-form-label font-weight-bold text-white">Tahlil Aktif Mi</label>
+            <div class="col-md-9">
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio1" name="AktifMi" class="custom-control-input" asp-for="AktifMi" value="true">
+                    <label class="custom-control-label" for="customRadio1">EVET</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="customRadio2" name="AktifMi" class="custom-control-input" asp-for="AktifMi" value="false">
+                    <label class="custom-control-label" for="customRadio2">HAYIR</label>
+                </div>
+                <div class="my-1">
+                    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AktifMi">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="KanDegerleriId" />
+    <input type="hidden" asp-for="Imza" />
+    <button type="submit" class="col btn btn-dark rounded mb-2">Düzenle</button>
+
+</form>

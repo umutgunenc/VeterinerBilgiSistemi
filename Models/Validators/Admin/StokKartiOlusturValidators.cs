@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class StokKartiOlusturValidator : AbstractValidator<StokKartiOlusturViewModel>
+    public class StokKartiOlusturValidators : AbstractValidator<StokKartiOlusturViewModel>
     {
-        public StokKartiOlusturValidator()
+        public StokKartiOlusturValidators()
         {
 
             RuleFor(x => x.StokAdi)

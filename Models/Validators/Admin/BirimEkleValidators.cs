@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class BirimEkleValidator : AbstractValidator<BirimEkleViewModel>
+    public class BirimEkleValidators : AbstractValidator<BirimEkleViewModel>
     {
-        public BirimEkleValidator()
+        public BirimEkleValidators()
         {
             RuleFor(x=>x.BirimAdi)
                 .NotNull().WithMessage("Birim adı boş olamaz.")

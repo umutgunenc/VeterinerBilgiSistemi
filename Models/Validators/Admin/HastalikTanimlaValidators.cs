@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class HastalikTanimlaValidator : AbstractValidator<HastalikTanimlaViewModel>
+    public class HastalikTanimlaValidators : AbstractValidator<HastalikTanimlaViewModel>
     {
-        public HastalikTanimlaValidator()
+        public HastalikTanimlaValidators()
         {
             RuleFor(x => x.HastalikAdi)
                 .NotNull().WithMessage("Hastalık adı boş olamaz.")

@@ -6,9 +6,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class StokDuzenleStokSecValidator : AbstractValidator<StokDuzenleStokSecViewModel>
+    public class StokDuzenleStokSecValidators : AbstractValidator<StokDuzenleStokSecViewModel>
     {
-        public StokDuzenleStokSecValidator()
+        public StokDuzenleStokSecValidators()
         {
             RuleFor(x => x.GirilenBarkodNo)
                 .NotEmpty().WithMessage("Barkod numarası boş olamaz.")

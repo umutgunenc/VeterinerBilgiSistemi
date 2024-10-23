@@ -4,9 +4,9 @@ using VeterinerBilgiSistemi.Models.ViewModel.Admin;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Admin
 {
-    public class StokCikisValidator :AbstractValidator<StokCikisViewModel>
+    public class StokGirisValidators :AbstractValidator<StokGirisViewModel>
     {
-        public StokCikisValidator()
+        public StokGirisValidators()
         {
             RuleFor(x=>x.ArananMetin)
                 .NotEmpty().WithMessage("Aranan kelime boş olamaz")

@@ -1,0 +1,27 @@
+﻿/* Kapsayıcıya tamamen sığdırma */
+.img-cover {
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
+}
+
+/* Kapsayıcı içinde ortalayarak içeriği sığdırma */
+.img-contain {
+    object-fit: contain;
+    width: 100%;
+    height: 200px;
+}
+
+/* Resmin boyutunu bozmadan kırparak gösterme */
+.img-fill {
+    object-fit: fill;
+    width: 100%;
+    height: 200px;
+}
+
+/* Resmi bozmadan tamamen gösterme */
+.img-scale-down {
+    object-fit: scale-down;
+    width: 100%;
+    height: 200px;
+}

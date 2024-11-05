@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerBilgiSistemi.Models.Validators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using System.IO;
+using System.Diagnostics.CodeAnalysis;
 
 
 
@@ -117,11 +119,8 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> CinsEkle(CinsEkleViewModel model)
         {
-
-
             CinsEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
-
 
             if (!result.IsValid)
             {
@@ -185,7 +184,6 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> TurEkle(TurEKleViewModel model)
         {
-
             TurEkleValidators validator = new TurEkleValidators();
             ValidationResult result = validator.Validate(model);
 
@@ -211,12 +209,10 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpGet]
         public async Task<IActionResult> TurSil()
         {
-
             TurSilViewModel model = new();
             model.TurListesi = await model.TurListesiniGetirASync(_veterinerDbContext);
 
             return View(model);
-
         }
         [HttpPost]
         public async Task<IActionResult> TurSil(TurSilViewModel model)
@@ -731,7 +727,6 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> BirimEkle(BirimEkleViewModel model)
         {
-
             BirimEkleValidators validator = new();
             ValidationResult result = validator.Validate(model);
             if (!result.IsValid)
@@ -1127,6 +1122,7 @@ namespace VeterinerBilgiSistemi.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> HastalikSil(HastalikSilViewModel model)
         {
             HastalikSilValidators validator = new();
@@ -1227,6 +1223,8 @@ namespace VeterinerBilgiSistemi.Controllers
                 {
                     ModelState.AddModelError("", errors.ErrorMessage);
                 }
+
+
                 ViewBag.SecilenKanTahlili = model;
                 return View("KanTahliliDuzenle", model);
             }
@@ -1273,6 +1271,227 @@ namespace VeterinerBilgiSistemi.Controllers
 
             TempData["KanTahliliSilindi"] = $"{silinecekKanTahlili.KanTestiAdi.ToUpper()} isimli kan tahlili sistemden silindi";
             return RedirectToAction();
+        }
+
+        [HttpGet]
+        public IActionResult FotografEkle()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> FotografEkle(AnaSayfaFotografEkleViewModel model)
+        {
+            AnaSayfaFotograflarValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                    return View(model);
+                }
+            }
+
+
+            var dosyaUzantısı = Path.GetExtension(model.FilePhoto.FileName);
+            var dosyaAdi = $"{model.FotografAdi.ToLower()}{dosyaUzantısı}";
+            var AnaSayfaFotografKlasoru = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\anaSayfaFotograf");
+
+            if (!Directory.Exists(AnaSayfaFotografKlasoru))
+            {
+                Directory.CreateDirectory(AnaSayfaFotografKlasoru);
+            }
+
+            var filePath = Path.Combine(AnaSayfaFotografKlasoru, dosyaAdi);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.FilePhoto.CopyToAsync(stream);
+            }
+
+            // Web URL'sini oluşturma
+            var fileUrl = $"/img/anaSayfaFotograf/{dosyaAdi}";
+
+            // Veritabanına URL'yi kaydetme
+            model.Url = fileUrl;
+            model.AktifMi = false;
+
+
+            await _veterinerDbContext.AnaSayfaFotograflar.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["Kaydedildi"] = $"{model.FotografAdi.ToUpper()} fotoğrafı kaydedildi";
+
+            return RedirectToAction();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> FotografDuzenle()
+        {
+            FotografDuzenleViewModel model = new();
+            model.FotograflarListesi = await model.FotograflariGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FotografSil(string Imza, string AnaSayfaFotograflarId)
+        {
+            if (!Signature.VerifySignature(AnaSayfaFotograflarId, AnaSayfaFotograflarId, Imza))
+                return View("BadRequest");
+
+            var fotograf = await _veterinerDbContext.AnaSayfaFotograflar.FindAsync(Convert.ToInt32(AnaSayfaFotograflarId));
+
+            var silinecekFotograf = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fotograf.Url.TrimStart('/'));
+
+            System.IO.File.Delete(silinecekFotograf);
+
+            _veterinerDbContext.AnaSayfaFotograflar.Remove(fotograf);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            return RedirectToAction("FotografDuzenle");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FotografSec(string Imza, string AnaSayfaFotograflarId)
+        {
+            if (!Signature.VerifySignature(AnaSayfaFotograflarId, AnaSayfaFotograflarId, Imza))
+                return View("BadRequest");
+
+            var fotograf = await _veterinerDbContext.AnaSayfaFotograflar.FindAsync(Convert.ToInt32(AnaSayfaFotograflarId));
+
+            if (fotograf.AktifMi)
+                fotograf.AktifMi = false;
+            else
+                fotograf.AktifMi = true;
+
+            _veterinerDbContext.AnaSayfaFotograflar.Update(fotograf);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            return RedirectToAction("FotografDuzenle");
+        }
+
+
+        [HttpGet]
+        public IActionResult HakkimizdaIcerikOlustur()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HakkimizdaIcerikOlustur(HakkimizdaIcerikOlusturViewModel model)
+        {
+            HakkimizdaIcerikOlusturValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                    return View(model);
+                }
+            }
+
+            model.AktifMi = false;
+            await _veterinerDbContext.Hakkimizda.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["HakkimizdaIcerikKaydedildi"] = "İçerik başarı ile kaydedildi.";
+
+            return RedirectToAction();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HakkimizdaIcerikDuzenle()
+        {
+            HakkimizdaIcerikDuzenleViewModel model = new();
+            model.Icerikler = await model.IcerikleriGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> HakkimizdaIcerikSil(string Imza, string HakkimizdaId)
+        {
+            if (!Signature.VerifySignature(HakkimizdaId, HakkimizdaId, Imza))
+                return View("BadRequest");
+
+            var id = Convert.ToInt32(HakkimizdaId);
+            var hakkimizdaIcerik = await _veterinerDbContext.Hakkimizda.FindAsync(id);
+            _veterinerDbContext.Hakkimizda.Remove(hakkimizdaIcerik);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            return RedirectToAction("HakkimizdaIcerikDuzenle");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HakkimizdaIcerikSec(string Imza, string HakkimizdaId)
+        {
+            if (!Signature.VerifySignature(HakkimizdaId, HakkimizdaId, Imza))
+                return View("BadRequest");
+
+            var id = Convert.ToInt32(HakkimizdaId);
+            var hakkimizdaIcerik = await _veterinerDbContext.Hakkimizda.FindAsync(id);
+            if (hakkimizdaIcerik.AktifMi)
+                hakkimizdaIcerik.AktifMi = false;
+            else
+                hakkimizdaIcerik.AktifMi = true;
+
+            _veterinerDbContext.Hakkimizda.Update(hakkimizdaIcerik);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            return RedirectToAction("HakkimizdaIcerikDuzenle");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HakkimizdaIcerikEditle(string Imza, string HakkimizdaId)
+        {
+            if (!Signature.VerifySignature(HakkimizdaId, HakkimizdaId, Imza))
+                return View("BadRequest");
+
+            var id = Convert.ToInt32(HakkimizdaId);
+            var hakkimizdaIcerik = await _veterinerDbContext.Hakkimizda.FindAsync(id);
+
+            HakkimizdaIcerikEditleViewModel model = new();
+            model.HakkimizdaId = hakkimizdaIcerik.HakkimizdaId;
+            model.Baslik = hakkimizdaIcerik.Baslik;
+            model.Aciklama = hakkimizdaIcerik.Aciklama;
+            model.Imza = Signature.CreateSignature(hakkimizdaIcerik.HakkimizdaId.ToString(), hakkimizdaIcerik.HakkimizdaId.ToString());
+            model.AktifMi = hakkimizdaIcerik.AktifMi;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HakkimizdaIcerikEditle(HakkimizdaIcerikEditleViewModel model)
+        {
+            if (!Signature.VerifySignature(model.HakkimizdaId.ToString(), model.HakkimizdaId.ToString(), model.Imza))
+                return View("BadRequest");
+
+            HakkimizdaIcerikEditleValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError("", errors.ErrorMessage);
+                }
+
+                return View(model);
+            }
+
+            var icerik = await _veterinerDbContext.Hakkimizda.FindAsync(model.HakkimizdaId);
+
+            icerik.Baslik = model.Baslik;
+            icerik.Aciklama = model.Aciklama;
+
+            _veterinerDbContext.Update(icerik);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            return RedirectToAction("HakkimizdaIcerikDuzenle");
         }
     }
 

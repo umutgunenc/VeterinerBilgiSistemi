@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeterinerBilgiSistemi.Models.Validators;
 using VeterinerBilgiSistemi.Data;
-using FluentValidation.Results;
 using System.Linq;
 using VeterinerBilgiSistemi.Models.Entity;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace VeterinerBilgiSistemi.Controllers
@@ -21,54 +16,28 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = new List<AnaSayfaFotograflar>();
+            model = await _context.AnaSayfaFotograflar.Where(x => x.AktifMi == true).ToListAsync();
+            return View(model);
         }
 
-        //[HttpGet]
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public async Task<IActionResult> Login(LoginViewModel model)
-        //{
-        //    string kullaniciAdi = model.KullaniciAdi;
-        //    Sifre sifreBilgileri = _context.Sifres.FirstOrDefault(x => x.KullaniciAdi == kullaniciAdi);
+        [HttpGet]
+        public async Task<IActionResult> IndexData()
+        {
+            var model = new List<AnaSayfaFotograflar>();
+            model = await _context.AnaSayfaFotograflar.Where(x=>x.AktifMi==true).ToListAsync();
+            return Json(model);
+        }
 
-        //    if (sifreBilgileri == null) { 
-        //        ModelState.AddModelError("sifre", "Kullanıcı adı veya şifre hatalı."); 
-        //        return View(); 
-        //    }
+        public async Task<IActionResult> Hakkimizda()
+        {
+            var icerikler = await _context.Hakkimizda.Where(x=>x.AktifMi==true).ToListAsync();
+            return View(icerikler);
+        }
 
-        //    model.SifreGecerlilikTarihi = sifreBilgileri.SifreGecerlilikTarihi;
-
-        //    LoginValidators validator = new LoginValidators(_context);
-        //    ValidationResult result = validator.Validate(model);
-
-        //    foreach (var error in result.Errors)
-        //    {
-        //        ModelState.AddModelError("", error.ErrorMessage);
-        //        return View();
-        //    }
-
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, model.KullaniciAdi)
-        //    };
-
-        //    var userIdentity = new ClaimsIdentity(claims, "login");
-        //    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-        //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-
-        //    return RedirectToAction("AdminIndex", "Admin");
-        //}
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //    return RedirectToAction("Index", "Home");
-        //}
+        
     }
 }

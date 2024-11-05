@@ -1,0 +1,69 @@
+﻿@model FotografDuzenleViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/css/imgCSS.css" />
+}
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var fotograf in Model.FotograflarListesi)
+        {
+            <div class="col-6 mb-3">
+                <div class="card mb-2">
+                    <img src="@fotograf.Url" class="card-img-top img-cover" alt="@fotograf.FotografAdi" sytle="width:17rem;">
+                    <div class="card-body px-3">
+                        <h5 class="card-title">@fotograf.FotografAdi.ToUpper()</h5>
+                        <div class="container p-0">
+                            <div class="row">
+                                <div class="col-6">
+                                    <form asp-action="FotografSil" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="Imza" value="@fotograf.Imza" />
+                                        <input type="hidden" name="AnaSayfaFotograflarId" value="@fotograf.AnaSayfaFotograflarId" />
+                                        <button class="btn btn-primary col" type="submit">Sil</button>
+                                    </form>
+                                </div>
+                                <div class="col-6">
+                                    <form asp-action="FotografSec" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="Imza" value="@fotograf.Imza" />
+                                        <input type="hidden" name="AnaSayfaFotograflarId" value="@fotograf.AnaSayfaFotograflarId" />
+                                        @if (fotograf.AktifMi)
+                                        {
+                                            <button class="btn btn-danger col" type="submit">Gösterme</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-primary col" type="submit">Göster</button>
+                                        }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (TempData["Kaydedildi"] != null)
+{
+    <div class="alert alert-success" id="Kaydedildi">@TempData["Kaydedildi"]</div>
+
+}
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("Kaydedildi");
+            successMessage.remove();
+        }, 2500);</script>
+}
+
+
+

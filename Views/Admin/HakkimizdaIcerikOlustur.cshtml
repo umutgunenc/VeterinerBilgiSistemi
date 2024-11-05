@@ -1,0 +1,48 @@
+﻿@model HakkimizdaIcerikOlusturViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+<form asp-action="HakkimizdaIcerikOlustur" asp-controller="Admin" method="post">
+    <div class="form-col">
+        <div class="col mb-2">
+            <input type="text" asp-for="Baslik" class="form-control" placeholder="Başlık">
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="Baslik">
+        </span>
+
+        <div class="col mb-2">
+            <textarea asp-for="Aciklama" class="form-control" placeholder="Açıklama" rows="3"></textarea>
+        </div>
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mx-3 mb-2" asp-validation-for="Aciklama">
+        </span>
+
+        <div class="col mb-2">
+            <button type="submit" class="col btn btn-dark rounded mb-2">Ekle</button>
+        </div>
+
+    </div>
+
+
+</form>
+
+
+@if (TempData["HakkimizdaIcerikKaydedildi"] != null)
+{
+    <div class="alert alert-success" role="alert" id="HakkimizdaIcerikKaydedildi">
+        @TempData["HakkimizdaIcerikKaydedildi"]
+    </div>
+
+}
+
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("HakkimizdaIcerikKaydedildi");
+            message.remove();
+        }, 5000);
+    </script>
+}

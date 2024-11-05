@@ -1,0 +1,12 @@
+﻿
+.scrollspy-example {
+    position: relative;
+    height: 30vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.scrollspy-example pre {
+    white-space: break-spaces;
+    overflow-x: hidden; 
+}

@@ -127,6 +127,27 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.AnaSayfaFotograflar", b =>
+                {
+                    b.Property<int>("AnaSayfaFotograflarId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("AktifMi")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FotografAdi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AnaSayfaFotograflarId");
+
+                    b.ToTable("AnaSayfaFotograflar");
+                });
+
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.AppRole", b =>
                 {
                     b.Property<int>("Id")
@@ -159,7 +180,7 @@ namespace VeterinerBilgiSistemi.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "c9ad05e7-1557-4430-859c-a487463aca05",
+                            ConcurrencyStamp = "44e36468-10e8-482f-b2c4-2bafbb5644c8",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -264,7 +285,7 @@ namespace VeterinerBilgiSistemi.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "550d3f72-b289-4446-82a2-134cbbf23bb5",
+                            ConcurrencyStamp = "57740a1f-15a6-49b7-bfdb-f2c034c1b269",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -273,12 +294,12 @@ namespace VeterinerBilgiSistemi.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAECsh+qOUig12PIz0O5ZJeXdkiEChkUYlBzO5hQodFrVMX55xpuxjAlRL2hgdHwNOhg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMI21MLu74wotJ3GB1q/Xftx5JvS/7y9OfmdeED3khONbqayWHGn9DxLlrX5x0hRzg==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8f587d09-5a43-4cd7-a6b2-5228cedcdf30",
-                            SifreGecerlilikTarihi = new DateTime(3023, 10, 21, 14, 7, 9, 440, DateTimeKind.Local).AddTicks(4935),
-                            SifreOlusturmaTarihi = new DateTime(2024, 10, 21, 14, 7, 9, 439, DateTimeKind.Local).AddTicks(2332),
+                            SecurityStamp = "83208dc8-bedc-481d-a82c-3a80f51f8aaf",
+                            SifreGecerlilikTarihi = new DateTime(3023, 11, 4, 13, 48, 35, 554, DateTimeKind.Local).AddTicks(5794),
+                            SifreOlusturmaTarihi = new DateTime(2024, 11, 4, 13, 48, 35, 553, DateTimeKind.Local).AddTicks(8160),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -335,6 +356,27 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasIndex("TurId");
 
                     b.ToTable("CinsTur");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Hakkimizda", b =>
+                {
+                    b.Property<int>("HakkimizdaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Aciklama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("AktifMi")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Baslik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HakkimizdaId");
+
+                    b.ToTable("Hakkimizda");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Hastalik", b =>
@@ -417,6 +459,65 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasIndex("RenkId");
 
                     b.ToTable("Hayvanlar");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.IletisimBilgileri", b =>
+                {
+                    b.Property<int>("IletisimBilgileriId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("AktifMi")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Cadde")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Mahalle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("No")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sehir")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sokak")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubeAdi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefonNumarasi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IletisimBilgileriId");
+
+                    b.ToTable("IletisimBilgileri");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.IletisimBilgileriSosyalMedya", b =>
+                {
+                    b.Property<int>("IletisimBilgileriId")
+                        .HasColumnType("int")
+                        .HasColumnName("IletisimBilgileriId");
+
+                    b.Property<int>("SosyalMedyaId")
+                        .HasColumnType("int")
+                        .HasColumnName("SosyalMedyaId");
+
+                    b.HasKey("IletisimBilgileriId", "SosyalMedyaId");
+
+                    b.HasIndex("SosyalMedyaId");
+
+                    b.ToTable("IletisimBilgileriSosyalMedyalar");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.KanDegerleri", b =>
@@ -557,6 +658,27 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasIndex("HayvanId");
 
                     b.ToTable("SahipHayvan");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.SosyalMedya", b =>
+                {
+                    b.Property<int>("SosyalMedyaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("SosyalMedyaAdi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SosyalMedyaPhotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SosyalMedyaUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SosyalMedyaId");
+
+                    b.ToTable("SosyalMedyalar");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Stok", b =>
@@ -804,6 +926,25 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.Navigation("Renk");
                 });
 
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.IletisimBilgileriSosyalMedya", b =>
+                {
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.IletisimBilgileri", "IletisimBilgileri")
+                        .WithMany("SosyalMedyalar")
+                        .HasForeignKey("IletisimBilgileriId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.SosyalMedya", "SosyalMedya")
+                        .WithMany("IletisimBilgileri")
+                        .HasForeignKey("SosyalMedyaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IletisimBilgileri");
+
+                    b.Navigation("SosyalMedya");
+                });
+
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.KanTestiMuayene", b =>
                 {
                     b.HasOne("VeterinerBilgiSistemi.Models.Entity.KanDegerleri", "KanDegerleri")
@@ -969,6 +1110,11 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.Navigation("Sahipler");
                 });
 
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.IletisimBilgileri", b =>
+                {
+                    b.Navigation("SosyalMedyalar");
+                });
+
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.KanDegerleri", b =>
                 {
                     b.Navigation("Muayeneler");
@@ -991,6 +1137,11 @@ namespace VeterinerBilgiSistemi.Migrations
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Renk", b =>
                 {
                     b.Navigation("Hayvanlar");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.SosyalMedya", b =>
+                {
+                    b.Navigation("IletisimBilgileri");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Stok", b =>

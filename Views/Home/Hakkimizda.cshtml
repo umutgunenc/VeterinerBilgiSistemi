@@ -1,0 +1,43 @@
+﻿@model List<Hakkimizda>
+
+@section styles{
+    <link href="/css/scrollspy.css" rel="stylesheet" />
+}
+
+<div class="bd-example">
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div id="list-example" class="list-group">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <a class="list-group-item list-group-item-action" href="#list-item-@i">@Model[i].Baslik</a>
+                }
+            </div>
+        </div>
+        <div class="col-12 col-md-8">
+            <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example bg-dark">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <h2 id="list-item-@i" class="font-weight-bold text-light pl-2">@Model[i].Baslik</h2>
+                    <pre class="text-warning pl-2">@Model[i].Aciklama</pre>
+
+                    @if (i != Model.Count - 1)
+                    {
+                        <hr class="mb-3 border-white" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').scrollspy({ target: '#list-example', offset: 0 });
+        });
+    </script>
+
+}

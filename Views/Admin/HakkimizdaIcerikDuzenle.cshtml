@@ -1,0 +1,73 @@
+﻿@model HakkimizdaIcerikDuzenleViewModel
+
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var icerik in Model.Icerikler)
+        {
+            <div class="col-6 mb-3">
+                <div class="card mb-2">
+                    <div class="card-body px-3">
+                        <h5 class="card-title">@icerik.Baslik.ToUpper()</h5>
+                        <div class="my-4" style="height:15vh; overflow:auto">
+                            <pre>@icerik.Aciklama</pre>
+                        </div>
+                        <div class="container p-0">
+                            <div class="row">
+                                <div class="col-4">
+                                    <form asp-action="HakkimizdaIcerikSil" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="Imza" value="@icerik.Imza" />
+                                        <input type="hidden" name="HakkimizdaId" value="@icerik.HakkimizdaId" />
+                                        <button class="btn btn-primary col" type="submit">Sil</button>
+                                    </form>
+                                </div>
+                                <div class="col-4">
+                                    <form asp-action="HakkimizdaIcerikSec" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="Imza" value="@icerik.Imza" />
+                                        <input type="hidden" name="HakkimizdaId" value="@icerik.HakkimizdaId" />
+                                        @if (icerik.AktifMi)
+                                        {
+                                            <button class="btn btn-danger col" type="submit">Gösterme</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-primary col" type="submit">Göster</button>
+                                        }
+                                    </form>
+                                </div>
+                                <div class="col-4">
+                                    <form asp-action="HakkimizdaIcerikEditle" asp-controller="Admin" method="get">
+                                        <input type="hidden" name="Imza" value="@icerik.Imza" />
+                                        <input type="hidden" name="HakkimizdaId" value="@icerik.HakkimizdaId" />
+                                        <button class="btn btn-primary col" type="submit">Duzenle</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (TempData["Kaydedildi"] != null)
+{
+    <div class="alert alert-success" id="Kaydedildi">@TempData["Kaydedildi"]</div>
+
+}
+
+@section scripts {
+    <script>setTimeout(function () {
+            var successMessage = document.getElementById("Kaydedildi");
+            successMessage.remove();
+        }, 2500);</script>
+}
+
+
+

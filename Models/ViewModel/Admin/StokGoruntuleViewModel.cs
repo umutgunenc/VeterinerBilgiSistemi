@@ -11,12 +11,8 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
     {
         public string KategoriAdi { get; set; }
         public string BirimAdi { get; set; }
-
-        public double StokSayisi { get; set; }
-        
-
+        public double StokSayisi { get; set; }      
         public List<StokGoruntuleViewModel> StokListesi { get; set; }
-
 
         public async Task<List<StokGoruntuleViewModel>> StokListesiniGetirAsync(VeterinerDBContext context)
         {

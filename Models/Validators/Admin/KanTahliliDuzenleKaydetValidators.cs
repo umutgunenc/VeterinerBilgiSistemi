@@ -13,7 +13,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.Admin
                 .NotEmpty().WithMessage("Kan tahlininin ismi boş olamaz")
                 .NotNull().WithMessage("Kan tahlininin ismi boş olamaz")
                 .MaximumLength(100).WithMessage("Maksimum 100 karakter uzunluğunda kan testi tanımlanabilir")
-                .Must((model, KanTestiAdi) => FunctionsValidator.BeUniqueKanTathlilAdi(model.KanDegerleriId, KanTestiAdi)).WithMessage("Sistem aynı isimde bir kan tahlili bulunmaktadır.");
+                .Must((model, KanTestiAdi) => FunctionsValidator.BeUniqueKanTathlilAdi(model.KanDegerleriId, KanTestiAdi)).WithMessage("Sistemde aynı isimde bir kan tahlili bulunmaktadır.");
 
             RuleFor(x => x.KanTestiBirimi)
                 .NotEmpty().WithMessage("Tanımlanacak kan testinin adını giriniz.")

@@ -46,7 +46,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             return _context.CinsTur.Any(x => x.CinsId == cinsId && x.TurId == turId);
         }
-        public static bool BeSameCins(AddAnimalViewModel model, int? parentID) 
+        public static bool BeSameCins(AddAnimalViewModel model, int? parentID)
         {
             if (!parentID.HasValue)
                 return true;
@@ -74,14 +74,14 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
 
             return parentCinsId == model.CinsId;
         }
-        public static bool BeOlder<T>(T model, int? parentID) where T:Hayvan
+        public static bool BeOlder<T>(T model, int? parentID) where T : Hayvan
         {
             if (!parentID.HasValue)
                 return true;
 
             var parent = _context.Hayvanlar.FirstOrDefault(a => a.HayvanId == parentID.Value);
             return parent != null && parent.HayvanDogumTarihi < model.HayvanDogumTarihi;
-        }        
+        }
         public static bool BeGirl(int? anneId)
         {
             if (!anneId.HasValue)
@@ -251,6 +251,13 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
 
         //    return await userManager.CheckPasswordAsync(user, oldPassword);
         //}
+
+        public static bool BeUniqueAnaSayfaFotografAdi(string fotografAdi)
+        {
+            if (string.IsNullOrEmpty(fotografAdi))
+                return true;
+            return !_context.AnaSayfaFotograflar.Any(x => x.FotografAdi.ToUpper() == fotografAdi.ToUpper());
+        }
         public static bool BeUniqueKategori(string kategoriAdi)
         {
             if (string.IsNullOrEmpty(kategoriAdi))
@@ -377,7 +384,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(barkod))
                 return true;
-            return !_context.Stoklar.Any(x => x.StokBarkod == barkod);
+            return !_context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod);
         }
         /// <summary>
         /// Girilen stok dışındaki barkod numarası benzersiz olmalıdır.
@@ -389,13 +396,13 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(barkod))
                 return true;
-            return !_context.Stoklar.Any(x => x.StokBarkod == barkod && x.Id != stokId);
+            return !_context.Stoklar.Any(x => x.StokBarkod.ToUpper() == barkod.ToUpper() && x.Id != stokId);
         }
         public static bool BeUniqueStokAdi(string stokAdi)
         {
             if (string.IsNullOrEmpty(stokAdi))
                 return true;
-            return !_context.Stoklar.Any(x => x.StokAdi == stokAdi);
+            return !_context.Stoklar.Any(x => x.StokAdi.ToUpper() == stokAdi.ToUpper());
         }
         /// <summary>
         /// Girilen stok dışındaki stok ismi benzersiz olmalıdır.
@@ -407,7 +414,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(stokAdi))
                 return true;
-            return !_context.Stoklar.Any(x => x.StokAdi == stokAdi && x.Id != stokId);
+            return !_context.Stoklar.Any(x => x.StokAdi.ToUpper() == stokAdi.ToUpper() && x.Id != stokId);
         }
         public static bool BeUniqueHastalikAdi(string hastalikAdi)
         {
@@ -422,10 +429,10 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(tathlilAdi))
                 return true;
-            return !_context.KanDegerleri.Any(x => x.KanTestiAdi == tathlilAdi);
+            return !_context.KanDegerleri.Any(x => x.KanTestiAdi.ToUpper() == tathlilAdi.ToUpper());
         }
         /// <summary>
-        /// Girilen kan tahlili ismi benzersiz olmalıdır.
+        /// Girilen kan tahlili ismi, kendi ismi dışında benzersiz olmalıdır.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="tathlilAdi"></param>
@@ -434,10 +441,27 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(tathlilAdi))
                 return true;
-            return !_context.KanDegerleri.Any(x => x.KanTestiAdi == tathlilAdi && x.KanDegerleriId != id);
+            return !_context.KanDegerleri.Any(x => x.KanTestiAdi.ToUpper() == tathlilAdi.ToUpper() && x.KanDegerleriId != id);
+        }
+        public static bool BeUniqueTitle( string baslik)
+        {
+            if (string.IsNullOrEmpty(baslik))
+                return true;
+            return !_context.Hakkimizda.Any(x => x.Baslik.ToUpper() == baslik.ToUpper());
         }
 
-
+        /// <summary>
+        /// Girilen başlık,kendi dışında benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tathlilAdi"></param>
+        /// <returns></returns>
+        public static bool BeUniqueTitle(int id,string baslik)
+        {
+            if (string.IsNullOrEmpty(baslik))
+                return true;
+            return !_context.Hakkimizda.Any(x => x.Baslik.ToUpper() == baslik.ToUpper() && x.HakkimizdaId != id);
+        }
 
         /// <summary>
         /// 
@@ -490,7 +514,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             if (string.IsNullOrEmpty(yeniSahipTCKN))
                 return true;
-            return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId && x.AktifMi==true).Any();
+            return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId && x.AktifMi == true).Any();
         }
 
         public static bool BeNotUsedHastalik(int hastalikId)
@@ -513,7 +537,12 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
             "changePhoto",
             "deletePhoto"
         };
-        private static readonly string[] allowedExtensionsForPhoto = { ".jpg", ".jpeg", ".png", ".bmp" };
+        private static readonly List<string> allowedExtensionsForPhoto = new List<string>
+        {   ".jpg",
+            ".jpeg",
+            ".png",
+            ".bmp"
+        };
 
     }
 }

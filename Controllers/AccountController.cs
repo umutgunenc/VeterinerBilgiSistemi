@@ -341,14 +341,12 @@ namespace VeterinerBilgiSistemi.Controllers
             {
                 FaceRecognitionClass faceRecognitionClass = new();
 
-                var result = (new List<FaceEncoding>(), false);
-                result = await faceRecognitionClass.DetectFacesAsync(filePhotos);
+                var result = await faceRecognitionClass.DetectFacesAsync(filePhotos);
 
                 if (result.Item2 == false)
                     return Json(new { success = false, message = "Yüz tespit işlemi başarısız oldu." });
 
-                var copareResault = (false, new AppUser());
-                copareResault = await faceRecognitionClass.CompareFaces(result.Item1, _context);
+                var copareResault = await faceRecognitionClass.CompareFaces(result.Item1, _context);
 
                 if (!copareResault.Item1)
                     return Json(new { success = false, message = "Sistemde kayıtlı yüz bilgisi bulunamadı." });

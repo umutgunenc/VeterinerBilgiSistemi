@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using VeterinerBilgiSistemi.Data;
 using VeterinerBilgiSistemi.Models.Entity;
@@ -15,9 +14,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
     public class AddAnimalViewModel : Hayvan
     {
 
-        public string CinsAdi { get; set; }
-        public string TurAdi { get; set; }
-        public string RenkAdi { get; set; }
         public int SecilenTurId { get; set; }
         public int SecilenCinsId { get; set; }
         public List<SelectListItem> TurlerListesi { get; set; }

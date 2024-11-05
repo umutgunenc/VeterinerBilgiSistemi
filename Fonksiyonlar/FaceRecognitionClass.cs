@@ -1,6 +1,7 @@
 ﻿using FaceRecognitionDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -66,7 +67,7 @@ namespace VeterinerBilgiSistemi.Fonksiyonlar
             return (ValidFacesEncodingList, true);
         }
 
-        public async Task<(bool, AppUser User)> CompareFaces(List<FaceEncoding> userFaceEncodingList, VeterinerDBContext context)
+        public async Task<(bool, AppUser)> CompareFaces(List<FaceEncoding> userFaceEncodingList, VeterinerDBContext context)
         {
 
             var dbFaceEncodingListByte = await context.UserFaces
@@ -98,6 +99,7 @@ namespace VeterinerBilgiSistemi.Fonksiyonlar
                         AppUser appUser = await context.AppUsers
                                                     .Where(au => au.Id == userFaceId)
                                                     .FirstOrDefaultAsync();
+
                         return (true, appUser);
                     }
                 }

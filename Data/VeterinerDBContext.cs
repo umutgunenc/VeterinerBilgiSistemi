@@ -34,6 +34,10 @@ namespace VeterinerBilgiSistemi.Data
         public virtual DbSet<UserFace> UserFaces { get; set; }
         public virtual DbSet<Hastalik> Hastaliklar { get; set; }
         public virtual DbSet<KanDegerleri> KanDegerleri { get; set; }
+        public virtual DbSet<Hakkimizda> Hakkimizda { get; set; }
+        public virtual DbSet<IletisimBilgileri> IletisimBilgileri { get; set; }
+        public virtual DbSet<SosyalMedya> SosyalMedyalar { get; set; }
+        public virtual DbSet<AnaSayfaFotograflar> AnaSayfaFotograflar { get; set; }
 
         //Ara tablolar n-n
         public virtual DbSet<CinsTur> CinsTur { get; set; }
@@ -41,6 +45,7 @@ namespace VeterinerBilgiSistemi.Data
         public virtual DbSet<HastalikMuayene> HastalikMuayene { get; set; }
         public virtual DbSet<KanTestiMuayene> KanTestiMuayene { get; set; }
         public virtual DbSet<StokMuayene> StokMuayane { get; set; }
+        public virtual DbSet<IletisimBilgileriSosyalMedya> IletisimBilgileriSosyalMedyalar { get; set; }
 
 
 
@@ -161,6 +166,31 @@ namespace VeterinerBilgiSistemi.Data
             modelBuilder.Entity<StokMuayene>()
                 .Property(sm => sm.StokId)
                 .HasColumnName("StokId");
+
+
+
+
+            modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
+                .HasKey(ibsm => new { ibsm.IletisimBilgileriId, ibsm.SosyalMedyaId });
+
+            modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
+                .HasOne(ibsm => ibsm.IletisimBilgileri)
+                .WithMany(sm => sm.SosyalMedyalar)
+                .HasForeignKey(ibsm => ibsm.IletisimBilgileriId);
+
+            modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
+                .HasOne(ibsm => ibsm.SosyalMedya)
+                .WithMany(ib => ib.IletisimBilgileri)
+                .HasForeignKey(km => km.SosyalMedyaId);
+
+            modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
+                .Property(ibsm => ibsm.IletisimBilgileriId)
+                .HasColumnName("IletisimBilgileriId");
+
+            modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
+                .Property(ibsm => ibsm.SosyalMedyaId)
+                .HasColumnName("SosyalMedyaId");
+
 
             modelBuilder.Entity<AppRole>()
                 .HasData(new AppRole { Id = 1, Name = "ADMIN", NormalizedName = "ADMIN" });

@@ -12,6 +12,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public string SubeAdi { get; set; }
         public string TelefonNumarasi { get; set; }
         public string Sehir { get; set; }
+        public string Ilce { get; set; }
         public string Mahalle { get; set; }
         public string Cadde { get; set; }
         public string Sokak { get; set; }

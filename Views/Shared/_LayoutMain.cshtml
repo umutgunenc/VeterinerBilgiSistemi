@@ -38,6 +38,17 @@
             </div>
 
         }
+        else if (IsSectionDefined("VeterinerMenu"))
+        {
+            <div class="d-flex flex-column flex-md-row">
+                <div class="col-md-3 p-0">
+                    @await RenderSectionAsync("VeterinerMenu")
+                </div>
+                <div class="col-md-9 p-1">
+                    @RenderBody()
+                </div>
+            </div>
+        }
         else
         { <div class="col-md-12 p-0">
 

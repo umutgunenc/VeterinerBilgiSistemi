@@ -1,27 +1,99 @@
-﻿@model List<Hakkimizda>
+﻿@model (List<Hakkimizda>, List<IletisimBilgileri>)
+
 
 @section styles{
     <link href="/css/scrollspy.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="/css/scrollBar.css" rel="stylesheet" />
+
 }
 
 <div class="bd-example">
     <div class="row">
         <div class="col-12 col-md-4">
             <div id="list-example" class="list-group">
-                @for (int i = 0; i < Model.Count; i++)
+                @for (int i = 0; i < Model.Item1.Count; i++)
                 {
-                    <a class="list-group-item list-group-item-action" href="#list-item-@i">@Model[i].Baslik</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-@i">@Model.Item1[i].Baslik</a>
                 }
             </div>
         </div>
         <div class="col-12 col-md-8">
             <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example bg-dark">
-                @for (int i = 0; i < Model.Count; i++)
+                @for (int i = 0; i < Model.Item1.Count; i++)
                 {
-                    <h2 id="list-item-@i" class="font-weight-bold text-light pl-2">@Model[i].Baslik</h2>
-                    <pre class="text-warning pl-2">@Model[i].Aciklama</pre>
+                    <h2 id="list-item-@i" class="font-weight-bold text-light pl-2">@Model.Item1[i].Baslik</h2>
+                    <pre class="text-warning pl-2">@Model.Item1[i].Aciklama</pre>
 
-                    @if (i != Model.Count - 1)
+                    @if (i != Model.Item1.Count - 1)
+                    {
+                        <hr class="mb-3 border-white" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="bd-example">
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div id="list-example2" class="list-group">
+                @for (int i = 0; i < Model.Item2.Count; i++)
+                {
+                    <a class="list-group-item list-group-item-action" href="#list-item-@Model.Item2[i].SubeAdi">@Model.Item2[i].SubeAdi</a>
+                }
+            </div>
+        </div>
+        <div class="col-12 col-md-8">
+            <div data-spy="scroll" data-target="#list-example2" data-offset="0" class="scrollspy-example bg-dark">
+                @for (int i = 0; i < Model.Item2.Count; i++)
+                {
+                    <h2 id="list-item-@Model.Item2[i].SubeAdi" class="font-weight-bold text-light pl-2">@Model.Item2[i].SubeAdi</h2>
+                    <pre class="text-warning pl-2">@Model.Item2[i].Mahalle</pre>
+                    <pre class="text-warning pl-2">@Model.Item2[i].Cadde</pre>
+                    <pre class="text-warning pl-2">@Model.Item2[i].Sokak</pre>
+                    <pre class="text-warning pl-2">@Model.Item2[i].No</pre>
+                    <pre class="text-warning pl-2">@Model.Item2[i].Sehir</pre>
+                    <pre class="text-warning pl-2">@Model.Item2[i].Ilce</pre>
+                    <hr />
+                    @if (@Model.Item2[i].TelefonNumarasi != null)
+                    {
+                        var formattedTelNo = FormatTelefon(Model.Item2[i].TelefonNumarasi);
+                        <pre class="text-warning pl-2">@formattedTelNo</pre>
+                    }
+
+                    @functions {
+                        public string FormatTelefon(string telefon)
+                        {
+                            if (string.IsNullOrEmpty(telefon))
+                                return string.Empty;
+
+                            string telNo = new string(telefon.Where(char.IsDigit).ToArray());
+
+                            if (telNo.Length == 11)
+                                return $"+90 {telNo.Substring(1, 3)} {telNo.Substring(4, 3)} {telNo.Substring(7, 2)} {telNo.Substring(9, 2)}";
+                            else
+                                return telefon;
+
+                        }
+                    }
+                    <hr />
+                    <span style="display:flex; gap:2vh;">
+                        @foreach (var sosyalMedya in Model.Item2[i].SosyalMedyalar)
+                        {
+
+                            <a href="@sosyalMedya.SosyalMedya.SosyalMedyaUrl" target="_blank">
+                                <p class="m-0 text-warning pl-2">
+                                    @Html.Raw(sosyalMedya.SosyalMedya.SosyalMedyaPhotoUrl)
+                                </p>
+                            </a>
+
+                        }
+                    </span>
+                    @if (i != Model.Item2.Count - 1)
                     {
                         <hr class="mb-3 border-white" />
                     }
@@ -32,11 +104,16 @@
 </div>
 
 
-
 @section scripts{
     <script>
         $(document).ready(function () {
             $('body').scrollspy({ target: '#list-example', offset: 0 });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('body').scrollspy({ target: '#list-example2', offset: 0 });
         });
     </script>
 

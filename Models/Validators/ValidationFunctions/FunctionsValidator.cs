@@ -221,7 +221,10 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             return _context.KanDegerleri.Any(x => x.KanDegerleriId == tahlilId);
         }
-
+        public static bool BeIletisimBilgileri(int id)
+        {
+            return _context.IletisimBilgileri.Any(x => x.IletisimBilgileriId == id);
+        }
 
         public static bool SeacrhInStock(string arananMetin)
         {
@@ -461,6 +464,47 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
             if (string.IsNullOrEmpty(baslik))
                 return true;
             return !_context.Hakkimizda.Any(x => x.Baslik.ToUpper() == baslik.ToUpper() && x.HakkimizdaId != id);
+        }
+
+
+        public static bool BeUniqueSosyalMedyaAdi(string sosyalMedyaAdi)
+        {
+            if (string.IsNullOrEmpty(sosyalMedyaAdi))
+                return true;
+            return !_context.SosyalMedyalar.Any(x => x.SosyalMedyaAdi.ToUpper() == sosyalMedyaAdi.ToUpper());
+        }
+
+        /// <summary>
+        /// Girilen sosyal medya adı,kendi dışında benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sosyalMedyaAdi"></param>
+        /// <returns></returns>
+        public static bool BeUniqueSosyalMedyaAdi(int id, string sosyalMedyaAdi)
+        {
+            if (string.IsNullOrEmpty(sosyalMedyaAdi))
+                return true;
+            return !_context.SosyalMedyalar.Any(x => x.SosyalMedyaAdi.ToUpper() == sosyalMedyaAdi.ToUpper() && x.SosyalMedyaId != id);
+        }
+
+        public static bool BeUniqueSubeAdi(string subeAdi)
+        {
+            if (string.IsNullOrEmpty(subeAdi))
+                return true;
+            return !_context.IletisimBilgileri.Any(x => x.SubeAdi.ToUpper() == subeAdi.ToUpper());
+        }
+
+        /// <summary>
+        /// Girilen sube adi,kendi dışında benzersiz olmalıdır.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="subeAdi"></param>
+        /// <returns></returns>
+        public static bool BeUniqueSubeAdi(int id, string subeAdi)
+        {
+            if (string.IsNullOrEmpty(subeAdi))
+                return true;
+            return !_context.IletisimBilgileri.Any(x => x.SubeAdi.ToUpper() == subeAdi.ToUpper() && x.IletisimBilgileriId != id);
         }
 
         /// <summary>

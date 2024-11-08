@@ -1,0 +1,103 @@
+﻿@model AdresEditleViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="AdresEditle" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <label asp-for="SubeAdi" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Şube Adı</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="SubeAdi" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SubeAdi">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="TelefonNumarasi" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Telefon Numarası</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="TelefonNumarasi" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="TelefonNumarasi">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="Sehir" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Şehir</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="Sehir" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Sehir">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="Ilce" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">İlçe</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="Ilce" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Ilce">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="Mahalle" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Mahalle</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="Mahalle" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Mahalle">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="Cadde" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Cadde</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="Cadde" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Cadde">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="Sokak" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">Sokak</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="Sokak" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Sokak">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="No" class="col-md-2 col-form-label pr-0 font-weight-bold text-white">No</label>
+        <div class="col-md-10">
+            <input type="text" asp-for="No" class="form-control" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="No">
+                </span>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="AktifMi" />
+    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="AktifMi"></span>
+
+    <input type="hidden" asp-for="IletisimBilgileriId" />
+    <input type="hidden" asp-for="Imza" />
+
+    <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="IletisimBilgileriId"></span>
+
+
+    <div class="form-row mb-2 px-1">
+        <button type="submit" class="col btn btn-dark rounded mb-2">Kaydet</button>
+    </div>
+
+</form>
+

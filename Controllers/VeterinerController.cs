@@ -6,7 +6,7 @@ using VeterinerBilgiSistemi.Models.Entity;
 
 namespace VeterinerBilgiSistemi.Controllers
 {
-    [Authorize(Roles = "VETERİNER")]
+    [Authorize(Roles = "VETERİNER,VETERINER")]
     public class VeterinerController : Controller
     {
         private readonly VeterinerDBContext _context;
@@ -18,9 +18,20 @@ namespace VeterinerBilgiSistemi.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public IActionResult VeterinerIndex()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult MuayeneEt()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult MuayeneKayitlari()
         {
             return View();
         }

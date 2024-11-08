@@ -18,6 +18,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.Admin
 
             RuleFor(x => x.IlacMi)
                 .NotNull().WithMessage("Lütfen seçim yapınız.")
+                .NotEmpty().WithMessage("Lütfen seçim yapınız.")
                 .Must(x => x == true || x == false).WithMessage("Lütfen seçim yapınız.");
         }
     }

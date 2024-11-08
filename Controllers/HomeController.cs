@@ -34,8 +34,17 @@ namespace VeterinerBilgiSistemi.Controllers
 
         public async Task<IActionResult> Hakkimizda()
         {
-            var icerikler = await _context.Hakkimizda.Where(x=>x.AktifMi==true).ToListAsync();
-            return View(icerikler);
+            List<Hakkimizda> hakkimizdaListesi = await _context.Hakkimizda
+                .Where(x=>x.AktifMi==true)
+                .ToListAsync();
+            List<IletisimBilgileri> iletisimBilgileriListesi = await _context.IletisimBilgileri
+                .Include(ib => ib.SosyalMedyalar)
+                .ThenInclude(ibsm => ibsm.SosyalMedya)
+                .ToListAsync();
+
+            var tupple = (hakkimizdaListesi, iletisimBilgileriListesi);
+
+            return View(tupple);
         }
 
         

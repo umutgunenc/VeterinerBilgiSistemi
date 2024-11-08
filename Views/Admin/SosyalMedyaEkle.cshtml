@@ -1,0 +1,79 @@
+﻿@model SosyalMedyaEkleViewModel
+
+@section AdminMenu {
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="SosyalMedyaEkle" asp-controller="Admin" method="post">
+    <div class="form-row">
+        <label asp-for="SosyalMedyaAdi" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Sosyal Medya Adı</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="SosyalMedyaAdi" class="form-control" form-control"" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SosyalMedyaAdi">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="SosyalMedyaUrl" class="col-md-3 col-form-label pr-0 font-weight-bold text-white">Sosyal Medya Url</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="SosyalMedyaUrl" class="form-control" form-control"" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SosyalMedyaUrl">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label asp-for="SosyalMedyaPhotoUrl"
+               class="col-md-3 col-form-label pr-0 font-weight-bold text-white"
+               data-container="body"
+               data-toggle="popover"
+               data-html="true"
+               data-placement="top"
+               data-content="<a href='https://icons.getbootstrap.com/?q=social' target='_blank'>Buradan Seçiniz</a> <br> Iconu sectikten sonra < i ... > < / i > seklindeki ifadeyi yan tarafa yapıştırınız"
+               style="cursor:pointer">
+            Sosyal Medya Foto Url
+        </label>
+        <div class="col-md-9">
+            <input type="text" asp-for="SosyalMedyaPhotoUrl" class="form-control" form-control"" />
+            <div class="my-2">
+                <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SosyalMedyaPhotoUrl">
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-row mb-2 px-1">
+        <button type="submit" class="col btn btn-dark rounded mb-2">Kaydet</button>
+    </div>
+
+</form>
+
+@if (TempData["SosyalMedyaEklendi"] != null)
+{
+    <div class="alert alert-success" role="alert" id="SosyalMedyaEklendi">
+        @TempData["SosyalMedyaEklendi"]
+    </div>
+
+}
+
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("SosyalMedyaEklendi");
+            message.remove();
+        }, 5000);
+    </script>
+
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+    </script>
+}

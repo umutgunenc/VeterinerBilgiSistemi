@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 
@@ -1493,7 +1495,233 @@ namespace VeterinerBilgiSistemi.Controllers
 
             return RedirectToAction("HakkimizdaIcerikDuzenle");
         }
-    }
 
+        [HttpGet]
+        public IActionResult AdresEkle()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdresEkle(AdresEkleViewModel model)
+        {
+            AdresEkleValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError("", errors.ErrorMessage);
+                }
+                return View(model);
+            }
+
+            model.AktifMi = false;
+
+            await _veterinerDbContext.IletisimBilgileri.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["AdresEklendi"] = $"{model.SubeAdi} şubesi için adres bilgisi eklendi.";
+
+            return RedirectToAction();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AdresDuzenle()
+        {
+            AdresDuzenleViewModel model = new();
+            model.IletisimBilgileriListesi = await model.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult SosyalMedyaEkle()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SosyalMedyaEkle(SosyalMedyaEkleViewModel model)
+        {
+            SosyalMedyaEkleValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+
+            if (!model.SosyalMedyaUrl.Contains("https://"))
+                model.SosyalMedyaUrl = "https://" + model.SosyalMedyaUrl;
+
+            await _veterinerDbContext.SosyalMedyalar.AddAsync(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            TempData["SosyalMedyaEklendi"] = $"{model.SosyalMedyaAdi.ToUpper()} için bilgiler kaydedildi.";
+            return RedirectToAction();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SosyalMedyaSec(string IletisimBilgileriId, string Imza, List<string> SecilenSosyalMedyaIdler)
+        {
+            if (!Signature.VerifySignature(IletisimBilgileriId, IletisimBilgileriId, Imza))
+                return View("BadRequest");
+
+            int iletisimBilgileriId;
+            int secilenSosyalMedyaId;
+            List<int> secilenSosyalMedyaIdListesi = new();
+
+            foreach (var item in SecilenSosyalMedyaIdler)
+            {
+                if (!int.TryParse(item, out secilenSosyalMedyaId))
+                    return View("BadRequest");
+                secilenSosyalMedyaIdListesi.Add(secilenSosyalMedyaId);
+
+            }
+            if (!int.TryParse(IletisimBilgileriId, out iletisimBilgileriId))
+                return View("BadRequest");
+
+            List<SosyalMedya> SecilenSosyalMedyalar = await _veterinerDbContext.SosyalMedyalar
+                                                                                .Where(sm => secilenSosyalMedyaIdListesi.Contains(sm.SosyalMedyaId))
+                                                                                .ToListAsync();
+
+            List<IletisimBilgileriSosyalMedya> updateEdilecekIletisimBilgileri = await _veterinerDbContext.IletisimBilgileriSosyalMedyalar
+                                                                                        .Where(ibsm => ibsm.IletisimBilgileriId == iletisimBilgileriId)
+                                                                                        .ToListAsync();
+
+            List<SosyalMedya> SecilmeyenSosyalMedyalar = _veterinerDbContext.SosyalMedyalar
+                .AsEnumerable()
+                .Except(SecilenSosyalMedyalar)
+                .ToList();
+
+            foreach (var sosyalMedya in SecilenSosyalMedyalar)
+            {
+                if (!updateEdilecekIletisimBilgileri.Any(ibsm => ibsm.SosyalMedyaId == sosyalMedya.SosyalMedyaId))
+                {
+                    _veterinerDbContext.IletisimBilgileriSosyalMedyalar.Add(new IletisimBilgileriSosyalMedya
+                    {
+                        IletisimBilgileriId = iletisimBilgileriId,
+                        SosyalMedyaId = sosyalMedya.SosyalMedyaId
+                    });
+                }
+            }
+
+            var silinecekIletisimBilgileri = updateEdilecekIletisimBilgileri
+                .Where(ibsm => !SecilenSosyalMedyalar.Any(sm => sm.SosyalMedyaId == ibsm.SosyalMedyaId))
+                .ToList();
+
+            foreach (var silinecek in silinecekIletisimBilgileri)
+            {
+                _veterinerDbContext.IletisimBilgileriSosyalMedyalar.Remove(silinecek);
+            }
+
+            await _veterinerDbContext.SaveChangesAsync();
+
+            AdresDuzenleViewModel model = new();
+            model.IletisimBilgileriListesi = await model.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
+            return View("AdresDuzenle", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdresSec(AdresDuzenleViewModel model)
+        {
+
+            if (!Signature.VerifySignature(model.IletisimBilgileriId.ToString(), model.IletisimBilgileriId.ToString(), model.Imza))
+                return View("BadRequest");
+            var iletisimBigisi = await _veterinerDbContext.IletisimBilgileri.FindAsync(model.IletisimBilgileriId);
+
+            if (iletisimBigisi.AktifMi)
+                iletisimBigisi.AktifMi = false;
+            else
+                iletisimBigisi.AktifMi = true;
+
+            _veterinerDbContext.IletisimBilgileri.Update(iletisimBigisi);
+            await _veterinerDbContext.SaveChangesAsync();
+
+            model.IletisimBilgileriListesi = await model.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
+            return View("AdresDuzenle", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdresSil(AdresDuzenleViewModel model)
+        {
+
+            if (!Signature.VerifySignature(model.IletisimBilgileriId.ToString(), model.IletisimBilgileriId.ToString(), model.Imza))
+                return View("BadRequest");
+
+            IletisimBilgileri iletisimBigisi = await _veterinerDbContext.IletisimBilgileri.FindAsync(model.IletisimBilgileriId);
+            List<IletisimBilgileriSosyalMedya> iletisimBilgisiSosyalMedyaListesi = await _veterinerDbContext.IletisimBilgileriSosyalMedyalar
+                                                                        .Where(ibsm => ibsm.IletisimBilgileriId == model.IletisimBilgileriId)
+                                                                        .ToListAsync();
+
+            _veterinerDbContext.RemoveRange(iletisimBilgisiSosyalMedyaListesi);
+            await _veterinerDbContext.SaveChangesAsync();
+            _veterinerDbContext.IletisimBilgileri.Remove(iletisimBigisi);
+            await _veterinerDbContext.SaveChangesAsync();
+
+
+            model.IletisimBilgileriListesi = await model.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
+            return View("AdresDuzenle", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AdresEditle(AdresDuzenleViewModel model)
+        {
+
+            if (!Signature.VerifySignature(model.IletisimBilgileriId.ToString(), model.IletisimBilgileriId.ToString(), model.Imza))
+                return View("BadRequest");
+            var iletisimBilgileri = await _veterinerDbContext.IletisimBilgileri.FindAsync(model.IletisimBilgileriId);
+
+            AdresEditleViewModel returnModel = new();
+            returnModel.IletisimBilgileriId = iletisimBilgileri.IletisimBilgileriId;
+            returnModel.SubeAdi = iletisimBilgileri.SubeAdi;
+            returnModel.Sehir = iletisimBilgileri.Sehir;
+            returnModel.Ilce = iletisimBilgileri.Ilce;
+            returnModel.Mahalle = iletisimBilgileri.Mahalle;
+            returnModel.Cadde = iletisimBilgileri.Cadde;
+            returnModel.Sokak = iletisimBilgileri.Sokak;
+            returnModel.No = iletisimBilgileri.No;
+            returnModel.TelefonNumarasi = iletisimBilgileri.TelefonNumarasi;
+            returnModel.Imza = Signature.CreateSignature(iletisimBilgileri.IletisimBilgileriId.ToString(), iletisimBilgileri.IletisimBilgileriId.ToString());
+            returnModel.AktifMi = iletisimBilgileri.AktifMi;
+
+            return View(returnModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdresEditle(AdresEditleViewModel model)
+        {
+
+            if (!Signature.VerifySignature(model.IletisimBilgileriId.ToString(), model.IletisimBilgileriId.ToString(), model.Imza))
+                return View("BadRequest");
+
+            AdresEditleValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError("", errors.ErrorMessage);
+                }
+                return View(model);
+            }
+
+            _veterinerDbContext.IletisimBilgileri.Update(model);
+            await _veterinerDbContext.SaveChangesAsync();
+
+
+            AdresDuzenleViewModel returnModel = new();
+            returnModel.IletisimBilgileriListesi = await returnModel.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
+            return View("AdresDuzenle", returnModel);
+        }
+    }
 }
 

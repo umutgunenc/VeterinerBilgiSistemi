@@ -186,6 +186,14 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             return _context.SahipHayvan.Any(x => x.HayvanId == hayvanId && x.AppUser.InsanTckn == model.SahipTckn);
         }
+
+        public static bool BeOwnedAnimal(string tckn)
+        {
+            return _context.AppUsers
+                     .Include(user => user.Hayvanlar) // AppUser ile ilişkili SahipHayvan kayıtlarını dahil et
+                     .Where(user => user.InsanTckn == tckn) // TCKN ile kullanıcıyı filtrele
+                     .Any(user => user.Hayvanlar.Any());
+        }
         public static bool BeInStock(string barkod)
         {
             if (string.IsNullOrEmpty(barkod))
@@ -446,7 +454,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
                 return true;
             return !_context.KanDegerleri.Any(x => x.KanTestiAdi.ToUpper() == tathlilAdi.ToUpper() && x.KanDegerleriId != id);
         }
-        public static bool BeUniqueTitle( string baslik)
+        public static bool BeUniqueTitle(string baslik)
         {
             if (string.IsNullOrEmpty(baslik))
                 return true;
@@ -459,7 +467,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         /// <param name="id"></param>
         /// <param name="tathlilAdi"></param>
         /// <returns></returns>
-        public static bool BeUniqueTitle(int id,string baslik)
+        public static bool BeUniqueTitle(int id, string baslik)
         {
             if (string.IsNullOrEmpty(baslik))
                 return true;
@@ -570,10 +578,6 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             return !_context.KanTestiMuayene.Any(x => x.KanDegerleriId == tahlilId);
         }
-
-
-
-
 
         private static readonly List<string> radioValues = new List<string>
         {

@@ -1,5 +1,31 @@
-﻿
+﻿@model VeterinerBilgiSistemi.Models.ViewModel.Veteriner.KisiSecViewModel
 
 @section VeterinerMenu{
     @await Html.PartialAsync("_VeterinerMenu")
+}
+
+
+<form asp-action="KisiSec" asp-controller="Veteriner" method="post">
+    <div class="form-row mb-2">
+        <div class="col">
+            <input asp-for="InsanTckn" class="form-control" placeholder="Hayvan sahibinin kişinin TCKN numarasını giriniz">
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+        </div>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+        </span>
+    </div>
+</form>
+
+@if (ViewBag.model != null)
+{
+    @await Component.InvokeAsync("KisininHayvanlariniGetir", ViewBag.model);
+}
+
+@if (ViewBag.hayvanBilgileri != null)
+{
+    @await Component.InvokeAsync("HayvanBilgileriniGetir", ViewBag.hayvanBilgileri);
 }

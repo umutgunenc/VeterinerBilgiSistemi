@@ -14,12 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using VeterinerBilgiSistemi.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VeterinerBilgiSistemi.Models.Validators;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 using System.IO;
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 

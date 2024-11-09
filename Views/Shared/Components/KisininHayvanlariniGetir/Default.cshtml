@@ -1,0 +1,31 @@
+﻿@model VeterinerBilgiSistemi.Models.ViewModel.Veteriner.KisiSecViewModel
+
+<form asp-action="HayvanSec" asp-controller="Veteriner" method="post">
+    <div class="form-row mb-2">
+        <div class="col">
+            <select class="form-control" name="hayvanId">
+                @if (Model.KisininHayvanlarininListesi.Count == 0)
+                {
+                    <option value="" disabled selected>Kişinin evcil hayvanı bulunmamaktadır.</option>
+                }
+                else
+                {
+                    <option value="" disabled selected>Muayene Edilecek Hayvanı Seçiniz</option>
+
+                    @foreach (var hayvan in Model.KisininHayvanlarininListesi)
+                    {
+                        <option value="@hayvan.Value" >@hayvan.Text</option>
+                    }
+                }
+            </select>
+            <input type="hidden" name="tckn" value="@Model.InsanTckn"/>          
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+        </div>
+    </div>
+    <div class="col">
+        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
+        </span>
+    </div>
+</form>

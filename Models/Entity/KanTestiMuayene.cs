@@ -11,6 +11,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         [ForeignKey(nameof(KanDegerleriId))]
         public int KanDegerleriId { get; set; }
         public virtual KanDegerleri KanDegerleri { get; set; }
+        public double KanDegeriValue { get; set; }
 
     }
 }

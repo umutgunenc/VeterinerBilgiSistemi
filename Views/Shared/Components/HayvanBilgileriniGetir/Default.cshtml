@@ -1,9 +1,11 @@
-﻿@model Hayvan
+﻿@{
+    var hayvan = ViewBag.hayvanBilgileri as Hayvan;
+}
 
 <h3 class="font-weight-bold text-white">
-    Hayvan Bilgileri   @if (Model.CinsTur.Cins.CinsAdi.ToUpper() == "KÖPEK")
+    Hayvan Bilgileri   @if (hayvan.CinsTur.Cins.CinsAdi.ToUpper() == "KÖPEK")
     {<i class="fa-solid fa-dog"></i> }
-    else if (Model.CinsTur.Tur.TurAdi.ToUpper() == "KEDI")
+    else if (hayvan.CinsTur.Cins.CinsAdi.ToUpper() == "KEDI")
     {<i class="fa-solid fa-cat"></i>}
     else
     {<i class="fa-solid fa-dove"></i>}
@@ -13,20 +15,22 @@
     <div class="row no-gutters">
         <div class="col-md-4">
             <div class="m-3 text-center">
-                <img src="@if (Model.ImgUrl != null) { @Model.ImgUrl } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@Model.HayvanAdi" style="min-height:377px; object-fit:cover">
+                <img src="@if (hayvan.ImgUrl != null) { @hayvan.ImgUrl } else { @Url.Content("~/img/animal.png") }" class="card-img" alt="@hayvan.HayvanAdi" style="min-height:377px; object-fit:cover">
             </div>
         </div>
         <div class="col-md-8 align-self-start">
             <div class="d-flex flex-column">
                 <div class="card-header font-weight-bold pl-0 ml-2 ml-lg-0">
-                    <h3>@Model.HayvanAdi.ToUpper()<h3>
+                    <h3>@hayvan.HayvanAdi.ToUpper()<h3>
                 </div>
                 <div class="">
-                    <h6 class="card-title ml-2 ml-lg-0">Türü : @Model.CinsTur.Tur.TurAdi</h6>
-                    <h6 class="card-title ml-2 ml-lg-0">Cinsi : @Model.CinsTur.Cins.CinsAdi</h6>
-                    <h6 class="card-title ml-2 ml-lg-0">Kilosu : @Model.HayvanKilo</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Türü : @hayvan.CinsTur.Tur.TurAdi</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Cinsi : @hayvan.CinsTur.Cins.CinsAdi</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Kilosu : @hayvan.HayvanKilo</h6>
+                    <h6 class="card-title ml-2 ml-lg-0">Rengi : @hayvan.Renk.RenkAdi</h6>
+
                     <h6 class="card-title ml-2 ml-lg-0">
-                        Cinsiyeti :@if (Model.HayvanCinsiyet == Cinsiyet.Erkek)
+                        Cinsiyeti :@if (hayvan.HayvanCinsiyet == Cinsiyet.Erkek)
                         {
                             @:Erkek
                         }
@@ -35,13 +39,14 @@
                             @:Dişi
                         }
                     </h6>
-                    <h6 class="card-title ml-2 ml-lg-0">Doğum Tarihi : @Model.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
-                    <h6 class="card-title ml-2 ml-lg-0">Sahiplik Tarihi : @Model.Sahipler.Select(x=>x.SahiplenmeTarihi.ToString("dd-MM-yyyy"))</h6>
-
+                    <h6 class="card-title ml-2 ml-lg-0">Doğum Tarihi : @hayvan.HayvanDogumTarihi.ToString("dd-MM-yyyy")</h6>
                     <h6 class="card-title ml-2 ml-lg-0">
-                        Ölüm Tarihi :@if (Model.HayvanOlumTarihi != null)
+                        Sahiplik Tarihi : @hayvan.Sahipler.FirstOrDefault().SahiplenmeTarihi.ToString("dd-MM-yyyy")
+                    </h6>
+                    <h6 class="card-title ml-2 ml-lg-0">
+                        Ölüm Tarihi :@if (hayvan.HayvanOlumTarihi != null)
                         {
-                            @Model.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
+                            @hayvan.HayvanOlumTarihi?.ToString("dd-MM-yyyy")
                         }
                         else
                         {
@@ -49,9 +54,9 @@
                         }
                     </h6>
                     <h6 class="card-title ml-2 ml-lg-0">
-                        Hayvan Annesi : @if (Model.HayvanAnne != null)
+                        Hayvan Annesi : @if (hayvan.HayvanAnne != null)
                         {
-                            @Model.HayvanAnne.HayvanAdi.ToUpper()
+                            @hayvan.HayvanAnne.HayvanAdi.ToUpper()
                         }
                         else
                         {
@@ -59,18 +64,24 @@
                         }
                     </h6>
                     <h6 class="card-title ml-2 ml-lg-0">
-                        Hayvan Babası : @if (Model.HayvanBaba != null)
+                        Hayvan Babası : @if (hayvan.HayvanBaba != null)
                         {
-                            @Model.HayvanBaba.HayvanAdi.ToUpper()
+                            @hayvan.HayvanBaba.HayvanAdi.ToUpper()
                         }
                         else
                         {
                             @: Bilinmiyor
                         }
-                    </h6>                    
-                    <div class="d-flex flex-lg-row flex-column">
-                        <a href="@Url.Action("AddSahip", "Animal", new { hayvanId = Model.HayvanId })" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Muayene Kayıtlarını Gör</a>
+                    </h6>
+                    <div class="row">
+                        <div class="d-flex flex-lg-row flex-column">
+                            <a href="@Url.Action("MuayeneKayitlari", "Veteriner", new { hayvanId = hayvan.HayvanId })" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Muayene Kayıtlarını Gör</a>
+                        </div>
+                        <div class="d-flex flex-lg-row flex-column">
+                            <a href="@Url.Action("MuayeneEt", "Veteriner", new { hayvanId = hayvan.HayvanId })" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Muayene Et</a>
+                        </div>
                     </div>
+
 
                 </div>
             </div>

@@ -907,7 +907,8 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
             model.StokAdi = model.StokAdi.ToUpper();
-            model.Aciklama = model.Aciklama.ToUpper();
+            if (model.Aciklama != null)
+                model.Aciklama = model.Aciklama.ToUpper();
             model.StokBarkod = model.StokBarkod.ToUpper();
 
             _veterinerDbContext.Update(model);

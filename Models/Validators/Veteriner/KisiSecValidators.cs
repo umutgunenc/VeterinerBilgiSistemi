@@ -4,7 +4,7 @@ using VeterinerBilgiSistemi.Models.ViewModel.Veteriner;
 
 namespace VeterinerBilgiSistemi.Models.Validators.Veteriner
 {
-    public class KisiSecValidators :AbstractValidator<KisiSecViewModel>
+    public class KisiSecValidators :AbstractValidator<KisiSecVeterinerViewModel>
     {
         public KisiSecValidators()
         {

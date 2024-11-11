@@ -1,27 +1,27 @@
-﻿@model VeterinerBilgiSistemi.Models.ViewModel.Veteriner.KisiSecViewModel
+﻿@model VeterinerBilgiSistemi.Models.ViewModel.Veteriner.KisiSecVeterinerViewModel
 
 <form asp-action="HayvanSec" asp-controller="Veteriner" method="post">
     <div class="form-row mb-2">
         <div class="col">
-            <select class="form-control" name="hayvanId">
+            <select class="form-control" name="hayvanId" id="select">
                 @if (Model.KisininHayvanlarininListesi.Count == 0)
                 {
-                    <option value="" disabled selected>Kişinin evcil hayvanı bulunmamaktadır.</option>
+                    <option value="" disabled selected id="selectOption">Kişinin evcil hayvanı bulunmamaktadır.</option>
                 }
                 else
                 {
-                    <option value="" disabled selected>Muayene Edilecek Hayvanı Seçiniz</option>
+                    <option value="" disabled selected id="selectOption">Muayene Edilecek Hayvanı Seçiniz</option>
 
                     @foreach (var hayvan in Model.KisininHayvanlarininListesi)
                     {
-                        <option value="@hayvan.Value" >@hayvan.Text</option>
+                        <option value="@hayvan.Value" id="selectOption">@hayvan.Text</option>
                     }
                 }
             </select>
             <input type="hidden" name="tckn" value="@Model.InsanTckn"/>          
         </div>
         <div class="input-group-append">
-            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+            <button class="btn btn-dark rounded-right px-3" type="submit" id="submit">Seç</button>
         </div>
     </div>
     <div class="col">
@@ -29,3 +29,4 @@
         </span>
     </div>
 </form>
+

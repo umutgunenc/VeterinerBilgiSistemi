@@ -336,7 +336,7 @@ namespace VeterinerBilgiSistemi.Controllers
             var cinsAdi = await model.CinsAdiniGetirAsync(_context, hayvan);
             var renkAdi = await model.RenkAdiniGetirAsync(_context, hayvan);
             var hayvanAdi = hayvan.HayvanAdi;
-            // Uygulamanızın geçerli URL'sini almak için
+            // Uygulamanın geçerli URL'sini almak için
             string baseUrl = $"{Request.Scheme}://{Request.Host}";
             string resimYolu = hayvan.ImgUrl != null ? hayvan.ImgUrl : Url.Content("/img/animal.png");
             string imgUrl = $"{baseUrl}{resimYolu}";

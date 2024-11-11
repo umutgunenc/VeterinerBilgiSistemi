@@ -6,7 +6,7 @@ namespace VeterinerBilgiSistemi.ViewComponents
 {
     public class KisininHayvanlariniGetirViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(KisiSecViewModel model)
+        public async Task<IViewComponentResult> InvokeAsync(KisiSecVeterinerViewModel model)
         {
             return View(model);
         }

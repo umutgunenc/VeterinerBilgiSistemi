@@ -1,31 +1,76 @@
-﻿@model VeterinerBilgiSistemi.Models.ViewModel.Veteriner.KisiSecViewModel
-
-@section VeterinerMenu{
-    @await Html.PartialAsync("_VeterinerMenu")
-}
+﻿@model MuayeneEtViewModel
 
 
-<form asp-action="KisiSec" asp-controller="Veteriner" method="post">
-    <div class="form-row mb-2">
-        <div class="col">
-            <input asp-for="InsanTckn" class="form-control" placeholder="Hayvan sahibinin kişinin TCKN numarasını giriniz">
+<div class="container">
+    <form asp-action="MuayeneEt" asp-controller="Veteriner" method="post">
+        <div class="form-group">
+            <label for="searchStok">Stok Ara:</label>
+            <input type="text" id="searchStok" class="form-control" placeholder="Stok adına göre ara" onkeyup="filterStok()">
         </div>
-        <div class="input-group-append">
-            <button class="btn btn-dark rounded-right px-3" type="submit">Seç</button>
+
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-striped" id="stokTable">
+                <thead>
+                    <tr>
+                        <th>Stok Adı</th>
+                        <th>Birimi</th>
+                        <th>Kullanılacak Miktar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stok in Model.StokLarListesi)
+                    {
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox my-2">
+                                    <input class="custom-control-input"
+                                           type="checkbox"
+                                           name=""
+                                           value="false"
+                                           id="@stok.Id" />
+                                    <label class="custom-control-label" for="@stok.Id">
+                                        <p class="m-0">
+                                            @stok.StokAdi
+                                        </p>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                @stok.Birim.BirimAdi
+                            </td>
+                            <td>
+                                <input type="number"
+                                       name=""
+                                       value=""
+                                       min="0"
+                                       step="0.01"
+                                       class="form-control"
+                                       placeholder="Miktar giriniz">
+                            </td>
+                        </tr>
+                    }
+                    @if (true) { }
+
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="col">
-        <span class="row font-weight-bold text-danger bg-light text-danger rounded mb-2" asp-validation-for="InsanTckn">
-        </span>
-    </div>
-</form>
+        <div class="col mb-2">
+            <button type="submit" class="col btn btn-dark rounded mb-2">Muayeneyi Tamamla</button>
+        </div>
+    </form>
+</div>
 
-@if (ViewBag.model != null)
-{
-    @await Component.InvokeAsync("KisininHayvanlariniGetir", ViewBag.model);
+@section scripts{
+    <script>
+        function filterStok() {
+            let searchInput = document.getElementById("searchStok").value.toLowerCase();
+            let rows = document.querySelectorAll("#stokTable tbody tr");
+
+            rows.forEach(row => {
+                let stokAdi = row.cells[0].textContent.toLowerCase();
+                row.style.display = stokAdi.includes(searchInput) ? "" : "none";
+            });
+        }
+    </script>
 }
 
-@if (ViewBag.hayvanBilgileri != null)
-{
-    @await Component.InvokeAsync("HayvanBilgileriniGetir", ViewBag.hayvanBilgileri);
-}

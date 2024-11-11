@@ -32,13 +32,13 @@ namespace VeterinerBilgiSistemi.Controllers
         }
 
         [HttpGet]
-        public IActionResult MuayeneEt()
+        public IActionResult Muayene()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> KisiSec(KisiSecViewModel model)
+        public async Task<IActionResult> KisiSec(KisiSecVeterinerViewModel model)
         {
             KisiSecValidators validator = new();
             ValidationResult result = validator.Validate(model);
@@ -53,18 +53,18 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("MuayeneEt", model);
             }
 
-            model.KisininHayvanlarininListesi = await model.KisininHayvanlarininListesiniGetir(_context, model);
+            model.KisininHayvanlarininListesi = await model.KisininHayvanlarininListesiniGetirAsync(_context, model);
 
             ViewBag.model = model;
             TempData["model"] = JsonConvert.SerializeObject(model);
 
-            return View("MuayeneEt", model);
+            return View("Muayene", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> HayvanSec(string hayvanId, string tckn)
         {
-            KisiSecViewModel model = new();
+            KisiSecVeterinerViewModel model = new();
 
             var hayvanBilgileriKontrol = await model.SecilenHayvanBilgileriniGetirAsync(hayvanId, _context, tckn);
 
@@ -73,21 +73,39 @@ namespace VeterinerBilgiSistemi.Controllers
 
             ViewBag.hayvanBilgileri = hayvanBilgileriKontrol.Item1;
 
-            var returnModel = TempData["model"] as string;
-            KisiSecViewModel deserializedReturnModel = new();
-            if (returnModel != null)          
-                deserializedReturnModel = JsonConvert.DeserializeObject<KisiSecViewModel>(returnModel);
+            KisiSecVeterinerViewModel returnModel = new();
+            returnModel.InsanTckn = tckn;
+            returnModel.KisininHayvanlarininListesi = await returnModel.KisininHayvanlarininListesiniGetirAsync(_context, returnModel);
 
-            ViewBag.model = deserializedReturnModel;
+            ViewBag.model = returnModel;
 
-            return View("MuayeneEt", deserializedReturnModel);
+            return View("Muayene", returnModel);
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> MuayeneEt(string hayvanId)
+        {
+            MuayeneEtViewModel model = new();
+            model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(hayvanId, _context);
+            model.StokLarListesi = await model.MuayenedeKullanilacakStoklarinListesiniGetirAsync(_context);
+            model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
+            model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
+            model.Hekim = await _userManager.GetUserAsync(User);
+
+            if (model.Hayvan == null)
+                return View("BadRequest");
 
 
+            return View(model);
+        }
 
-
+        [HttpPost]
+        public async Task<IActionResult> MuayeneEt(MuayeneEtViewModel model)
+        {
+            return View();
+        }
+        
 
 
 

@@ -1,15 +1,17 @@
 ﻿@model MuayeneEtViewModel
-
+@section styles{
+    <link href="~/css/scrollBar.css" rel="stylesheet" />
+}
 
 <div class="container">
     <form asp-action="MuayeneEt" asp-controller="Veteriner" method="post">
+
         <div class="form-group">
             <label for="searchStok">Stok Ara:</label>
             <input type="text" id="searchStok" class="form-control" placeholder="Stok adına göre ara" onkeyup="filterStok()">
         </div>
-
         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-striped" id="stokTable">
+            <table class="table table-hover table-dark" id="stokTable">
                 <thead>
                     <tr>
                         <th>Stok Adı</th>
@@ -18,30 +20,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var stok in Model.StokLarListesi)
+                    @for (int i = 0; i < Model.StokLarListesi.Count; i++)
                     {
                         <tr>
                             <td>
-                                <div class="custom-control custom-checkbox my-2">
-                                    <input class="custom-control-input"
-                                           type="checkbox"
-                                           name=""
-                                           value="false"
-                                           id="@stok.Id" />
-                                    <label class="custom-control-label" for="@stok.Id">
-                                        <p class="m-0">
-                                            @stok.StokAdi
-                                        </p>
-                                    </label>
-                                </div>
+                                <label for="stok-@Model.StokLarListesi[i].Id">
+                                    <p class="m-0">
+                                        @Model.StokLarListesi[i].StokAdi
+                                    </p>
+                                </label>
                             </td>
                             <td>
-                                @stok.Birim.BirimAdi
+                                @Model.StokLarListesi[i].Birim.BirimAdi
                             </td>
                             <td>
+                                <input type="hidden"
+                                       name="Stoklar[@i].Id"
+                                       value="@Model.StokLarListesi[i].Id" />
                                 <input type="number"
-                                       name=""
-                                       value=""
+                                       id="stok-@Model.StokLarListesi[i].Id"
+                                       name="Stoklar[@i].Miktar"
                                        min="0"
                                        step="0.01"
                                        class="form-control"
@@ -49,18 +47,95 @@
                             </td>
                         </tr>
                     }
-                    @if (true) { }
-
                 </tbody>
             </table>
         </div>
-        <div class="col mb-2">
+        <hr />
+        <div class="form-group row font-weight-bold">
+            <label for="datetime" class="col-md-3 col-form-label">Sonraki Muayene Tariihi</label>
+            <div class="col-md-9">
+                <input type="date" class="form-control" id="datetime" name="" value="" min="@DateTime.Now.ToString("yyyy-MM-dd")">
+            </div>
+        </div>
+        <hr class="font-weight-bold" />
+        <div class="form-group row font-weight-bold">
+            <label for="aciklama" class="col-md-3 col-form-label">Açıklama</label>
+            <div class="col-md-9">
+                <textarea class="form-control" id="aciklama" name="" value="" placeholder="Açıklama" rows="5"></textarea>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group row font-weight-bold">
+            <label for="saglik" class="col-md-3 col-form-label">Saglik Durumu</label>
+            <div class="col-md-9 ">
+                <select class="form-control">
+                    <option selected disabled value="" name="">Hayvanın Sağlık Durumunu Seçiniz</option>
+                    @foreach (var hastalik in Model.HastalikListesi)
+                    {
+                        <option value="@hastalik.HastalikId">@hastalik.HastalikAdi</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="searchKan">Kan Testi Ara:</label>
+            <input type="text" id="searchKan" class="form-control" placeholder="Kan testinin adına göre ara" onkeyup="filterKanDegerleri()">
+        </div>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-hover table-dark" id="kanTestleriTable">
+                <thead>
+                    <tr>
+                        <th>Kan Testi</th>
+                        <th>Birimi</th>
+                        <th>Alt Limit</th>
+                        <th>Üst Limit</th>
+                        <th>Sonuç</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var kanTestleri in Model.KanTestleriListesi)
+                    {
+                        <tr>
+                            <td>
+                                <label for="kanTestleri-@kanTestleri.KanDegerleriId">
+                                    <p class="m-0">
+                                        @kanTestleri.KanTestiAdi
+                                    </p>
+                                </label>
+                            </td>
+                            <td>
+                                @kanTestleri.KanTestiBirimi
+                            </td>
+                            <td>
+                                @kanTestleri.AltLimit
+                            </td>
+                            <td>
+                                @kanTestleri.UstLimit
+                            </td>
+                            <td>
+                                <input type="number"
+                                       id="kanTestleri-@kanTestleri.KanDegerleriId"
+                                       value=""
+                                       min="0"
+                                       step="0.01"
+                                       class="form-control"
+                                       placeholder="Sonuç">
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col my-5 px-0">
             <button type="submit" class="col btn btn-dark rounded mb-2">Muayeneyi Tamamla</button>
         </div>
     </form>
 </div>
 
 @section scripts{
+
     <script>
         function filterStok() {
             let searchInput = document.getElementById("searchStok").value.toLowerCase();
@@ -72,5 +147,17 @@
             });
         }
     </script>
+    <script>
+        function filterKanDegerleri() {
+            let searchInput = document.getElementById("searchKan").value.toLowerCase();
+            let rows = document.querySelectorAll("#kanTestleriTable tbody tr");
+
+            rows.forEach(row => {
+                let testAdi = row.cells[0].textContent.toLowerCase();
+                row.style.display = testAdi.includes(searchInput) ? "" : "none";
+            });
+        }
+    </script>
+
 }
 

@@ -88,7 +88,7 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             MuayeneEtViewModel model = new();
             model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(hayvanId, _context);
-            model.StokLarListesi = await model.MuayenedeKullanilacakStoklarinListesiniGetirAsync(_context);
+            model.StokLarListesi = await model.StoklarinListesiniGetirAsync(_context);
             model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
             model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
             model.Hekim = await _userManager.GetUserAsync(User);

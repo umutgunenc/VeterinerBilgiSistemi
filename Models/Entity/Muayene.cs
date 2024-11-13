@@ -21,7 +21,6 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public DateTime? SonrakiMuayeneTarihi { get; set; }
         public string Aciklama { get; set; }
         public int HekimId { get; set; }
-        public int StokId { get; set; }
         public virtual Hayvan Hayvan { get; set; }
         public virtual AppUser Hekim { get; set; }
         public virtual ICollection<KanTestiMuayene> KanTestleri { get; set; }

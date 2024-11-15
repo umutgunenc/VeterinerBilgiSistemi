@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -111,6 +112,27 @@ namespace VeterinerBilgiSistemi.Controllers
             if (!Signature.VerifySignature(model.HekimId.ToString(), model.HayvanId.ToString(), model.Imza))
                 return View("BadRequest");
 
+            MuayeneEtValidators validator = new();
+            ValidationResult result = validator.Validate(model);
+
+
+            model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(model.HayvanId.ToString(), _context);
+            model.StokLarListesi = await model.StoklarinListesiniGetirAsync(_context);
+            model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
+            model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
+            model.Hekim = await _userManager.GetUserAsync(User);
+            model.Imza = Signature.CreateSignature(model.HekimId.ToString(), model.Hayvan.HayvanId.ToString());
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                return View(model);
+            }
+
             Muayene muayene = new();
             muayene.HekimId = model.HekimId;
             muayene.HayvanId = model.HayvanId;
@@ -151,13 +173,6 @@ namespace VeterinerBilgiSistemi.Controllers
 
             await _context.KanTestiMuayene.AddRangeAsync(kanTestleri);
             await _context.SaveChangesAsync();
-
-            model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(model.HayvanId.ToString(), _context);
-            model.StokLarListesi = await model.StoklarinListesiniGetirAsync(_context);
-            model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
-            model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
-            model.Hekim = await _userManager.GetUserAsync(User);
-            model.Imza = Signature.CreateSignature(model.HekimId.ToString(), model.Hayvan.HayvanId.ToString());
 
             TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
 

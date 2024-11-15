@@ -42,15 +42,18 @@
                             <td>
                                 <input type="hidden"
                                        asp-for="MuayenedeKullanilanStoklar[@i].StokId"
-                                       value="@Model.StokLarListesi[i].Id"/>
+                                       value="@Model.StokLarListesi[i].Id" />
                                 <input type="number"
                                        asp-for="MuayenedeKullanilanStoklar[@i].StokCikisAdet"
                                        min="0"
                                        step="0.01"
                                        class="form-control"
                                        placeholder="Miktar giriniz">
+                                <span class="row text-white bg-danger rounded mt-2 mx-0" asp-validation-for="MuayenedeKullanilanStoklar[@i]">
+                                </span>
                             </td>
                         </tr>
+
                     }
                 </tbody>
             </table>
@@ -60,6 +63,10 @@
             <label for="datetime" class="col-md-3 col-form-label">Sonraki Muayene Tariihi</label>
             <div class="col-md-9">
                 <input type="date" class="form-control" asp-for="SonrakiMuayeneTarihi" min="@DateTime.Now.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="col mx-3 mb-0 mt-3">
+                <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="SonrakiMuayeneTarihi">
+                </span>
             </div>
         </div>
         <hr class="font-weight-bold" />
@@ -77,7 +84,10 @@
                     <option selected disabled value="">Hayvanın Sağlık Durumunu Seçiniz</option>
                 </select>
             </div>
-
+            <div class="col mx-3 mb-0 mt-3">
+                <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="HastalikId">
+                </span>
+            </div>
         </div>
         <hr />
         <div class="form-group">
@@ -106,7 +116,7 @@
                                            id="kanTesti-@Model.KanTestleriListesi[i].KanDegerleriId"
                                            asp-for="MuayendeYapilanKanTestleri[@i].SeciliMi">
 
-                                    <label class="custom-control-label" 
+                                    <label class="custom-control-label"
                                            for="kanTesti-@Model.KanTestleriListesi[i].KanDegerleriId">
                                         <span class="m-0 d-inline">
                                             @Model.KanTestleriListesi[i].KanTestiAdi
@@ -127,12 +137,15 @@
                             <td>
                                 <input type="hidden"
                                        asp-for="MuayendeYapilanKanTestleri[@i].KanDegerleriId"
-                                       value="@Model.KanTestleriListesi[i].KanDegerleriId"/>
+                                       value="@Model.KanTestleriListesi[i].KanDegerleriId" />
                                 <input type="number"
                                        asp-for="MuayendeYapilanKanTestleri[@i].KanDegeriValue"
                                        min="0"
                                        step="0.01"
-                                       class="form-control">
+                                       class="form-control"
+                                       placeholder="Kan Testi Sonucu">
+                                <span class="row text-white bg-danger rounded mt-2 mx-0" asp-validation-for="MuayendeYapilanKanTestleri[@i]">
+                                </span>
                             </td>
                         </tr>
                     }

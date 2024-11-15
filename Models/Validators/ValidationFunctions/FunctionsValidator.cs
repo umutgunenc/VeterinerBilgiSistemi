@@ -220,6 +220,26 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
             return true;
         }
 
+        public static bool BePositiveStock(int id , double? miktar)
+        {
+            var stokHarektlerListesi = _context.StokHareketler
+                .Where(sh => sh.StokId == id)
+                .ToList();
+            double? toplamAlisMiktari = 0;
+            double? toplamSatisMiktari = 0;
+            foreach (var stokHareket in stokHarektlerListesi)
+            {
+                stokHareket.StokGirisAdet ??= 0;
+                stokHareket.StokCikisAdet ??= 0;
+                toplamAlisMiktari += stokHareket.StokGirisAdet;
+                toplamSatisMiktari += stokHareket.StokCikisAdet;
+            }
+
+            if (((toplamSatisMiktari + miktar) >= toplamAlisMiktari) || toplamAlisMiktari <= 0)
+                return false;
+            return true;
+        }
+
         public static bool BeHastalik(int hastalikId)
         {
             return _context.Hastaliklar.Any(h => h.HastalikId == hastalikId);

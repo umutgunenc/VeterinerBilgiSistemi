@@ -16,7 +16,7 @@
                     <tr>
                         <th>Stok Adı</th>
                         <th>Birimi</th>
-                        <th>Kullanılacak Miktar</th>
+                        <th>Miktar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,22 +24,27 @@
                     {
                         <tr>
                             <td>
-                                <label for="stok-@Model.StokLarListesi[i].Id">
-                                    <p class="m-0">
-                                        @Model.StokLarListesi[i].StokAdi
-                                    </p>
-                                </label>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="stok-@Model.StokLarListesi[i].Id"
+                                           asp-for="MuayenedeKullanilanStoklar[@i].SeciliMi">
+
+                                    <label class="custom-control-label" for="stok-@Model.StokLarListesi[i].Id">
+                                        <span class="m-0 d-inline">@Model.StokLarListesi[i].StokAdi</span>
+                                    </label>
+                                </div>
+
                             </td>
                             <td>
                                 @Model.StokLarListesi[i].Birim.BirimAdi
                             </td>
                             <td>
                                 <input type="hidden"
-                                       name="Stoklar[@i].Id"
-                                       value="@Model.StokLarListesi[i].Id" />
+                                       asp-for="MuayenedeKullanilanStoklar[@i].StokId"
+                                       value="@Model.StokLarListesi[i].Id"/>
                                 <input type="number"
-                                       id="stok-@Model.StokLarListesi[i].Id"
-                                       name="Stoklar[@i].Miktar"
+                                       asp-for="MuayenedeKullanilanStoklar[@i].StokCikisAdet"
                                        min="0"
                                        step="0.01"
                                        class="form-control"
@@ -54,26 +59,22 @@
         <div class="form-group row font-weight-bold">
             <label for="datetime" class="col-md-3 col-form-label">Sonraki Muayene Tariihi</label>
             <div class="col-md-9">
-                <input type="date" class="form-control" id="datetime" name="" value="" min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                <input type="date" class="form-control" asp-for="SonrakiMuayeneTarihi" min="@DateTime.Now.ToString("yyyy-MM-dd")">
             </div>
         </div>
         <hr class="font-weight-bold" />
         <div class="form-group row font-weight-bold">
             <label for="aciklama" class="col-md-3 col-form-label">Açıklama</label>
             <div class="col-md-9">
-                <textarea class="form-control" id="aciklama" name="" value="" placeholder="Açıklama" rows="5"></textarea>
+                <textarea class="form-control" asp-for="Aciklama" placeholder="Açıklama" rows="5"></textarea>
             </div>
         </div>
         <hr />
         <div class="form-group row font-weight-bold">
             <label for="saglik" class="col-md-3 col-form-label">Saglik Durumu</label>
-            <div class="col-md-9 ">
-                <select class="form-control">
-                    <option selected disabled value="" name="">Hayvanın Sağlık Durumunu Seçiniz</option>
-                    @foreach (var hastalik in Model.HastalikListesi)
-                    {
-                        <option value="@hastalik.HastalikId">@hastalik.HastalikAdi</option>
-                    }
+            <div class="col-md-9">
+                <select class="form-control" asp-for="HastalikId" asp-items="Model.HastalikListesi">
+                    <option selected disabled value="">Hayvanın Sağlık Durumunu Seçiniz</option>
                 </select>
             </div>
 
@@ -91,43 +92,58 @@
                         <th>Birimi</th>
                         <th>Alt Limit</th>
                         <th>Üst Limit</th>
-                        <th>Sonuç</th>
+                        <th>Test Sonucu</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var kanTestleri in Model.KanTestleriListesi)
+                    @for (int i = 0; i < Model.KanTestleriListesi.Count; i++)
                     {
                         <tr>
                             <td>
-                                <label for="kanTestleri-@kanTestleri.KanDegerleriId">
-                                    <p class="m-0">
-                                        @kanTestleri.KanTestiAdi
-                                    </p>
-                                </label>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="kanTesti-@Model.KanTestleriListesi[i].KanDegerleriId"
+                                           asp-for="MuayendeYapilanKanTestleri[@i].SeciliMi">
+
+                                    <label class="custom-control-label" 
+                                           for="kanTesti-@Model.KanTestleriListesi[i].KanDegerleriId">
+                                        <span class="m-0 d-inline">
+                                            @Model.KanTestleriListesi[i].KanTestiAdi
+                                        </span>
+                                    </label>
+                                </div>
+
                             </td>
                             <td>
-                                @kanTestleri.KanTestiBirimi
+                                @Model.KanTestleriListesi[i].KanTestiBirimi
                             </td>
                             <td>
-                                @kanTestleri.AltLimit
+                                @Model.KanTestleriListesi[i].AltLimit
                             </td>
                             <td>
-                                @kanTestleri.UstLimit
+                                @Model.KanTestleriListesi[i].UstLimit
                             </td>
                             <td>
+                                <input type="hidden"
+                                       asp-for="MuayendeYapilanKanTestleri[@i].KanDegerleriId"
+                                       value="@Model.KanTestleriListesi[i].KanDegerleriId"/>
                                 <input type="number"
-                                       id="kanTestleri-@kanTestleri.KanDegerleriId"
-                                       value=""
+                                       asp-for="MuayendeYapilanKanTestleri[@i].KanDegeriValue"
                                        min="0"
                                        step="0.01"
-                                       class="form-control"
-                                       placeholder="Sonuç">
+                                       class="form-control">
                             </td>
                         </tr>
                     }
+
                 </tbody>
             </table>
         </div>
+        <input type="hidden" asp-for="@Model.HekimId" />
+        <input type="hidden" asp-for="@Model.HayvanId" />
+        <input type="hidden" asp-for="@Model.Imza" />
+
         <div class="col my-5 px-0">
             <button type="submit" class="col btn btn-dark rounded mb-2">Muayeneyi Tamamla</button>
         </div>

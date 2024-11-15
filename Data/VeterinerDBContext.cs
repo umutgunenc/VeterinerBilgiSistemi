@@ -42,9 +42,7 @@ namespace VeterinerBilgiSistemi.Data
         //Ara tablolar n-n
         public virtual DbSet<CinsTur> CinsTur { get; set; }
         public virtual DbSet<SahipHayvan> SahipHayvan { get; set; }
-        public virtual DbSet<HastalikMuayene> HastalikMuayene { get; set; }
         public virtual DbSet<KanTestiMuayene> KanTestiMuayene { get; set; }
-        public virtual DbSet<StokMuayene> StokMuayane { get; set; }
         public virtual DbSet<IletisimBilgileriSosyalMedya> IletisimBilgileriSosyalMedyalar { get; set; }
 
 
@@ -100,28 +98,6 @@ namespace VeterinerBilgiSistemi.Data
 
 
 
-            modelBuilder.Entity<HastalikMuayene>()
-                .HasKey(hm => new { hm.MuayeneId, hm.HastalikId });
-
-            modelBuilder.Entity<HastalikMuayene>()
-                .HasOne(hm => hm.Hastalik)
-                .WithMany(m => m.Muayeneler)
-                .HasForeignKey(hm => hm.HastalikId);
-
-            modelBuilder.Entity<HastalikMuayene>()
-                .HasOne(hm => hm.Muayene)
-                .WithMany(h => h.Hastaliklar)
-                .HasForeignKey(hm => hm.MuayeneId);
-
-            modelBuilder.Entity<HastalikMuayene>()
-                .Property(hm => hm.MuayeneId)
-                .HasColumnName("MuayeneId");
-
-            modelBuilder.Entity<HastalikMuayene>()
-                .Property(hm => hm.HastalikId)
-                .HasColumnName("HastalikId");
-
-
 
             modelBuilder.Entity<KanTestiMuayene>()
                 .HasKey(km => new { km.MuayeneId, km.KanDegerleriId });
@@ -143,29 +119,6 @@ namespace VeterinerBilgiSistemi.Data
             modelBuilder.Entity<KanTestiMuayene>()
                 .Property(km => km.KanDegerleriId)
                 .HasColumnName("KanDegerleriId");
-
-
-
-            modelBuilder.Entity<StokMuayene>()
-                .HasKey(sm => new { sm.MuayeneId, sm.StokId });
-
-            modelBuilder.Entity<StokMuayene>()
-                .HasOne(sm => sm.Stok)
-                .WithMany(m => m.Muayeneler)
-                .HasForeignKey(km => km.StokId);
-
-            modelBuilder.Entity<StokMuayene>()
-                .HasOne(sm => sm.Muayene)
-                .WithMany(k => k.Stoklar)
-                .HasForeignKey(km => km.MuayeneId);
-
-            modelBuilder.Entity<StokMuayene>()
-                .Property(sm => sm.MuayeneId)
-                .HasColumnName("MuayeneId");
-
-            modelBuilder.Entity<StokMuayene>()
-                .Property(sm => sm.StokId)
-                .HasColumnName("StokId");
 
 
 

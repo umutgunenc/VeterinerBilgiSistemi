@@ -10,8 +10,7 @@ namespace VeterinerBilgiSistemi.Models.Entity
         //TODO stoklar için ara tablo oluştur
         public Muayene()
         {
-            Stoklar = new HashSet<StokMuayene>();
-            Hastaliklar = new HashSet<HastalikMuayene>();
+            StokHareketleri = new HashSet<StokHareket>();
             KanTestleri = new HashSet<KanTestiMuayene>();
         }
         public int MuayeneId { get; set; }
@@ -21,10 +20,11 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public DateTime? SonrakiMuayeneTarihi { get; set; }
         public string Aciklama { get; set; }
         public int HekimId { get; set; }
+        public int HastalikId { get; set; }
         public virtual Hayvan Hayvan { get; set; }
         public virtual AppUser Hekim { get; set; }
+        public virtual Hastalik Hastalik { get; set; }
         public virtual ICollection<KanTestiMuayene> KanTestleri { get; set; }
-        public virtual ICollection<StokMuayene> Stoklar { get; set; }
-        public virtual ICollection<HastalikMuayene> Hastaliklar { get; set; }
+        public virtual ICollection<StokHareket>? StokHareketleri { get; set; }
     }
 }

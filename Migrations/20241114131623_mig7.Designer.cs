@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VeterinerBilgiSistemi.Data;
 
 namespace VeterinerBilgiSistemi.Migrations
 {
     [DbContext(typeof(VeterinerDBContext))]
-    partial class VeterinerDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241114131623_mig7")]
+    partial class mig7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +182,7 @@ namespace VeterinerBilgiSistemi.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "99d9b061-c0b1-46c2-90b3-3564f582311c",
+                            ConcurrencyStamp = "29d914a7-9caa-49ca-8176-2e3c1a0a1022",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -285,7 +287,7 @@ namespace VeterinerBilgiSistemi.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "97ee3ce6-6ff6-47e4-88c3-6a3161005e29",
+                            ConcurrencyStamp = "1aad2938-67d8-487f-8e00-a67671990d25",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -294,12 +296,12 @@ namespace VeterinerBilgiSistemi.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELDkUP0oq+09rAreAz2NoGPwV8EC7xTU1BhnhCZg1XssdwPvOk4+IRHJ+r+a6lQb4g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBsNVGoc47jxiLp5tMyq9meFMKy9FOBeiaDyUyVL+Vkng4rl/zs1uQC69vNNWuGcWQ==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d9f61211-902d-4fc8-8eda-3c5dd17ae074",
-                            SifreGecerlilikTarihi = new DateTime(3023, 11, 14, 23, 52, 34, 421, DateTimeKind.Local).AddTicks(8401),
-                            SifreOlusturmaTarihi = new DateTime(2024, 11, 14, 23, 52, 34, 419, DateTimeKind.Local).AddTicks(7772),
+                            SecurityStamp = "ccf34f7d-bde9-472e-a503-af26983fe3f6",
+                            SifreGecerlilikTarihi = new DateTime(3023, 11, 14, 16, 16, 21, 906, DateTimeKind.Local).AddTicks(1863),
+                            SifreOlusturmaTarihi = new DateTime(2024, 11, 14, 16, 16, 21, 904, DateTimeKind.Local).AddTicks(9659),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -392,6 +394,23 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasKey("HastalikId");
 
                     b.ToTable("Hastalik");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.HastalikMuayene", b =>
+                {
+                    b.Property<int>("MuayeneId")
+                        .HasColumnType("int")
+                        .HasColumnName("MuayeneId");
+
+                    b.Property<int>("HastalikId")
+                        .HasColumnType("int")
+                        .HasColumnName("HastalikId");
+
+                    b.HasKey("MuayeneId", "HastalikId");
+
+                    b.HasIndex("HastalikId");
+
+                    b.ToTable("HastalikMuayene");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Hayvan", b =>
@@ -581,9 +600,6 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.Property<string>("Aciklama")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HastalikId")
-                        .HasColumnType("int");
-
                     b.Property<int>("HayvanId")
                         .HasColumnType("int");
 
@@ -600,8 +616,6 @@ namespace VeterinerBilgiSistemi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("MuayeneId");
-
-                    b.HasIndex("HastalikId");
 
                     b.HasIndex("HayvanId");
 
@@ -719,9 +733,6 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.Property<int>("CalisanId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MuayeneId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("SatisTarihi")
                         .HasColumnType("datetime2");
 
@@ -741,11 +752,26 @@ namespace VeterinerBilgiSistemi.Migrations
 
                     b.HasIndex("CalisanId");
 
-                    b.HasIndex("MuayeneId");
-
                     b.HasIndex("StokId");
 
                     b.ToTable("StokHareketler");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.StokMuayene", b =>
+                {
+                    b.Property<int>("MuayeneId")
+                        .HasColumnType("int")
+                        .HasColumnName("MuayeneId");
+
+                    b.Property<int>("StokId")
+                        .HasColumnType("int")
+                        .HasColumnName("StokId");
+
+                    b.HasKey("MuayeneId", "StokId");
+
+                    b.HasIndex("StokId");
+
+                    b.ToTable("StokMuayane");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Tur", b =>
@@ -853,6 +879,25 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.Navigation("Tur");
                 });
 
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.HastalikMuayene", b =>
+                {
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Hastalik", "Hastalik")
+                        .WithMany("Muayeneler")
+                        .HasForeignKey("HastalikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Muayene", "Muayene")
+                        .WithMany("Hastaliklar")
+                        .HasForeignKey("MuayeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hastalik");
+
+                    b.Navigation("Muayene");
+                });
+
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Hayvan", b =>
                 {
                     b.HasOne("VeterinerBilgiSistemi.Models.Entity.CinsTur", "CinsTur")
@@ -926,12 +971,6 @@ namespace VeterinerBilgiSistemi.Migrations
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Muayene", b =>
                 {
-                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Hastalik", "Hastalik")
-                        .WithMany("Muayeneler")
-                        .HasForeignKey("HastalikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("VeterinerBilgiSistemi.Models.Entity.Hayvan", "Hayvan")
                         .WithMany("Muayeneler")
                         .HasForeignKey("HayvanId")
@@ -943,8 +982,6 @@ namespace VeterinerBilgiSistemi.Migrations
                         .HasForeignKey("HekimId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Hastalik");
 
                     b.Navigation("Hayvan");
 
@@ -997,10 +1034,6 @@ namespace VeterinerBilgiSistemi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Muayene", "Muayene")
-                        .WithMany("StokHareketleri")
-                        .HasForeignKey("MuayeneId");
-
                     b.HasOne("VeterinerBilgiSistemi.Models.Entity.Stok", "Stok")
                         .WithMany("StokHareketleri")
                         .HasForeignKey("StokId")
@@ -1008,6 +1041,23 @@ namespace VeterinerBilgiSistemi.Migrations
                         .IsRequired();
 
                     b.Navigation("Calisan");
+
+                    b.Navigation("Stok");
+                });
+
+            modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.StokMuayene", b =>
+                {
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Muayene", "Muayene")
+                        .WithMany("Stoklar")
+                        .HasForeignKey("MuayeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VeterinerBilgiSistemi.Models.Entity.Stok", "Stok")
+                        .WithMany("Muayeneler")
+                        .HasForeignKey("StokId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Muayene");
 
@@ -1082,9 +1132,11 @@ namespace VeterinerBilgiSistemi.Migrations
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Muayene", b =>
                 {
+                    b.Navigation("Hastaliklar");
+
                     b.Navigation("KanTestleri");
 
-                    b.Navigation("StokHareketleri");
+                    b.Navigation("Stoklar");
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Renk", b =>
@@ -1099,6 +1151,8 @@ namespace VeterinerBilgiSistemi.Migrations
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Stok", b =>
                 {
+                    b.Navigation("Muayeneler");
+
                     b.Navigation("StokHareketleri");
                 });
 

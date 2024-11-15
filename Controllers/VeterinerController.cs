@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VeterinerBilgiSistemi.Data;
+using VeterinerBilgiSistemi.Fonksiyonlar;
 using VeterinerBilgiSistemi.Models.Entity;
 using VeterinerBilgiSistemi.Models.Validators.Veteriner;
 using VeterinerBilgiSistemi.Models.ViewModel.Veteriner;
@@ -88,10 +91,12 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             MuayeneEtViewModel model = new();
             model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(hayvanId, _context);
+            model.HayvanId = model.Hayvan.HayvanId;
             model.StokLarListesi = await model.StoklarinListesiniGetirAsync(_context);
             model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
             model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
-            model.Hekim = await _userManager.GetUserAsync(User);
+            model.HekimId = (await _userManager.GetUserAsync(User)).Id;
+            model.Imza = Signature.CreateSignature(model.HekimId.ToString(), model.HayvanId.ToString());
 
             if (model.Hayvan == null)
                 return View("BadRequest");
@@ -103,7 +108,60 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> MuayeneEt(MuayeneEtViewModel model)
         {
-            return View();
+            if (!Signature.VerifySignature(model.HekimId.ToString(), model.HayvanId.ToString(), model.Imza))
+                return View("BadRequest");
+
+            Muayene muayene = new();
+            muayene.HekimId = model.HekimId;
+            muayene.HayvanId = model.HayvanId;
+            muayene.MuayeneTarihi = DateTime.Now;
+            muayene.SonrakiMuayeneTarihi = model.SonrakiMuayeneTarihi;
+            muayene.Aciklama = model.Aciklama.ToUpper();
+            muayene.HastalikId = model.HastalikId;
+
+            await _context.Muayeneler.AddAsync(muayene);
+            await _context.SaveChangesAsync();
+
+            var stokHarekler = model.MuayenedeKullanilanStoklar
+                .Where(x => x.SeciliMi == true)
+                .Select(x => new StokHareket
+                {
+                    StokId = x.StokId,
+                    SatisTarihi = muayene.MuayeneTarihi,
+                    StokHareketTarihi = muayene.MuayeneTarihi,
+                    StokCikisAdet = x.StokCikisAdet,
+                    CalisanId = muayene.HekimId,
+                    MuayeneId = muayene.MuayeneId
+                })
+            .ToList();
+
+            await _context.StokHareketler.AddRangeAsync(stokHarekler);
+            await _context.SaveChangesAsync();
+
+            var kanTestleri = model.MuayendeYapilanKanTestleri
+                .Where(x => x.SeciliMi == true)
+                .Select(x => new KanTestiMuayene
+                {
+                    KanDegerleriId = x.KanDegerleriId,
+                    KanDegeriValue = x.KanDegeriValue,
+                    MuayeneId = muayene.MuayeneId
+
+                })
+                .ToList();
+
+            await _context.KanTestiMuayene.AddRangeAsync(kanTestleri);
+            await _context.SaveChangesAsync();
+
+            model.Hayvan = await model.MuayeneOlacakHayvaniGetirAsync(model.HayvanId.ToString(), _context);
+            model.StokLarListesi = await model.StoklarinListesiniGetirAsync(_context);
+            model.HastalikListesi = await model.HastaliklarListesiniGetirAsync(_context);
+            model.KanTestleriListesi = await model.MuayenedeYapilacakKanTestlerininListeisiniGetirAsync(_context);
+            model.Hekim = await _userManager.GetUserAsync(User);
+            model.Imza = Signature.CreateSignature(model.HekimId.ToString(), model.Hayvan.HayvanId.ToString());
+
+            TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+
+            return View("Muayene");
         }
         
 

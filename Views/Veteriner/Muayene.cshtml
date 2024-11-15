@@ -20,6 +20,15 @@
     </div>
 </form>
 
+@if (TempData["MuayeneEdildi"] != null)
+{
+    <div class="alert alert-success" role="alert" id="MuayeneEdildi">
+        @TempData["MuayeneEdildi"]
+    </div>
+
+}
+
+
 @if (ViewBag.model != null)
 {
     @await Component.InvokeAsync("KisininHayvanlariniGetir", ViewBag.model);
@@ -31,6 +40,14 @@
 }
 
 @section scripts{
+
+    <script>
+        setTimeout(function () {
+            var message = document.getElementById("MuayeneEdildi");
+            message.remove();
+        }, 5000);
+    </script>
+
     <script>
         var submitButton = document.getElementById('submit');
 

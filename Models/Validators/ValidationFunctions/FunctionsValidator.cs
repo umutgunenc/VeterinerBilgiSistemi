@@ -569,10 +569,11 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
             return !_context.SahipHayvan.Where(x => x.AppUser.InsanTckn == yeniSahipTCKN && x.HayvanId == hayvanId && x.AktifMi == true).Any();
         }
 
-        public static bool BeNotUsedHastalik(int hastalikId)
-        {
-            return !_context.HastalikMuayene.Any(x => x.HastalikId == hastalikId);
-        }
+        //TODO duzelt
+        //public static bool BeNotUsedHastalik(int hastalikId)
+        //{
+        //    return !_context.HastalikMuayene.Any(x => x.HastalikId == hastalikId);
+        //}
 
         public static bool BeNotUsedKanTahlili(int tahlilId)
         {

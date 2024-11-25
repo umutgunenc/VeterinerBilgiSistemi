@@ -54,13 +54,13 @@ namespace VeterinerBilgiSistemi.Controllers
                     ModelState.AddModelError("", errors.ErrorMessage);
                 }
 
-                return View("MuayeneEt", model);
+                return View("Muayene", model);
             }
 
             model.KisininHayvanlarininListesi = await model.KisininHayvanlarininListesiniGetirAsync(_context, model);
 
             ViewBag.model = model;
-            TempData["model"] = JsonConvert.SerializeObject(model);
+            //TempData["model"] = JsonConvert.SerializeObject(model);
 
             return View("Muayene", model);
         }
@@ -188,6 +188,7 @@ namespace VeterinerBilgiSistemi.Controllers
         public IActionResult MuayeneKayitlari()
         {
             return View();
+
         }
 
     }

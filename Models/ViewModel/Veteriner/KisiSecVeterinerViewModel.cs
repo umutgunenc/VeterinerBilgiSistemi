@@ -19,11 +19,11 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
         {
             var kisininHayvanlari = await context.Hayvanlar
                 .Include(h => h.Sahipler)
-                .ThenInclude(s => s.AppUser)
+                    .ThenInclude(s => s.AppUser)
                 .Include(h => h.CinsTur)
-                .ThenInclude(ct => ct.Cins)
+                    .ThenInclude(ct => ct.Cins)
                 .Include(h => h.CinsTur)
-                .ThenInclude(ct => ct.Tur)
+                    .ThenInclude(ct => ct.Tur)
                 .Where(h => h.Sahipler.Any(s => s.AppUser.InsanTckn == model.InsanTckn))
                 .ToListAsync();
 
@@ -45,7 +45,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
                 return (null, false);
 
             var hayvan = await context.Hayvanlar
-                .Include(h => h.Sahipler.Where(s => s.AppUser.InsanTckn == tckn))
+                .Include(h => h.Sahipler)
                     .ThenInclude(s => s.AppUser)
                 .Include(h => h.CinsTur)
                     .ThenInclude(ct => ct.Cins)
@@ -54,14 +54,14 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
                 .Include(h => h.Renk)
                 .Include(h => h.HayvanAnne)
                 .Include(h => h.HayvanBaba)
-                .FirstOrDefaultAsync(h => h.HayvanId == hayvanId);
+                .Where(h => h.Sahipler.Any(s => s.AppUser.InsanTckn == tckn))
+                .FirstOrDefaultAsync(h => h.HayvanId == hayvanId);               
 
 
             if (hayvan == null)
                 return (null, false);
 
             return (hayvan, true);
-
 
         }
     }

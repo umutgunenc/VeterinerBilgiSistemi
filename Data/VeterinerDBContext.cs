@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using VeterinerBilgiSistemi.Models.Entity;
 
 namespace VeterinerBilgiSistemi.Data
@@ -173,6 +175,47 @@ namespace VeterinerBilgiSistemi.Data
             modelBuilder.Entity<IdentityUserRole<int>>().HasData(
                 new IdentityUserRole<int> { RoleId = 1, UserId = 1 }
             );
+
+
+            var hastaliklar = new List<Hastalik>
+            {
+                new Hastalik { HastalikAdi = "Sağlıklı", HastalikId = 1 },
+                new Hastalik { HastalikAdi = "Böbrek Yetmezliği", HastalikId = 2 },
+                new Hastalik { HastalikAdi = "Anemi", HastalikId = 3 },
+                new Hastalik { HastalikAdi = "Polisitemi", HastalikId = 4 },
+                new Hastalik { HastalikAdi = "Akut Enfeksiyon", HastalikId = 5 },
+                new Hastalik { HastalikAdi = "Lösemi", HastalikId = 6 },
+                new Hastalik { HastalikAdi = "Karaciğer Hastalıkları", HastalikId = 7 },
+                new Hastalik { HastalikAdi = "Diyabet", HastalikId = 8 },
+                new Hastalik { HastalikAdi = "Hipoalbuminemi", HastalikId = 9 },
+                new Hastalik { HastalikAdi = "Hiponatremi", HastalikId = 10 },
+                new Hastalik { HastalikAdi = "Hiperkalemi", HastalikId = 11 }
+
+            }.AsEnumerable();
+
+            var kanTestleri = new List<KanDegerleri>
+            {
+                new KanDegerleri {KanDegerleriId = 1, AktifMi = true, AltLimit = 0.4, UstLimit = 1.8, KanTestiAdi =     "Kreatinin", KanTestiBirimi = "mg/dL"},
+                new KanDegerleri {KanDegerleriId = 2, AktifMi = true, AltLimit = 12, UstLimit = 18, KanTestiAdi =   "Hemoglobin", KanTestiBirimi = "g/dL"},
+                new KanDegerleri {KanDegerleriId = 3, AktifMi = true, AltLimit = 37, UstLimit = 55, KanTestiAdi = "Hematokrit Yüzdesi", KanTestiBirimi = "%"},
+                new KanDegerleri {KanDegerleriId = 4, AktifMi = true, AltLimit = 5.5, UstLimit = 8.5, KanTestiAdi = "Eritrosit Sayısı", KanTestiBirimi = "milyon/µL"},
+                new KanDegerleri {KanDegerleriId = 5, AktifMi = true, AltLimit = 6, UstLimit = 17, KanTestiAdi = "Lökosit Sayısı", KanTestiBirimi = "bin/µL"},
+                new KanDegerleri {KanDegerleriId = 6, AktifMi = true, AltLimit = 160, UstLimit = 430, KanTestiAdi = "Trombosit Sayısı", KanTestiBirimi = "bin/µL"},
+                new KanDegerleri {KanDegerleriId = 7, AktifMi = true, AltLimit = 10, UstLimit = 109, KanTestiAdi = "Alanin - ALT", KanTestiBirimi = "U/L"},
+                new KanDegerleri {KanDegerleriId = 8, AktifMi = true, AltLimit = 15, UstLimit = 66, KanTestiAdi = "Aspartat - AST", KanTestiBirimi = "U/L"},
+                new KanDegerleri {KanDegerleriId = 9, AktifMi = true, AltLimit = 7, UstLimit = 27, KanTestiAdi = "Üre", KanTestiBirimi = "mg/dL"},
+                new KanDegerleri {KanDegerleriId = 10, AktifMi = true, AltLimit = 2.6, UstLimit = 4, KanTestiAdi = "Albumin", KanTestiBirimi = "g/dL"},
+                new KanDegerleri {KanDegerleriId = 11, AktifMi = true, AltLimit = 75, UstLimit = 120, KanTestiAdi = "Glikoz", KanTestiBirimi = "mg/dL"},
+                new KanDegerleri {KanDegerleriId = 12, AktifMi = true, AltLimit = 138, UstLimit = 154, KanTestiAdi = "Sodyum", KanTestiBirimi = "mEq/L"},
+                new KanDegerleri {KanDegerleriId = 13, AktifMi = true, AltLimit = 3.5, UstLimit = 5.8, KanTestiAdi =    "Potasyum", KanTestiBirimi = "mEq/L"},
+                new KanDegerleri {KanDegerleriId = 14, AktifMi = true, AltLimit = 100, UstLimit = 118, KanTestiAdi = "Klorür", KanTestiBirimi = "mEq/L"},
+                new KanDegerleri {KanDegerleriId = 15, AktifMi = true, AltLimit = 95, UstLimit = 100, KanTestiAdi = "Oksijen Doygunluğu - SpO₂", KanTestiBirimi = "%"}
+            }.AsEnumerable();
+
+
+            modelBuilder.Entity<Hastalik>().HasData(hastaliklar);
+
+            modelBuilder.Entity<KanDegerleri>().HasData(kanTestleri);
 
             base.OnModelCreating(modelBuilder);
 

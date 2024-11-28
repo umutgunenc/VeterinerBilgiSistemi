@@ -180,7 +180,7 @@ namespace VeterinerBilgiSistemi.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "99d9b061-c0b1-46c2-90b3-3564f582311c",
+                            ConcurrencyStamp = "cb4c98ba-ec4c-464b-b178-6a8c63e66341",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -285,7 +285,7 @@ namespace VeterinerBilgiSistemi.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             CalisiyorMu = true,
-                            ConcurrencyStamp = "97ee3ce6-6ff6-47e4-88c3-6a3161005e29",
+                            ConcurrencyStamp = "73617997-cd32-44b4-8a92-6652389f6a61",
                             Email = "umutgunenc@gmail.com",
                             EmailConfirmed = false,
                             InsanAdi = "Umut",
@@ -294,12 +294,12 @@ namespace VeterinerBilgiSistemi.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "UMUTGUNENC@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELDkUP0oq+09rAreAz2NoGPwV8EC7xTU1BhnhCZg1XssdwPvOk4+IRHJ+r+a6lQb4g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJHp/y70dJ3S43Kdg2iwKhSkmpARVC1MvIHdVAn/F8koB6fihz7KoyzuPacXAySGxQ==",
                             PhoneNumber = "05300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d9f61211-902d-4fc8-8eda-3c5dd17ae074",
-                            SifreGecerlilikTarihi = new DateTime(3023, 11, 14, 23, 52, 34, 421, DateTimeKind.Local).AddTicks(8401),
-                            SifreOlusturmaTarihi = new DateTime(2024, 11, 14, 23, 52, 34, 419, DateTimeKind.Local).AddTicks(7772),
+                            SecurityStamp = "30b8bcb4-848b-4343-b221-229c10e8c819",
+                            SifreGecerlilikTarihi = new DateTime(3023, 11, 26, 1, 1, 45, 899, DateTimeKind.Local).AddTicks(8506),
+                            SifreOlusturmaTarihi = new DateTime(2024, 11, 26, 1, 1, 45, 898, DateTimeKind.Local).AddTicks(6257),
                             TermOfUse = true,
                             TwoFactorEnabled = false,
                             UserName = "ADMIN"
@@ -392,6 +392,63 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasKey("HastalikId");
 
                     b.ToTable("Hastalik");
+
+                    b.HasData(
+                        new
+                        {
+                            HastalikId = 1,
+                            HastalikAdi = "Sağlıklı"
+                        },
+                        new
+                        {
+                            HastalikId = 2,
+                            HastalikAdi = "Böbrek Yetmezliği"
+                        },
+                        new
+                        {
+                            HastalikId = 3,
+                            HastalikAdi = "Anemi"
+                        },
+                        new
+                        {
+                            HastalikId = 4,
+                            HastalikAdi = "Polisitemi"
+                        },
+                        new
+                        {
+                            HastalikId = 5,
+                            HastalikAdi = "Akut Enfeksiyon"
+                        },
+                        new
+                        {
+                            HastalikId = 6,
+                            HastalikAdi = "Lösemi"
+                        },
+                        new
+                        {
+                            HastalikId = 7,
+                            HastalikAdi = "Karaciğer Hastalıkları"
+                        },
+                        new
+                        {
+                            HastalikId = 8,
+                            HastalikAdi = "Diyabet"
+                        },
+                        new
+                        {
+                            HastalikId = 9,
+                            HastalikAdi = "Hipoalbuminemi"
+                        },
+                        new
+                        {
+                            HastalikId = 10,
+                            HastalikAdi = "Hiponatremi"
+                        },
+                        new
+                        {
+                            HastalikId = 11,
+                            HastalikAdi = "Hiperkalemi"
+                        });
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.Hayvan", b =>
@@ -531,6 +588,143 @@ namespace VeterinerBilgiSistemi.Migrations
                     b.HasKey("KanDegerleriId");
 
                     b.ToTable("KanDegerleri");
+
+                    b.HasData(
+                        new
+                        {
+                            KanDegerleriId = 1,
+                            AktifMi = true,
+                            AltLimit = 0.40000000000000002,
+                            KanTestiAdi = "Kreatinin",
+                            KanTestiBirimi = "mg/dL",
+                            UstLimit = 1.8
+                        },
+                        new
+                        {
+                            KanDegerleriId = 2,
+                            AktifMi = true,
+                            AltLimit = 12.0,
+                            KanTestiAdi = "Hemoglobin",
+                            KanTestiBirimi = "g/dL",
+                            UstLimit = 18.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 3,
+                            AktifMi = true,
+                            AltLimit = 37.0,
+                            KanTestiAdi = "Hematokrit Yüzdesi",
+                            KanTestiBirimi = "%",
+                            UstLimit = 55.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 4,
+                            AktifMi = true,
+                            AltLimit = 5.5,
+                            KanTestiAdi = "Eritrosit Sayısı",
+                            KanTestiBirimi = "milyon/µL",
+                            UstLimit = 8.5
+                        },
+                        new
+                        {
+                            KanDegerleriId = 5,
+                            AktifMi = true,
+                            AltLimit = 6.0,
+                            KanTestiAdi = "Lökosit Sayısı",
+                            KanTestiBirimi = "bin/µL",
+                            UstLimit = 17.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 6,
+                            AktifMi = true,
+                            AltLimit = 160.0,
+                            KanTestiAdi = "Trombosit Sayısı",
+                            KanTestiBirimi = "bin/µL",
+                            UstLimit = 430.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 7,
+                            AktifMi = true,
+                            AltLimit = 10.0,
+                            KanTestiAdi = "Alanin - ALT",
+                            KanTestiBirimi = "U/L",
+                            UstLimit = 109.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 8,
+                            AktifMi = true,
+                            AltLimit = 15.0,
+                            KanTestiAdi = "Aspartat - AST",
+                            KanTestiBirimi = "U/L",
+                            UstLimit = 66.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 9,
+                            AktifMi = true,
+                            AltLimit = 7.0,
+                            KanTestiAdi = "Üre",
+                            KanTestiBirimi = "mg/dL",
+                            UstLimit = 27.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 10,
+                            AktifMi = true,
+                            AltLimit = 2.6000000000000001,
+                            KanTestiAdi = "Albumin",
+                            KanTestiBirimi = "g/dL",
+                            UstLimit = 4.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 11,
+                            AktifMi = true,
+                            AltLimit = 75.0,
+                            KanTestiAdi = "Glikoz",
+                            KanTestiBirimi = "mg/dL",
+                            UstLimit = 120.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 12,
+                            AktifMi = true,
+                            AltLimit = 138.0,
+                            KanTestiAdi = "Sodyum",
+                            KanTestiBirimi = "mEq/L",
+                            UstLimit = 154.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 13,
+                            AktifMi = true,
+                            AltLimit = 3.5,
+                            KanTestiAdi = "Potasyum",
+                            KanTestiBirimi = "mEq/L",
+                            UstLimit = 5.7999999999999998
+                        },
+                        new
+                        {
+                            KanDegerleriId = 14,
+                            AktifMi = true,
+                            AltLimit = 100.0,
+                            KanTestiAdi = "Klorür",
+                            KanTestiBirimi = "mEq/L",
+                            UstLimit = 118.0
+                        },
+                        new
+                        {
+                            KanDegerleriId = 15,
+                            AktifMi = true,
+                            AltLimit = 95.0,
+                            KanTestiAdi = "Oksijen Doygunluğu - SpO₂",
+                            KanTestiBirimi = "%",
+                            UstLimit = 100.0
+                        });
                 });
 
             modelBuilder.Entity("VeterinerBilgiSistemi.Models.Entity.KanTestiMuayene", b =>

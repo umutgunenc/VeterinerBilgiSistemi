@@ -161,7 +161,7 @@
             <button type="submit" class="col btn btn-dark rounded mb-2">Muayeneyi Tamamla</button>
         </div>
         <div class="col my-2 px-0">
-            <button type="button" class="col btn btn-dark rounded mb-2">Tahmin Yap</button>
+            <button type="button" id="tahmin" class="col btn btn-dark rounded mb-2">Tahmin Yap</button>
         </div>
     </form>
 </div>
@@ -179,6 +179,7 @@
             });
         }
     </script>
+
     <script>
         function filterKanDegerleri() {
             let searchInput = document.getElementById("searchKan").value.toLowerCase();
@@ -191,5 +192,53 @@
         }
     </script>
 
+    <script>
+
+        document.getElementById("tahmin").addEventListener("click", function () {
+            // Tüm checkboxları seç
+            const kanTestiCheckboxes = document.querySelectorAll("#kanTestleriTable input[type='checkbox']");
+            let seciliKanTestleri = [];
+
+            kanTestiCheckboxes.forEach((checkbox) => {
+                if (checkbox.checked) { // Sadece seçili olanları al
+                    let row = checkbox.closest("tr"); // Checkbox'ın bulunduğu satır
+                    let kanDegerleriId = checkbox.id.split("-")[1]; // ID'den Kan Testi ID'sini al
+                    let testSonucuInput = row.querySelector("input[type='number']"); // Test sonucu inputunu seç
+                    let testSonucu = testSonucuInput ? testSonucuInput.value : null; // Sonucu al
+
+                    seciliKanTestleri.push({
+                        KanDegerleriId: kanDegerleriId,
+                        TestSonucu: testSonucu || null
+                    });
+                }
+            });
+
+            // JSON'u oluştur
+            const jsonData = JSON.stringify(seciliKanTestleri);
+
+            // API'ye gönder
+            fetch("http://127.0.0.1:5002/api/tahmin", { // Python API adresinizi buraya yazın
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Python API'den gelen cevap:", data);
+                    alert("Tahmin işlemi tamamlandı!");
+                })
+                .catch(error => {
+                    console.error("Hata oluştu:", error);
+                    alert("Tahmin işlemi sırasında bir hata oluştu.");
+                });
+        });
+    </script>
+
+
+
+    
 }
+        
 

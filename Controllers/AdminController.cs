@@ -25,6 +25,8 @@ namespace VeterinerBilgiSistemi.Controllers
     //bu alanları kaldır
     //stokhareketdetay listesinde ortalama alış fiyatını sil
     //Stok ile ilgili viewlerde kategori listesi şeklinde bir ifade var, onu kategoriler olarak değiştir
+    //stok detay sayfasında alışlar ve satışlar gözükmüyor, düzelt
+    //Sosyal medya duzenle sayfası yapılmamış
 
     [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
     public class AdminController : Controller

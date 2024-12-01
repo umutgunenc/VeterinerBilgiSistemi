@@ -1,0 +1,259 @@
+﻿@model MuayeneNoViewModel
+@section styles{
+    <link href="~/css/scrollBar.css" rel="stylesheet" />
+}
+
+
+<div class="container">
+    @if (TempData["MuayeneGuncellendi"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="MuayeneGuncellendi">
+            @TempData["MuayeneGuncellendi"]
+        </div>
+    }
+    <form asp-action="MuayeneNo" asp-controller="Veteriner" method="post">
+
+        <div class="form-group">
+            <label for="searchStok" class="font-weight-bold">Stok Ara:</label>
+            <input type="text" id="searchStok" class="form-control" placeholder="Stok adına göre ara" onkeyup="filterStok()">
+        </div>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-hover table-dark" id="stokTable">
+                <thead>
+                    <tr>
+                        <th>Stok Adı</th>
+                        <th>Birimi</th>
+                        <th>Miktar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.KullanilanIlaclar.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="stok-@Model.KullanilanIlaclar[i].Stok.Id"
+                                           asp-for="@Model.KullanilanIlaclar[i].YapildiMi">
+                                    <label class="custom-control-label" for="stok-@Model.KullanilanIlaclar[i].Stok.Id">
+                                        <span class="m-0 d-inline">@Model.KullanilanIlaclar[i].Stok.StokAdi</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                @Model.KullanilanIlaclar[i].Stok.Birim.BirimAdi
+                            </td>
+                            <td>
+                                <input type="hidden"
+                                       asp-for="@Model.KullanilanIlaclar[i].Stok.Id"
+                                       value="@Model.KullanilanIlaclar[i].Stok.Id" />
+                                <input type="number"
+                                       asp-for="@Model.KullanilanIlaclar[i].StokCikisAdet"
+                                       value="@Model.KullanilanIlaclar[i].Stok.StokHareketleri.Where(sh=> sh.MuayeneId == Model.Muayene.MuayeneId).FirstOrDefault()?.StokCikisAdet"
+                                       min="0"
+                                       step="0.01"
+                                       class="form-control"
+                                       placeholder="Miktar giriniz">
+                                <span class="row text-white bg-danger rounded mt-2 mx-0" asp-validation-for="@Model.KullanilanIlaclar[i]">
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr />
+        <div class="form-group row font-weight-bold">
+            <label for="datetime" class="col-md-3 col-form-label">Sonraki Muayene Tarihi</label>
+            <div class="col-md-9">
+                <input type="date" class="form-control" asp-for="@Model.Muayene.SonrakiMuayeneTarihi" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="datetime">
+            </div>
+            <div class="col mx-3 mb-0 mt-3">
+                <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="@Model.Muayene.SonrakiMuayeneTarihi">
+                </span>
+            </div>
+        </div>
+        <hr class="font-weight-bold" />
+        <div class="form-group row font-weight-bold">
+            <label for="aciklama" class="col-md-3 col-form-label">Açıklama</label>
+            <div class="col-md-9">
+                <textarea class="form-control" id="aciklama" asp-for="@Model.Muayene.Aciklama" placeholder="Açıklama" rows="5"></textarea>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group row font-weight-bold">
+            <label for="saglik" class="col-md-3 col-form-label">Saglik Durumu</label>
+            <div class="col-md-9">
+                <select class="form-control" asp-for="@Model.Muayene.HastalikId" asp-items="@Model.Hastaliklar" id="saglik">
+                    <option selected disabled value="">Hayvanın Sağlık Durumunu Seçiniz</option>
+                </select>
+            </div>
+            <div class="col mx-3 mb-0 mt-3">
+                <span class="row font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="@Model.Muayene.HastalikId">
+                </span>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="searchKan" class="font-weight-bold">Kan Testi Ara:</label>
+            <input type="text" id="searchKan" class="form-control" placeholder="Kan testinin adına göre ara" onkeyup="filterKanDegerleri()">
+        </div>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-hover table-dark" id="kanTestleriTable">
+                <thead>
+                    <tr>
+                        <th>Kan Testi</th>
+                        <th>Birimi</th>
+                        <th>Alt Limit</th>
+                        <th>Üst Limit</th>
+                        <th>Test Sonucu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.YapilanKanTestleri.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="kanTesti-@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId"
+                                           asp-for="@Model.YapilanKanTestleri[i].SecildiMi">
+
+                                    <label class="custom-control-label"
+                                           for="kanTesti-@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId">
+                                        <span class="m-0 d-inline">
+                                            @Model.YapilanKanTestleri[i].KanTesti.KanTestiAdi
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                @Model.YapilanKanTestleri[i].KanTesti.KanTestiBirimi
+                            </td>
+                            <td>
+                                @Model.YapilanKanTestleri[i].KanTesti.AltLimit
+                            </td>
+                            <td>
+                                @Model.YapilanKanTestleri[i].KanTesti.UstLimit
+                            </td>
+                            <td>
+                                <input type="hidden"
+                                       asp-for="@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId"
+                                       value="@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId" />
+                                <input type="number"
+                                       asp-for="@Model.YapilanKanTestleri[i].KanDegeriValue"
+                                       value="@Model.YapilanKanTestleri[i].KanTesti.Muayeneler.Where(m=> m.MuayeneId == Model.Muayene.MuayeneId).FirstOrDefault()?.KanDegeriValue"
+                                       min="0"
+                                       step="0.01"
+                                       class="form-control"
+                                       placeholder="Kan Testi Sonucu">
+                                <span class="row text-white bg-danger rounded mt-2 mx-0" asp-validation-for="@Model.YapilanKanTestleri[i]">
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <input type="hidden" asp-for="@Model.Muayene.MuayeneId" />
+        <input type="hidden" asp-for="@Model.HayvanId" />
+        <input type="hidden" asp-for="@Model.Imza" />
+
+        <div class="col mt-5 mb-2 px-0">
+            <button type="submit" class="col btn btn-dark rounded mb-2">Düzenle</button>
+        </div>
+        <div class="col my-2 px-0">
+            <button type="button" id="tahmin" class="col btn btn-dark rounded mb-2">Tahmin Yap</button>
+        </div>
+    </form>
+</div>
+
+
+
+@section scripts{
+
+    <script>
+        function filterStok() {
+            let searchInput = document.getElementById("searchStok").value.toLowerCase();
+            let rows = document.querySelectorAll("#stokTable tbody tr");
+
+            rows.forEach(row => {
+                let stokAdi = row.cells[0].textContent.toLowerCase();
+                row.style.display = stokAdi.includes(searchInput) ? "" : "none";
+            });
+        }
+    </script>
+
+    <script>
+        function filterKanDegerleri() {
+            let searchInput = document.getElementById("searchKan").value.toLowerCase();
+            let rows = document.querySelectorAll("#kanTestleriTable tbody tr");
+
+            rows.forEach(row => {
+                let testAdi = row.cells[0].textContent.toLowerCase();
+                row.style.display = testAdi.includes(searchInput) ? "" : "none";
+            });
+        }
+    </script>
+
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("MuayeneGuncellendi");
+            successMessage.remove();
+        }, 4500);
+
+    </script>
+
+
+    <script>
+
+        document.getElementById("tahmin").addEventListener("click", function () {
+            // Tüm checkboxları seç
+            const kanTestiCheckboxes = document.querySelectorAll("#kanTestleriTable input[type='checkbox']");
+            let seciliKanTestleri = [];
+
+            kanTestiCheckboxes.forEach((checkbox) => {
+                if (checkbox.checked) { // Sadece seçili olanları al
+                    let row = checkbox.closest("tr"); // Checkbox'ın bulunduğu satır
+                    let kanDegerleriId = checkbox.id.split("-")[1]; // ID'den Kan Testi ID'sini al
+                    let testSonucuInput = row.querySelector("input[type='number']"); // Test sonucu inputunu seç
+                    let testSonucu = testSonucuInput ? testSonucuInput.value : null; // Sonucu al
+
+                    seciliKanTestleri.push({
+                        KanDegerleriId: kanDegerleriId,
+                        TestSonucu: testSonucu || null
+                    });
+                }
+            });
+
+            // JSON'u oluştur
+            const jsonData = JSON.stringify(seciliKanTestleri);
+
+            // API'ye gönder
+            fetch("http://127.0.0.1:5002/api/tahmin", { // Python API adresinizi buraya yazın
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Python API'den gelen cevap:", data);
+                    alert("Tahmin işlemi tamamlandı!");
+                })
+                .catch(error => {
+                    console.error("Hata oluştu:", error);
+                    alert("Tahmin işlemi sırasında bir hata oluştu.");
+                });
+        });
+    </script>
+
+
+
+
+}
+
+

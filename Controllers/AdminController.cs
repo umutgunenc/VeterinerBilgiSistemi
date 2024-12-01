@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using VeterinerBilgiSistemi.Models.Validators.Admin;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using VeterinerBilgiSistemi.Models.Validators;
 using System.IO;
 using System.Collections.Generic;
 

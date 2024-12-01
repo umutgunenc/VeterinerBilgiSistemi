@@ -1,0 +1,170 @@
+﻿@model MuayeneKayitlariViewModel
+
+
+<div class="d-inline justify-content-between">
+    <form asp-controller="Veteriner" asp-action="MuayeneKayitlari" method="get">
+        <div class="form-row">
+            <div class="form-group col-md">
+                <label for="HayvanAdi" class="text-white font-weight-bold">Hayvan Adı</label>
+                <input type="text" class="form-control" id="HayvanAdi" asp-for="HayvanAdi">
+            </div>
+            <div class="form-group col-md">
+                <label for="HekimAdi" class="text-white font-weight-bold">Hekim Adı</label>
+                <input type="text" class="form-control" id="HekimAdi" asp-for="HekimAdi">
+            </div>
+            <div class="form-group col-md">
+                <label for="baslangicTarihi" class="text-white font-weight-bold">Başlangıç Tarihi</label>
+                <input type="date" class="form-control" id="baslangicTarihi" asp-for="ilkTarih">
+            </div>
+            <div class="form-group col-md">
+                <label for="bitisTarihi" class="text-white font-weight-bold">Bitiş Tarihi</label>
+                <input type="date" class="form-control" id="bitisTarihi" asp-for="sonTarih">
+            </div>
+            <div class="form-group col-auto">
+                <label class="d-block text-white font-weight-bold">&nbsp;</label>
+                <a class="btn btn-warning w-100" href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = 1, HayvanAdi = "", HekimAdi = "", ilkTarih = "", sonTarih = "" })">Reset</a>
+            </div>
+
+            <div class="form-group col-auto">
+                <label class="d-block text-white font-weight-bold">&nbsp;</label>
+                <button class="btn btn-primary w-100" type="submit">Filtrele</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Muayene No</th>
+            <th scope="col">Muayene Tarihi</th>
+            <th scope="col">Hayvan Adı</th>
+            <th scope="col">Sağlık Durumu</th>
+            <th scope="col">Hayvan Sahibi</th>
+            <th scope="col">Veteriner Hekim</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var muayene in Model.MuayenelerListesi)
+        {
+            <tr onclick="window.location='@Url.Action("MuayeneNo", "Veteriner", new { id = muayene.MuayeneId })'" style="cursor:pointer">
+                <th scope="row">@muayene.MuayeneId</th>
+                <td>@muayene.MuayeneTarihi</td>
+                <td>@muayene.Hayvan.HayvanAdi</td>
+                <td>@muayene.Hastalik.HastalikAdi</td>
+                <td>@muayene.Hayvan.Sahipler.FirstOrDefault().AppUser.InsanAdi.ToUpper() @muayene.Hayvan.Sahipler.FirstOrDefault().AppUser.InsanSoyadi.ToUpper()</td>
+                <td>@muayene.Hekim.InsanAdi.ToUpper() @muayene.Hekim.InsanSoyadi.ToUpper() </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example" class="d-flex justify-content-between">
+    <div class="form-row">
+        <div class="col-auto">
+            <select class="custom-select mr-sm-2 d-inline-block float-start bg-dark text-white"
+                    style="width: auto;"
+                    onchange="window.location.href=this.value">
+                <option selected>Sayfa Seçiniz</option>
+                @for (int i = 1; i <= Model.SonSayfaNumarasi; i++)
+                {
+                    <option value="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = i, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(i). Sayfa
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+    <ul class="pagination justify-content-end float-end">
+        <li class="page-item bg-dark text-white">
+            <a class="page-link bg-dark text-white" href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = 1, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })" tabindex="-1">İlk</a>
+        </li>
+        @if (Model.SonSayfaNumarasi >= 3)
+        {
+            @if (Model.MevcutSayfa == 1)
+            {
+                <li class="page-item">
+                    <a class="page-link bg-warning text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa + 1, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd")})">
+                        @(Model.MevcutSayfa+1)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa +2, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa+2)
+                    </a>
+                </li>
+
+            }
+            else if (Model.MevcutSayfa == Model.SonSayfaNumarasi)
+            {
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa -2, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa+-2)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa - 1, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih })">
+                        @(Model.MevcutSayfa-1)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-warning text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih, sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa)
+                    </a>
+                </li>
+
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa - 1, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa-1)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-warning text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white"
+                       href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.MevcutSayfa + 1, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">
+                        @(Model.MevcutSayfa+1)
+                    </a>
+                </li>
+
+            }
+        }
+        <li class="page-item">
+            <a class="page-link bg-dark text-white" href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = Model.SonSayfaNumarasi, HayvanAdi = Model.HayvanAdi, HekimAdi = Model.HekimAdi, ilkTarih = Model.ilkTarih?.ToString("yyyy-MM-dd"), sonTarih = Model.sonTarih?.ToString("yyyy-MM-dd") })">Son</a>
+        </li>
+    </ul>
+</nav>
+
+@section scripts {
+
+    <script>
+
+        var ilkTarih = document.getElementById("baslangicTarihi").value;
+
+        if (ilkTarih == "1975-01-01") {
+
+            document.getElementById("baslangicTarihi").value = '';
+        }
+    </script>
+}

@@ -7,7 +7,7 @@
     <form asp-action="MuayeneEt" asp-controller="Veteriner" method="post">
 
         <div class="form-group">
-            <label for="searchStok">Stok Ara:</label>
+            <label for="searchStok" class="font-weight-bold">Stok Ara:</label>
             <input type="text" id="searchStok" class="form-control" placeholder="Stok adına göre ara" onkeyup="filterStok()">
         </div>
         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -60,7 +60,7 @@
         </div>
         <hr />
         <div class="form-group row font-weight-bold">
-            <label for="datetime" class="col-md-3 col-form-label">Sonraki Muayene Tariihi</label>
+            <label for="SonrakiMuayeneTarihi" class="col-md-3 col-form-label">Sonraki Muayene Tarihi</label>
             <div class="col-md-9">
                 <input type="date" class="form-control" asp-for="SonrakiMuayeneTarihi" min="@DateTime.Now.ToString("yyyy-MM-dd")">
             </div>
@@ -71,14 +71,14 @@
         </div>
         <hr class="font-weight-bold" />
         <div class="form-group row font-weight-bold">
-            <label for="aciklama" class="col-md-3 col-form-label">Açıklama</label>
+            <label for="Aciklama" class="col-md-3 col-form-label">Açıklama</label>
             <div class="col-md-9">
                 <textarea class="form-control" asp-for="Aciklama" placeholder="Açıklama" rows="5"></textarea>
             </div>
         </div>
         <hr />
         <div class="form-group row font-weight-bold">
-            <label for="saglik" class="col-md-3 col-form-label">Saglik Durumu</label>
+            <label for="HastalikId" class="col-md-3 col-form-label">Saglik Durumu</label>
             <div class="col-md-9">
                 <select class="form-control" asp-for="HastalikId" asp-items="Model.HastalikListesi">
                     <option selected disabled value="">Hayvanın Sağlık Durumunu Seçiniz</option>
@@ -91,7 +91,7 @@
         </div>
         <hr />
         <div class="form-group">
-            <label for="searchKan">Kan Testi Ara:</label>
+            <label for="searchKan" class="font-weight-bold">Kan Testi Ara:</label>
             <input type="text" id="searchKan" class="form-control" placeholder="Kan testinin adına göre ara" onkeyup="filterKanDegerleri()">
         </div>
         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">

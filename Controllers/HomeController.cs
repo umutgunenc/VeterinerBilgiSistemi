@@ -5,10 +5,12 @@ using VeterinerBilgiSistemi.Models.Entity;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace VeterinerBilgiSistemi.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly VeterinerDBContext _context;

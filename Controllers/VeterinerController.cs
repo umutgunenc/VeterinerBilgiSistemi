@@ -108,6 +108,7 @@ namespace VeterinerBilgiSistemi.Controllers
             return View(model);
         }
 
+        //TODO validation mesajları için alert ekle
         [HttpPost]
         public async Task<IActionResult> MuayeneEt(MuayeneEtViewModel model)
         {
@@ -192,7 +193,7 @@ namespace VeterinerBilgiSistemi.Controllers
         {
             model.MevcutSayfa = model.MevcutSayfa <= 0 ? 1 : model.MevcutSayfa;
 
-            model.ilkTarih = model.ilkTarih ?? null; 
+            model.ilkTarih = model.ilkTarih ?? null;
             model.sonTarih = model.sonTarih ?? DateTime.Now;
 
 
@@ -200,7 +201,7 @@ namespace VeterinerBilgiSistemi.Controllers
             model.HekimAdi = model.HekimAdi?.Trim() ?? string.Empty;
             model.HayvanAdi = model.HayvanAdi?.Trim() ?? string.Empty;
 
-            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context,model);
+            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context, model);
             model.SonSayfaNumarasi = model.SonSayfaNumarasi <= 0 ? 1 : model.SonSayfaNumarasi;
 
             model.MevcutSayfa = model.MevcutSayfa > model.SonSayfaNumarasi ? model.SonSayfaNumarasi : model.MevcutSayfa;
@@ -213,7 +214,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> MuayeneNo (int id)
+        public async Task<IActionResult> MuayeneNo(int id)
         {
             MuayeneNoViewModel model = new();
 
@@ -237,8 +238,6 @@ namespace VeterinerBilgiSistemi.Controllers
             ValidationResult result = validator.Validate(model);
 
 
-
-
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
@@ -255,28 +254,61 @@ namespace VeterinerBilgiSistemi.Controllers
                 returnModel.YapilanKanTestleri = await returnModel.KanTestleriListesiniGetirAsync(_context);
                 returnModel.Hastaliklar = await returnModel.HastalikListesiniGetirAsync(_context);
 
-                foreach (var item1 in returnModel.KullanilanIlaclar)
+                for (int i = 0; i < returnModel.KullanilanIlaclar.Count; i++)
                 {
-                    foreach (var item2 in model.KullanilanIlaclar)
+                    returnModel.KullanilanIlaclar[i].Stok.StokHareketleri.FirstOrDefault().StokCikisAdet = model.KullanilanIlaclar[i].StokCikisAdet;
+                    if (model.KullanilanIlaclar[i].YapildiMi)
+                        returnModel.KullanilanIlaclar[i].YapildiMi = true;
+                    else
+                        returnModel.KullanilanIlaclar[i].YapildiMi = false;
+                }
+                for (int i = 0; i < returnModel.YapilanKanTestleri.Count; i++)
+                {
+                    //if (returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler == null)
+                    //    returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler = new List<KanTestiMuayene>();
+
+                    if (returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.FirstOrDefault() == null)
                     {
-                        double? a = item2.StokCikisAdet;
-                        if (item1.Stok.Id == item2.Stok.Id)
+                        returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.Add(new KanTestiMuayene
                         {
-                            if (item2.YapildiMi == false)
-                                item1.YapildiMi = false;
-                            else if (item2.YapildiMi)
-                                item2.YapildiMi = true;
-                            item1.StokCikisAdet = item2.StokCikisAdet;
-                        }
+                            KanDegerleriId = model.YapilanKanTestleri[i].KanDegerleriId,
+                            KanDegeriValue = model.YapilanKanTestleri[i].KanDegeriValue,
+                            MuayeneId = returnModel.Muayene.MuayeneId,
+                        });
                     }
+
+                    var mevcutMuayene = returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler
+                        .FirstOrDefault(x => x.Muayene != null && x.Muayene.MuayeneId == model.Muayene.MuayeneId);
+
+                    if (mevcutMuayene == null)
+                    {
+                        mevcutMuayene = new KanTestiMuayene
+                        {
+                            KanDegerleriId = model.YapilanKanTestleri[i].KanDegerleriId,
+                            MuayeneId = model.Muayene.MuayeneId,
+                        };
+
+                        returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.Add(mevcutMuayene);
+                    }
+
+                    mevcutMuayene.KanDegeriValue = model.YapilanKanTestleri[i].KanDegeriValue;
+
+                    var hedefMuayene = returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler
+                        .FirstOrDefault(x => x.Muayene != null && x.Muayene.MuayeneId == model.Muayene.MuayeneId);
+
+                    if (hedefMuayene != null)
+                        hedefMuayene.KanDegeriValue = model.YapilanKanTestleri[i].KanDegeriValue;
+
+                    returnModel.YapilanKanTestleri[i].SecildiMi = model.YapilanKanTestleri[i].SecildiMi;
                 }
 
+                TempData["Hata"] = "Form Doldurulurken Yanlis Bir Deger Girildi.\nGirilen Degerleri Kontrol Ediniz.";
                 return View(returnModel);
             }
 
             var muayene = model.Muayene;
             if (muayene.Aciklama != null)
-                muayene.Aciklama=muayene.Aciklama.ToUpper();
+                muayene.Aciklama = muayene.Aciklama.ToUpper();
 
             muayene.MuayeneTarihi = DateTime.Now;
             var hekim = await _userManager.GetUserAsync(User);
@@ -292,7 +324,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
             List<StokHareket> yeniStokListesi = new();
 
-            foreach (var stokHareket in model.KullanilanIlaclar.Where(ki=>ki.YapildiMi==true))
+            foreach (var stokHareket in model.KullanilanIlaclar.Where(ki => ki.YapildiMi == true))
             {
                 var yeniStokHareket = new StokHareket();
                 yeniStokHareket.StokCikisAdet = stokHareket.StokCikisAdet;
@@ -308,26 +340,16 @@ namespace VeterinerBilgiSistemi.Controllers
             _context.StokHareketler.RemoveRange(stokHarektler);
             await _context.SaveChangesAsync();
 
-
             await _context.StokHareketler.AddRangeAsync(yeniStokListesi);
             await _context.SaveChangesAsync();
-
-                       
-
-
-
-
-
 
             var eskiKanDegerleriListesi = await _context.KanTestiMuayene
                 .Where(ktm => ktm.MuayeneId == muayene.MuayeneId)
                 .ToListAsync();
 
+            List<KanTestiMuayene> yeniKanTestiListesi = new();
 
-
-            List<KanTestiMuayene> yeniKanTestiListesi = new ();
-
-            foreach (var kanTesti in model.YapilanKanTestleri.Where(x=>x.SecildiMi==true))
+            foreach (var kanTesti in model.YapilanKanTestleri.Where(x => x.SecildiMi == true))
             {
                 var yeniKanTesti = new KanTestiMuayene();
                 yeniKanTesti.MuayeneId = muayene.MuayeneId;
@@ -345,15 +367,9 @@ namespace VeterinerBilgiSistemi.Controllers
 
             TempData["MuayeneGuncellendi"] = "Yapilan değişiklikler başarılı bir şekilde kaydedildi.";
 
-            //model.Muayene = model.Muayene;
-            //model.HayvanId = model.Muayene.HayvanId;
-            //model.Imza = Signature.CreateSignature(model.HayvanId.ToString(), model.Muayene.MuayeneId.ToString());
-            //model.KullanilanIlaclar = await model.IlaclarListesiniGetirAsync(_context);
-            //model.YapilanKanTestleri = await model.KanTestleriListesiniGetirAsync(_context);
-            //model.Hastaliklar = await model.HastalikListesiniGetirAsync(_context);
-
-            return RedirectToAction("MuayeneNo", new { id =muayene.MuayeneId});
+            return RedirectToAction("MuayeneNo", new { id = muayene.MuayeneId });
         }
 
     }
 }
+

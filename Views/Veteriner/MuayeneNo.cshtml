@@ -3,6 +3,14 @@
     <link href="~/css/scrollBar.css" rel="stylesheet" />
 }
 
+@if (TempData["Hata"] != null)
+{
+    <script>
+        var message = `@TempData["Hata"].ToString().Replace("\n", "\\n").Replace("\r", "")`;
+        alert(message);
+    </script>
+}
+
 
 <div class="container">
     @if (TempData["MuayeneGuncellendi"] != null)
@@ -50,7 +58,7 @@
                                        value="@Model.KullanilanIlaclar[i].Stok.Id" />
                                 <input type="number"
                                        asp-for="@Model.KullanilanIlaclar[i].StokCikisAdet"
-                                       value="@Model.KullanilanIlaclar[i].Stok.StokHareketleri.Where(sh=> sh.MuayeneId == Model.Muayene.MuayeneId).FirstOrDefault()?.StokCikisAdet"
+                                       value="@Model.KullanilanIlaclar[i].Stok.StokHareketleri.FirstOrDefault()?.StokCikisAdet"
                                        min="0"
                                        step="0.01"
                                        class="form-control"
@@ -144,7 +152,7 @@
                                        value="@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId" />
                                 <input type="number"
                                        asp-for="@Model.YapilanKanTestleri[i].KanDegeriValue"
-                                       value="@Model.YapilanKanTestleri[i].KanTesti.Muayeneler.Where(m=> m.MuayeneId == Model.Muayene.MuayeneId).FirstOrDefault()?.KanDegeriValue"
+                                       value="@Model.YapilanKanTestleri[i].KanTesti.Muayeneler.Where(x=>x.MuayeneId==Model.Muayene.MuayeneId).FirstOrDefault()?.KanDegeriValue"
                                        min="0"
                                        step="0.01"
                                        class="form-control"

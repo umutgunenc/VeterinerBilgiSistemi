@@ -48,7 +48,7 @@
     <tbody>
         @foreach (var muayene in Model.MuayenelerListesi)
         {
-            <tr onclick="window.location='@Url.Action("MuayeneNo", "Veteriner", new { id = muayene.MuayeneId })'" style="cursor:pointer">
+            <tr onclick="window.open('@Url.Action("MuayeneNo", "Veteriner", new { id = muayene.MuayeneId })', '_blank')" style="cursor:pointer">
                 <th scope="row">@muayene.MuayeneId</th>
                 <td>@muayene.MuayeneTarihi</td>
                 <td>@muayene.Hayvan.HayvanAdi</td>

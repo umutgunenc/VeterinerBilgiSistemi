@@ -83,7 +83,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
             };
 
-            var hayvan = await model.KaydedilecekHayvaniOlusturAsync(_context, model);
+            var hayvan = await model.KaydedilecekHayvaniOlusturAsync(_context);
             //hayvanın id degerine ulasabilmek için öncelikle onu db'ye kaydetmek gerekiyor.
             await _context.Hayvanlar.AddAsync(hayvan);
             await _context.SaveChangesAsync();
@@ -210,7 +210,7 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
 
-            var hayvan = await model.HayvaniGetirAsync(_context, model);
+            var hayvan = await model.HayvaniGetirAsync(_context);
 
             if (model.PhotoOption == "changePhoto" && model.filePhoto != null)
             {
@@ -264,7 +264,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return RedirectToAction("Information", "User");
             }
 
-            var guncelHayvan = await model.GuncelHayvanBilgileriniGetirAsnyc(_context, model, hayvan);
+            var guncelHayvan = await model.GuncelHayvanBilgileriniGetirAsnyc(_context, hayvan);
 
             _context.Hayvanlar.Update(guncelHayvan);
             await _context.SaveChangesAsync();

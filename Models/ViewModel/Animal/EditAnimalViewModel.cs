@@ -270,25 +270,25 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
         {
             return await context.SahipHayvan.Where(sh => sh.SahipId == user.Id && sh.HayvanId == hayvan.HayvanId).FirstOrDefaultAsync();
         }
-        public async Task<Hayvan> HayvaniGetirAsync(VeterinerDBContext context, EditAnimalViewModel model)
+        public async Task<Hayvan> HayvaniGetirAsync(VeterinerDBContext context)
         {
-            return await context.Hayvanlar.FindAsync(model.HayvanId);
+            return await context.Hayvanlar.FindAsync(HayvanId);
         }
-        public async Task<Hayvan> GuncelHayvanBilgileriniGetirAsnyc(VeterinerDBContext context, EditAnimalViewModel model, Hayvan hayvan)
+        public async Task<Hayvan> GuncelHayvanBilgileriniGetirAsnyc(VeterinerDBContext context, Hayvan hayvan)
         {
-            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
+            hayvan.HayvanAdi = HayvanAdi.ToUpper();
             int cinsTurId = await context.CinsTur
-                .Where(ct => ct.CinsId == model.CinsId && ct.TurId == model.TurId)
+                .Where(ct => ct.CinsId == CinsId && ct.TurId == TurId)
                 .Select(ct => ct.Id)
                 .FirstOrDefaultAsync();
             hayvan.CinsTurId = cinsTurId;
-            hayvan.RenkId = model.RenkId;
-            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
-            hayvan.HayvanKilo = model.HayvanKilo;
-            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
-            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
-            hayvan.HayvanAnneId = model.HayvanAnneId;
-            hayvan.HayvanBabaId = model.HayvanBabaId;
+            hayvan.RenkId = RenkId;
+            hayvan.HayvanCinsiyet = HayvanCinsiyet;
+            hayvan.HayvanKilo = HayvanKilo;
+            hayvan.HayvanDogumTarihi = HayvanDogumTarihi;
+            hayvan.HayvanOlumTarihi = HayvanOlumTarihi;
+            hayvan.HayvanAnneId = HayvanAnneId;
+            hayvan.HayvanBabaId = HayvanBabaId;
             hayvan.ImgUrl = hayvan.ImgUrl;
 
             return hayvan;

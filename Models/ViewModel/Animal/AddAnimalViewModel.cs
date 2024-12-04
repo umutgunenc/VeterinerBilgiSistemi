@@ -158,22 +158,22 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             return Model;
         }
 
-        public async Task<Hayvan> KaydedilecekHayvaniOlusturAsync(VeterinerDBContext context, AddAnimalViewModel model)
+        public async Task<Hayvan> KaydedilecekHayvaniOlusturAsync(VeterinerDBContext context)
         {
             Hayvan hayvan = new Hayvan();
 
-            hayvan.HayvanAdi = model.HayvanAdi.ToUpper();
-            hayvan.HayvanCinsiyet = model.HayvanCinsiyet;
-            hayvan.HayvanKilo = model.HayvanKilo;
-            hayvan.HayvanDogumTarihi = model.HayvanDogumTarihi;
-            hayvan.HayvanOlumTarihi = model.HayvanOlumTarihi;
-            hayvan.HayvanAnneId = model.HayvanAnneId;
-            hayvan.HayvanBabaId = model.HayvanBabaId;
+            hayvan.HayvanAdi = HayvanAdi.ToUpper();
+            hayvan.HayvanCinsiyet = HayvanCinsiyet;
+            hayvan.HayvanKilo = HayvanKilo;
+            hayvan.HayvanDogumTarihi = HayvanDogumTarihi;
+            hayvan.HayvanOlumTarihi = HayvanOlumTarihi;
+            hayvan.HayvanAnneId = HayvanAnneId;
+            hayvan.HayvanBabaId = HayvanBabaId;
             var cinsTur = await context.CinsTur
-                                    .Where(ct => ct.CinsId == model.SecilenCinsId && ct.TurId == model.SecilenTurId)
+                                    .Where(ct => ct.CinsId == SecilenCinsId && ct.TurId == SecilenTurId)
                                     .FirstOrDefaultAsync();
             hayvan.CinsTur = cinsTur;
-            hayvan.RenkId = model.RenkId;
+            hayvan.RenkId = RenkId;
 
             return hayvan;
         }

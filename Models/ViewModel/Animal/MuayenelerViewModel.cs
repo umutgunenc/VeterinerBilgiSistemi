@@ -1,31 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinerBilgiSistemi.Data;
 using VeterinerBilgiSistemi.Models.Entity;
+using VeterinerBilgiSistemi.Models.ViewModel.Veteriner;
 
-namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
+namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
 {
-    public class MuayeneKayitlariViewModel : Muayene
+    public class MuayenelerViewModel : Muayene
     {
-        public int SonSayfaNumarasi { get; set; }
-        public int MevcutSayfa { get; set; }
-        public string HayvanAdi { get; set; }
+        public List<Muayene> MuayenelerListesi { get;set; }
         public string HekimAdi { get; set; }
-        public int HayvanId { get; set; }
-
-        public DateTime? ilkTarih { get; set; }
-        public DateTime? sonTarih { get; set; }
-
-        public List<Muayene> MuayenelerListesi { get; set; }
+        public DateTime? ilkTarih { get; set; } = new DateTime(1975, 01, 01);
+        public DateTime? sonTarih { get; set; } = DateTime.Now;
+        public int MevcutSayfa { get; set; } = 1;
+        public int SonSayfaNumarasi { get; set; }
 
         public async Task<List<Muayene>> MuayeneKayitlariniGetirAsync(VeterinerDBContext context)
         {
             MuayenelerListesi = new();
-            if (ilkTarih == null)
-                ilkTarih = new DateTime(1975, 01, 01);
+
             MuayenelerListesi = await context.Muayeneler
                    .Include(m => m.Hastalik)
                    .Include(m => m.Hekim)
@@ -40,12 +37,8 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
                                 m.Hekim.InsanSoyadi
                                     .ToUpper()
                                     .Contains(HekimAdi.ToUpper())
-                            ) &&
-                            (string.IsNullOrWhiteSpace(HayvanAdi) ||
-                                m.Hayvan.HayvanAdi
-                                    .ToUpper()
-                                    .Contains(HayvanAdi.ToUpper())
-                            ) && (HayvanId == 0 || m.Hayvan.HayvanId == HayvanId) &&
+                            ) && 
+                            (m.Hayvan != null && m.Hayvan.HayvanId == HayvanId) &&
                                 m.MuayeneTarihi >= ilkTarih &&
                                 m.MuayeneTarihi <= sonTarih.Value.AddHours(24)
                         )
@@ -59,8 +52,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
 
         public async Task<int> ToplamSayfaSayisiniGetirAsync(VeterinerDBContext context)
         {
-            if (ilkTarih == null)
-                ilkTarih = new DateTime(1975, 01, 01);
+
             var toplamKayitlar = await context.Muayeneler
                    .Include(m => m.Hastalik)
                    .Include(m => m.Hekim)
@@ -76,20 +68,22 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
                                     .ToUpper()
                                     .Contains(HekimAdi.ToUpper())
                             ) &&
-                            (string.IsNullOrWhiteSpace(HayvanAdi) ||
-                                m.Hayvan.HayvanAdi
-                                    .ToUpper()
-                                    .Contains(HayvanAdi.ToUpper())
-                            ) && (HayvanId == 0 || m.Hayvan.HayvanId == HayvanId) &&
+                            (m.Hayvan != null && m.Hayvan.HayvanId == HayvanId) &&
                                 m.MuayeneTarihi >= ilkTarih &&
                                 m.MuayeneTarihi <= sonTarih.Value.AddHours(24)
                         )
                    .ToListAsync();
+
             int toplamKayitlarSayisi = toplamKayitlar.Count();
-            if (toplamKayitlarSayisi % 10 == 0)
+            if (toplamKayitlarSayisi == 0)
+                return 1;
+            else if (toplamKayitlarSayisi % 10 == 0)
                 return toplamKayitlarSayisi / 10;
-            return (toplamKayitlarSayisi / 10) + 1;
+            else
+                return (toplamKayitlarSayisi / 10) + 1;
         }
+
+
 
     }
 }

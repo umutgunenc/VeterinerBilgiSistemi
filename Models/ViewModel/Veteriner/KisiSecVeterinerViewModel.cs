@@ -15,7 +15,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
     {
 
         public List<SelectListItem> KisininHayvanlarininListesi { get; set; }
-        public async Task<List<SelectListItem>> KisininHayvanlarininListesiniGetirAsync(VeterinerDBContext context, KisiSecVeterinerViewModel model)
+        public async Task<List<SelectListItem>> KisininHayvanlarininListesiniGetirAsync(VeterinerDBContext context)
         {
             var kisininHayvanlari = await context.Hayvanlar
                 .Include(h => h.Sahipler)
@@ -24,7 +24,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
                     .ThenInclude(ct => ct.Cins)
                 .Include(h => h.CinsTur)
                     .ThenInclude(ct => ct.Tur)
-                .Where(h => h.Sahipler.Any(s => s.AppUser.InsanTckn == model.InsanTckn))
+                .Where(h => h.Sahipler.Any(s => s.AppUser.InsanTckn == InsanTckn))
                 .ToListAsync();
 
             KisininHayvanlarininListesi = kisininHayvanlari

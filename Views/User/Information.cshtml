@@ -115,10 +115,6 @@
                     <div class="d-flex flex-lg-row flex-column">
                         <a href="/User/EditUser" class="btn btn-secondary m-2 m-lg-0 mb-lg-2">Düzenle</a>
                         <a href="/User/FaceId" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Yüz Tanıma</a>
-                        @if (User.IsInRole("MÜŞTERI"))
-                        {
-                            <a href="/User/SendDeletionEmail" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2" data-toggle="tooltip" data-placement="top" title="Mail adresinize bir onay maili gönderilcektir.">Hesabımı Sil</a>
-                        }
                         <a href="/User/ChangePassword" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Şifremi Değiştir</a>
                         <a href="/Animal/AddAnimal" class="btn btn-secondary m-2 m-lg-0 mb-lg-2 ml-lg-2">Hayvan Ekle</a>
                     </div>

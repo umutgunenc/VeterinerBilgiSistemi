@@ -59,7 +59,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("Muayene", model);
             }
 
-            model.KisininHayvanlarininListesi = await model.KisininHayvanlarininListesiniGetirAsync(_context, model);
+            model.KisininHayvanlarininListesi = await model.KisininHayvanlarininListesiniGetirAsync(_context);
 
             ViewBag.model = model;
             //TempData["model"] = JsonConvert.SerializeObject(model);
@@ -81,7 +81,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
             KisiSecVeterinerViewModel returnModel = new();
             returnModel.InsanTckn = tckn;
-            returnModel.KisininHayvanlarininListesi = await returnModel.KisininHayvanlarininListesiniGetirAsync(_context, returnModel);
+            returnModel.KisininHayvanlarininListesi = await returnModel.KisininHayvanlarininListesiniGetirAsync(_context);
 
             ViewBag.model = returnModel;
 
@@ -197,16 +197,15 @@ namespace VeterinerBilgiSistemi.Controllers
             model.sonTarih = model.sonTarih ?? DateTime.Now;
 
 
-
             model.HekimAdi = model.HekimAdi?.Trim() ?? string.Empty;
             model.HayvanAdi = model.HayvanAdi?.Trim() ?? string.Empty;
 
-            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context, model);
+            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context);
             model.SonSayfaNumarasi = model.SonSayfaNumarasi <= 0 ? 1 : model.SonSayfaNumarasi;
 
             model.MevcutSayfa = model.MevcutSayfa > model.SonSayfaNumarasi ? model.SonSayfaNumarasi : model.MevcutSayfa;
 
-            model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context, model);
+            model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context);
 
 
             return View(model);

@@ -58,7 +58,6 @@ namespace VeterinerBilgiSistemi.Fonksiyonlar
                     var faceEncoding = _faceRecognition.FaceEncodings(Image, new[] { faceLocation }).FirstOrDefault();
                     if (faceEncoding != null)
                         ValidFacesEncodingList.Add(faceEncoding);
-
                 }
 
             }

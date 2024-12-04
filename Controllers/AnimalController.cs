@@ -522,5 +522,23 @@ namespace VeterinerBilgiSistemi.Controllers
             return RedirectToAction("Information", "User");
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MuayeneKayitlari(MuayenelerViewModel model)
+        {
+            var sahip = await _userManager.GetUserAsync(User);
+            if (sahip == null)
+                return View("BadRequest");
+            var sahibinHayvani = await _context.SahipHayvan
+                .FirstOrDefaultAsync(sh => sh.SahipId == sahip.Id && sh.HayvanId == model.HayvanId);
+            if (sahibinHayvani == null)
+                return View("BadRequest");
+
+            model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context);
+            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context);
+
+
+            return View(model);
+        }
     }
 }

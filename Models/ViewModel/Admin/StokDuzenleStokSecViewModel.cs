@@ -6,15 +6,15 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
     {
         public string GirilenBarkodNo { get;set; }
 
-        public StokDuzenleStokSecViewModel ModeliOlustur(StokDuzenleKaydetViewModel model)
+        public StokDuzenleStokSecViewModel ModeliOlustur( )
         {
 
-            Aciklama = model.Aciklama;
-            AktifMi = model.AktifMi;
-            StokAdi = model.StokAdi;
-            StokBarkod = model.StokBarkod;
-            BirimId = model.BirimId;
-            KategoriId = model.KategoriId;
+            Aciklama = Aciklama;
+            AktifMi = AktifMi;
+            StokAdi = StokAdi;
+            StokBarkod = StokBarkod;
+            BirimId = BirimId;
+            KategoriId = KategoriId;
 
             return this;           
             

@@ -25,7 +25,7 @@ namespace VeterinerBilgiSistemi.Controllers
     //stokhareketdetay listesinde ortalama alış fiyatını sil
     //Stok ile ilgili viewlerde kategori listesi şeklinde bir ifade var, onu kategoriler olarak değiştir
     //stok detay sayfasında alışlar ve satışlar gözükmüyor, düzelt
-    //Sosyal medya duzenle sayfası yapılmamış
+    //Sosyal medya duzenle sayfası yapıldı
 
     [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
     public class AdminController : Controller
@@ -101,7 +101,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
                 return View(model);
             }
-            var silinecekRenk = await model.SilinecekRengiGetirAsync(model, _veterinerDbContext);
+            var silinecekRenk = await model.SilinecekRengiGetirAsync(_veterinerDbContext);
             _veterinerDbContext.Renkler.Remove(silinecekRenk);
             await _veterinerDbContext.SaveChangesAsync();
 
@@ -165,7 +165,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View(model);
             }
 
-            var silinecekCins = await model.SilinecekCinsiGetir(model, _veterinerDbContext);
+            var silinecekCins = await model.SilinecekCinsiGetir(_veterinerDbContext);
 
             _veterinerDbContext.Cinsler.Remove(silinecekCins);
             await _veterinerDbContext.SaveChangesAsync();
@@ -229,7 +229,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View(model);
 
             }
-            var silinecekTur = await model.SilinecekTuruGetirAsync(model, _veterinerDbContext);
+            var silinecekTur = await model.SilinecekTuruGetirAsync(_veterinerDbContext);
 
             _veterinerDbContext.Turler.Remove(silinecekTur);
             await _veterinerDbContext.SaveChangesAsync();
@@ -272,8 +272,8 @@ namespace VeterinerBilgiSistemi.Controllers
             await _veterinerDbContext.CinsTur.AddAsync(model);
             await _veterinerDbContext.SaveChangesAsync();
 
-            model.Cins = await model.SecilenCinsiGetirAsync(_veterinerDbContext, model);
-            model.Tur = await model.SecilenTuruGetirAsync(_veterinerDbContext, model);
+            model.Cins = await model.SecilenCinsiGetirAsync(_veterinerDbContext);
+            model.Tur = await model.SecilenTuruGetirAsync(_veterinerDbContext);
 
             TempData["CinsTurEklendi"] = $"{model.Cins.CinsAdi} cinsi ve {model.Tur.TurAdi} türü eşleştirildi";
 
@@ -308,10 +308,10 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View(model);
             }
 
-            model.EslemesiKaldiralacakCinstur = await model.EslesmesiKaldirilacakCinsTuruGetirAsync(model, _veterinerDbContext);
+            model.EslemesiKaldiralacakCinstur = await model.EslesmesiKaldirilacakCinsTuruGetirAsync(_veterinerDbContext);
 
-            var cinsAdi = await model.EslesmesiKaldirilacakCinsAdiniGetirAsync(model, _veterinerDbContext);
-            var turAdi = await model.EslesmesiKaldirilacakTurAdiniGetirAsync(model, _veterinerDbContext);
+            var cinsAdi = await model.EslesmesiKaldirilacakCinsAdiniGetirAsync(_veterinerDbContext);
+            var turAdi = await model.EslesmesiKaldirilacakTurAdiniGetirAsync(_veterinerDbContext);
 
 
             _veterinerDbContext.CinsTur.Remove(model.EslemesiKaldiralacakCinstur);
@@ -378,7 +378,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
                 return View(model);
             }
-            model.SilinecekRol = await model.SilinecekRoluGetir(_veterinerDbContext, model);
+            model.SilinecekRol = await model.SilinecekRoluGetir(_veterinerDbContext);
             _veterinerDbContext.Roles.Remove(model.SilinecekRol);
             await _veterinerDbContext.SaveChangesAsync();
 
@@ -399,7 +399,7 @@ namespace VeterinerBilgiSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> KisiEkle(KisiEkleViewModel model)
         {
-            model.Kullanici = await model.KisiOlusturAsync(_veterinerDbContext, model);
+            model.Kullanici = await model.KisiOlusturAsync(_veterinerDbContext);
 
             KisiEkleValidators validator = new KisiEkleValidators();
             ValidationResult result = validator.Validate(model.Kullanici);
@@ -428,7 +428,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
                 return View(model);
             }
-            model.KullaniciRolu = await model.KisininRolunuGetirAsync(_veterinerDbContext, model);
+            model.KullaniciRolu = await model.KisininRolunuGetirAsync(_veterinerDbContext);
 
             await _veterinerDbContext.UserRoles.AddAsync(model.KullaniciRolu);
 
@@ -579,7 +579,7 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
             KisiDuzenleViewModel kisiDuzenleViewModel = new();
-            kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
+            kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext);
             kisiDuzenleViewModel.Signature = Signature.CreateSignature(kisiDuzenleViewModel.Id.ToString(), kisiDuzenleViewModel.InsanTckn);
 
             ViewBag.model = kisiDuzenleViewModel;
@@ -605,7 +605,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("KisiSec");
             }
 
-            model.EskiRol = await model.KullanicininEskiRolunuGetirAsync(_veterinerDbContext, model);
+            model.EskiRol = await model.KullanicininEskiRolunuGetirAsync(_veterinerDbContext);
             model.YeniRol = model.KullanicininYeniRolunuGetir(model);
 
 
@@ -615,7 +615,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 await _veterinerDbContext.UserRoles.AddAsync(model.YeniRol);
             }
 
-            model.UpdateOlacakKullanici = await model.UpdateOlacakKullaniciyiGetirAsync(_veterinerDbContext, model);
+            model.UpdateOlacakKullanici = await model.UpdateOlacakKullaniciyiGetirAsync(_veterinerDbContext);
             _veterinerDbContext.Users.Update(model.UpdateOlacakKullanici);
 
             await _veterinerDbContext.SaveChangesAsync();
@@ -711,7 +711,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View(model);
             }
 
-            model.SilinecekKategori = await model.SilinecekKategoriyiGetirAsync(_veterinerDbContext, model);
+            model.SilinecekKategori = await model.SilinecekKategoriyiGetirAsync(_veterinerDbContext);
             _veterinerDbContext.Kategoriler.Remove(model.SilinecekKategori);
             await _veterinerDbContext.SaveChangesAsync();
             TempData["KategoriSilindi"] = $"{model.SilinecekKategori.KategoriAdi} başarı ile silindi.";
@@ -767,7 +767,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View();
             }
 
-            model.SilinecekBirim = await model.SilinecekBirimGetirAsync(_veterinerDbContext, model);
+            model.SilinecekBirim = await model.SilinecekBirimGetirAsync(_veterinerDbContext);
 
             _veterinerDbContext.Birimler.Remove(model.SilinecekBirim);
             await _veterinerDbContext.SaveChangesAsync();
@@ -978,7 +978,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
             }
 
-            var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
+            var stok = await model.StoguGetirAsync(_veterinerDbContext);
             int sayac = 0;
 
             foreach (var imza in model.ImzaListesi)
@@ -992,7 +992,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("BadRequest");
 
             var user = await _userManager.GetUserAsync(User);
-            var stokHareket = model.StokHareketBigileriniGetir(model, user);
+            var stokHareket = model.StokHareketBigileriniGetir(user);
 
             _veterinerDbContext.StokHareketler.Add(stokHareket);
             await _veterinerDbContext.SaveChangesAsync();
@@ -1059,7 +1059,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("StokCikis", cikisModel);
             }
 
-            var stok = await model.StoguGetirAsync(model, _veterinerDbContext);
+            var stok = await model.StoguGetirAsync(_veterinerDbContext);
 
             int sayac = 0;
 
@@ -1074,7 +1074,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("BadRequest");
 
             var user = await _userManager.GetUserAsync(User);
-            var stokHareket = model.StokHareketBigileriniGetir(model, user);
+            var stokHareket = model.StokHareketBigileriniGetir(user);
 
             _veterinerDbContext.StokHareketler.Add(stokHareket);
             await _veterinerDbContext.SaveChangesAsync();
@@ -1137,7 +1137,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View(model);
             }
 
-            var hastalik = await model.SilinecekHastaligiGetirAsnyc(_veterinerDbContext, model);
+            var hastalik = await model.SilinecekHastaligiGetirAsnyc(_veterinerDbContext);
             _veterinerDbContext.Hastaliklar.Remove(hastalik);
             await _veterinerDbContext.SaveChangesAsync();
 
@@ -1200,7 +1200,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
                 return View(model);
             }
-            model = await model.SecilenKanTahlilDetayınıGetirAsync(model, _veterinerDbContext);
+            model = await model.SecilenKanTahlilDetayınıGetirAsync(_veterinerDbContext);
 
             ViewBag.SecilenKanTahlili = model;
             return View(model);
@@ -1229,7 +1229,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("KanTahliliDuzenle", model);
             }
 
-            var duzenlenmisKanTahlili = await model.KanTahlilBilgileriniDuzenle(model, _veterinerDbContext);
+            var duzenlenmisKanTahlili = await model.KanTahlilBilgileriniDuzenle(_veterinerDbContext);
 
             _veterinerDbContext.Update(duzenlenmisKanTahlili);
             await _veterinerDbContext.SaveChangesAsync();
@@ -1265,7 +1265,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View();
             }
 
-            var silinecekKanTahlili = await model.SilinecekKanTahliliniGetirAsync(model, _veterinerDbContext);
+            var silinecekKanTahlili = await model.SilinecekKanTahliliniGetirAsync(_veterinerDbContext);
             _veterinerDbContext.Remove(silinecekKanTahlili);
             await _veterinerDbContext.SaveChangesAsync();
 

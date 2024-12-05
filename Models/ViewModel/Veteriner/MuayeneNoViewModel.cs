@@ -79,7 +79,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
             {
                 YapilanKanTesti seciliKanTesti = new();
 
-                seciliKanTesti.KanTesti = kanTesti;
+                seciliKanTesti.KanDegerleri = kanTesti;
 
                 if (kanTesti.Muayeneler.Any(km=>km.Muayene==Muayene))
                     seciliKanTesti.SecildiMi = true;
@@ -110,13 +110,11 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
     }
     public class YapilanKanTesti : KanTestiMuayene
     {
-        public KanDegerleri KanTesti { get; set; }
         public bool SecildiMi { get; set; }
     }
 
     public class KullanilanStok :StokHareket
     {
-        public Stok Stok { get; set; }
         public bool YapildiMi { get; set; }
     }
 

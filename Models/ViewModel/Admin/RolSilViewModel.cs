@@ -30,9 +30,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return RollerListesi;
         }
 
-        public async Task<AppRole> SilinecekRoluGetir(VeterinerDBContext context, RolSilViewModel model)
+        public async Task<AppRole> SilinecekRoluGetir(VeterinerDBContext context)
         {
-            return await context.Roles.FirstOrDefaultAsync(x => x.Id == model.Id);
+            return await context.Roles.FirstOrDefaultAsync(x => x.Id == Id);
         }
     }
 }

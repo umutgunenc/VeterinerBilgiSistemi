@@ -28,9 +28,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return TurListesi;
         }
 
-        public async Task<Tur> SilinecekTuruGetirAsync(TurSilViewModel model, VeterinerDBContext context)
+        public async Task<Tur> SilinecekTuruGetirAsync(VeterinerDBContext context)
         {
-            return await context.Turler.FindAsync(model.TurId);
+            return await context.Turler.FindAsync(TurId);
         }
 
 

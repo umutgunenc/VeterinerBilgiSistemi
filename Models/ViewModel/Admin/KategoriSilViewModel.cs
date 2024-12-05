@@ -29,11 +29,11 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 
         }
 
-        public async Task<Kategori> SilinecekKategoriyiGetirAsync(VeterinerDBContext context, KategoriSilViewModel model)
+        public async Task<Kategori> SilinecekKategoriyiGetirAsync(VeterinerDBContext context)
         {
             SilinecekKategori = new();
             SilinecekKategori = await context.Kategoriler
-                                                .Where(k => k.KategoriId == model.KategoriId)
+                                                .Where(k => k.KategoriId == KategoriId)
                                                 .Select(k => k)
                                                 .FirstOrDefaultAsync();
             return SilinecekKategori;

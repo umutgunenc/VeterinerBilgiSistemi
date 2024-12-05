@@ -43,14 +43,14 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             }
             return CinslerListesi;
         }
-        public async Task<Cins> SecilenCinsiGetirAsync(VeterinerDBContext context, CinsTurEslestirViewModel model)
+        public async Task<Cins> SecilenCinsiGetirAsync(VeterinerDBContext context )
         {
-           return await context.Cinsler.FirstOrDefaultAsync(x => x.CinsId == model.CinsId);
+           return await context.Cinsler.FirstOrDefaultAsync(x => x.CinsId == CinsId);
         }
 
-        public async Task<Tur> SecilenTuruGetirAsync(VeterinerDBContext context, CinsTurEslestirViewModel model)
+        public async Task<Tur> SecilenTuruGetirAsync(VeterinerDBContext context)
         {
-            return await context.Turler.FirstOrDefaultAsync(x => x.TurId == model.TurId);
+            return await context.Turler.FirstOrDefaultAsync(x => x.TurId == TurId);
         }
 
     }

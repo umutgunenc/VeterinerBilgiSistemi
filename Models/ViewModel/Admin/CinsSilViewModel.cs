@@ -28,9 +28,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return CinslerListesi;
         }
 
-        public async Task<Cins> SilinecekCinsiGetir(CinsSilViewModel model, VeterinerDBContext context)
+        public async Task<Cins> SilinecekCinsiGetir(VeterinerDBContext context)
         {
-            return await context.Cinsler.FindAsync(model.CinsId);
+            return await context.Cinsler.FindAsync(CinsId);
         }
     }
 }

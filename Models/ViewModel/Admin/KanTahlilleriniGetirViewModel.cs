@@ -31,9 +31,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return KanTahlilleriListesi;
         }
 
-        public async Task<KanTahlilleriniGetirViewModel> SecilenKanTahlilDetayınıGetirAsync(KanTahlilleriniGetirViewModel model, VeterinerDBContext context)
+        public async Task<KanTahlilleriniGetirViewModel> SecilenKanTahlilDetayınıGetirAsync(VeterinerDBContext context)
         {
-            var secilenKanTahlili = await context.KanDegerleri.Where(x => x.KanDegerleriId == model.KanDegerleriId).FirstOrDefaultAsync();
+            var secilenKanTahlili = await context.KanDegerleri.Where(x => x.KanDegerleriId == KanDegerleriId).FirstOrDefaultAsync();
 
             this.AktifMi = secilenKanTahlili.AktifMi;
             this.AltLimit = secilenKanTahlili.AltLimit;
@@ -46,24 +46,24 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return this;
         }
 
-        public async Task<KanDegerleri> KanTahlilBilgileriniDuzenle(KanTahlilleriniGetirViewModel model, VeterinerDBContext context)
+        public async Task<KanDegerleri> KanTahlilBilgileriniDuzenle(VeterinerDBContext context)
         {
             var DuzenlenecekKanTahlili = await context.KanDegerleri
-                                                    .Where(x => x.KanDegerleriId == model.KanDegerleriId)
+                                                    .Where(x => x.KanDegerleriId == KanDegerleriId)
                                                     .FirstOrDefaultAsync();
 
-            DuzenlenecekKanTahlili.AktifMi = model.AktifMi;
-            DuzenlenecekKanTahlili.KanTestiAdi = model.KanTestiAdi;
-            DuzenlenecekKanTahlili.AltLimit = model.AltLimit;
-            DuzenlenecekKanTahlili.UstLimit = model.UstLimit;
-            DuzenlenecekKanTahlili.KanTestiBirimi = model.KanTestiBirimi;
+            DuzenlenecekKanTahlili.AktifMi = AktifMi;
+            DuzenlenecekKanTahlili.KanTestiAdi = KanTestiAdi;
+            DuzenlenecekKanTahlili.AltLimit = AltLimit;
+            DuzenlenecekKanTahlili.UstLimit = UstLimit;
+            DuzenlenecekKanTahlili.KanTestiBirimi = KanTestiBirimi;
 
             return DuzenlenecekKanTahlili;
         }
 
-        public async Task<KanDegerleri> SilinecekKanTahliliniGetirAsync(KanTahlilleriniGetirViewModel model, VeterinerDBContext context)
+        public async Task<KanDegerleri> SilinecekKanTahliliniGetirAsync(VeterinerDBContext context)
         {
-            return await context.KanDegerleri.Where(x => x.KanDegerleriId == model.KanDegerleriId).FirstOrDefaultAsync();
+            return await context.KanDegerleri.Where(x => x.KanDegerleriId == KanDegerleriId).FirstOrDefaultAsync();
         }
 
         private string ImzaOlustur(string string1, string string2)

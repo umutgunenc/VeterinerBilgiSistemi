@@ -27,9 +27,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return HastalikListesi;
         }
 
-        public async Task<Hastalik> SilinecekHastaligiGetirAsnyc(VeterinerDBContext context, HastalikSilViewModel model)
+        public async Task<Hastalik> SilinecekHastaligiGetirAsnyc(VeterinerDBContext context)
         {
-            return await context.Hastaliklar.FindAsync(model.HastalikId); 
+            return await context.Hastaliklar.FindAsync(HastalikId); 
         }
 
 

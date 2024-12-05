@@ -11,9 +11,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
     public class StokDuzenleKaydetViewModel : Stok
     {
 
-        //TODO _contex'i D.I yapınca controlerda birimlistesinigetir ve katergorilistesini getir fonksiyonları çalışmıyor ?
         public string Signature { get; set; }
-        private StokDetayViewModel Model { get; set; }
         public List<SelectListItem> KategoriListesi { get; set; }
         public List<SelectListItem> BirimListesi { get; set; }
         public async Task<List<SelectListItem>> KategoriListesiniGetirAsync(VeterinerDBContext context)

@@ -77,20 +77,20 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return ImzaListesi;
         }
 
-        public async Task<Stok> StoguGetirAsync(StokGirisKaydetViewModel model, VeterinerDBContext context)
+        public async Task<Stok> StoguGetirAsync(  VeterinerDBContext context)
         {
             var stok = await context.Stoklar
-                .Where(s => s.Id == model.StokId)
+                .Where(s => s.Id == StokId)
                 .FirstOrDefaultAsync();
             return stok;
         }
 
-        public StokHareket StokHareketBigileriniGetir(StokGirisKaydetViewModel model, AppUser user)
+        public StokHareket StokHareketBigileriniGetir( AppUser user)
         {
             StokHareketTarihi = System.DateTime.Now;
-            StokId = model.StokId;
-            AlisTarihi = model.AlisTarihi;
-            StokGirisAdet = model.StokGirisAdet;
+            StokId = StokId;
+            AlisTarihi = AlisTarihi;
+            StokGirisAdet = StokGirisAdet;
             CalisanId = user.Id;
 
             return this;

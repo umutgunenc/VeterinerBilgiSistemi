@@ -14,7 +14,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Veteriner
         public int MevcutSayfa { get; set; }
         public string HayvanAdi { get; set; }
         public string HekimAdi { get; set; }
-        public int HayvanId { get; set; }
 
         public DateTime? ilkTarih { get; set; }
         public DateTime? sonTarih { get; set; }

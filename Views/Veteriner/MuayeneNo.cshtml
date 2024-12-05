@@ -126,33 +126,33 @@
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox"
                                            class="custom-control-input"
-                                           id="kanTesti-@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId"
+                                           id="kanTesti-@Model.YapilanKanTestleri[i].KanDegerleri.KanDegerleriId"
                                            asp-for="@Model.YapilanKanTestleri[i].SecildiMi">
 
                                     <label class="custom-control-label"
-                                           for="kanTesti-@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId">
+                                           for="kanTesti-@Model.YapilanKanTestleri[i].KanDegerleri.KanDegerleriId">
                                         <span class="m-0 d-inline">
-                                            @Model.YapilanKanTestleri[i].KanTesti.KanTestiAdi
+                                            @Model.YapilanKanTestleri[i].KanDegerleri.KanTestiAdi
                                         </span>
                                     </label>
                                 </div>
                             </td>
                             <td>
-                                @Model.YapilanKanTestleri[i].KanTesti.KanTestiBirimi
+                                @Model.YapilanKanTestleri[i].KanDegerleri.KanTestiBirimi
                             </td>
                             <td>
-                                @Model.YapilanKanTestleri[i].KanTesti.AltLimit
+                                @Model.YapilanKanTestleri[i].KanDegerleri.AltLimit
                             </td>
                             <td>
-                                @Model.YapilanKanTestleri[i].KanTesti.UstLimit
+                                @Model.YapilanKanTestleri[i].KanDegerleri.UstLimit
                             </td>
                             <td>
                                 <input type="hidden"
-                                       asp-for="@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId"
-                                       value="@Model.YapilanKanTestleri[i].KanTesti.KanDegerleriId" />
+                                       asp-for="@Model.YapilanKanTestleri[i].KanDegerleri.KanDegerleriId"
+                                       value="@Model.YapilanKanTestleri[i].KanDegerleri.KanDegerleriId" />
                                 <input type="number"
                                        asp-for="@Model.YapilanKanTestleri[i].KanDegeriValue"
-                                       value="@Model.YapilanKanTestleri[i].KanTesti.Muayeneler.Where(x=>x.MuayeneId==Model.Muayene.MuayeneId).FirstOrDefault()?.KanDegeriValue"
+                                       value="@Model.YapilanKanTestleri[i].KanDegerleri.Muayeneler.Where(x=>x.MuayeneId==Model.Muayene.MuayeneId).FirstOrDefault()?.KanDegeriValue"
                                        min="0"
                                        step="0.01"
                                        class="form-control"

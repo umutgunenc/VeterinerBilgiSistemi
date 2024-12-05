@@ -309,56 +309,56 @@ namespace VeterinerBilgiSistemi.Controllers
         //TODO kullanıcı silinmeyecek, kullanıcı için aktifMi seklinde bir alan tanımlanacak
         //Kullanıcı hesabı deaktif yapılacak.
         //Bu işlemlerden sonra şifremi unuttum ve login işlemleri düzenlenecek, aktif olan kullanıcılar login olabiliecek.
-        public async Task<IActionResult> DeleteAccount(string userId, string code)
-        {
-            if (userId == null || code == null)
-            {
-                return View("BadRequest");
-            }
+        //public async Task<IActionResult> DeleteAccount(string userId, string code)
+        //{
+        //    if (userId == null || code == null)
+        //    {
+        //        return View("BadRequest");
+        //    }
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //    var user = await _userManager.FindByIdAsync(userId);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var result = await _userManager.VerifyUserTokenAsync(user, "Default", "DeleteAccount", code);
-            if (!result)
-            {
-                return View("BadRequest");
-            }
-
-
-            // Kullanıcının sahip olduğu hayvan kayıtlarını al
-            var kullaniciHayvanKayitlari = _context.SahipHayvan
-                .Where(s => s.AppUser.InsanTckn == user.InsanTckn)
-                .ToList();
-
-            // Kullanıcının sahip olduğu hayvanlara ait ID'leri listele
-            var kullaniciHayvanIds = kullaniciHayvanKayitlari
-                .Select(k => k.HayvanId)
-                .ToList();
-
-            // SahipHayvans tablosundan sadece bu kullanıcının kayıtlarını sil
-            _context.SahipHayvan.RemoveRange(kullaniciHayvanKayitlari);
-            _context.SaveChanges();
-
-            // Sahipsiz kalan hayvanları belirle
-            var sahipsizHayvanlar = _context.Hayvanlar
-                .Where(h => !(_context.SahipHayvan
-                    .Any(sh => sh.HayvanId == h.HayvanId)))
-                .ToList();
-
-            // Hayvans tablosundan sahipsiz hayvanları sil
-            _context.Hayvanlar.RemoveRange(sahipsizHayvanlar);
-            _context.SaveChanges();
+        //    var result = await _userManager.VerifyUserTokenAsync(user, "Default", "DeleteAccount", code);
+        //    if (!result)
+        //    {
+        //        return View("BadRequest");
+        //    }
 
 
-            await _signInManager.SignOutAsync();
-            await _userManager.DeleteAsync(user);
+        //    // Kullanıcının sahip olduğu hayvan kayıtlarını al
+        //    var kullaniciHayvanKayitlari = _context.SahipHayvan
+        //        .Where(s => s.AppUser.InsanTckn == user.InsanTckn)
+        //        .ToList();
 
-            return RedirectToAction("Index", "Home");
-        }
+        //    // Kullanıcının sahip olduğu hayvanlara ait ID'leri listele
+        //    var kullaniciHayvanIds = kullaniciHayvanKayitlari
+        //        .Select(k => k.HayvanId)
+        //        .ToList();
+
+        //    // SahipHayvans tablosundan sadece bu kullanıcının kayıtlarını sil
+        //    _context.SahipHayvan.RemoveRange(kullaniciHayvanKayitlari);
+        //    _context.SaveChanges();
+
+        //    // Sahipsiz kalan hayvanları belirle
+        //    var sahipsizHayvanlar = _context.Hayvanlar
+        //        .Where(h => !(_context.SahipHayvan
+        //            .Any(sh => sh.HayvanId == h.HayvanId)))
+        //        .ToList();
+
+        //    // Hayvans tablosundan sahipsiz hayvanları sil
+        //    _context.Hayvanlar.RemoveRange(sahipsizHayvanlar);
+        //    _context.SaveChanges();
+
+
+        //    await _signInManager.SignOutAsync();
+        //    await _userManager.DeleteAsync(user);
+
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         [HttpGet]
         public IActionResult FaceId()

@@ -266,9 +266,9 @@ namespace VeterinerBilgiSistemi.Controllers
                     //if (returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler == null)
                     //    returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler = new List<KanTestiMuayene>();
 
-                    if (returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.FirstOrDefault() == null)
+                    if (returnModel.YapilanKanTestleri[i].KanDegerleri.Muayeneler.FirstOrDefault() == null)
                     {
-                        returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.Add(new KanTestiMuayene
+                        returnModel.YapilanKanTestleri[i].KanDegerleri.Muayeneler.Add(new KanTestiMuayene
                         {
                             KanDegerleriId = model.YapilanKanTestleri[i].KanDegerleriId,
                             KanDegeriValue = model.YapilanKanTestleri[i].KanDegeriValue,
@@ -276,7 +276,7 @@ namespace VeterinerBilgiSistemi.Controllers
                         });
                     }
 
-                    var mevcutMuayene = returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler
+                    var mevcutMuayene = returnModel.YapilanKanTestleri[i].KanDegerleri.Muayeneler
                         .FirstOrDefault(x => x.Muayene != null && x.Muayene.MuayeneId == model.Muayene.MuayeneId);
 
                     if (mevcutMuayene == null)
@@ -287,12 +287,12 @@ namespace VeterinerBilgiSistemi.Controllers
                             MuayeneId = model.Muayene.MuayeneId,
                         };
 
-                        returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler.Add(mevcutMuayene);
+                        returnModel.YapilanKanTestleri[i].KanDegerleri.Muayeneler.Add(mevcutMuayene);
                     }
 
                     mevcutMuayene.KanDegeriValue = model.YapilanKanTestleri[i].KanDegeriValue;
 
-                    var hedefMuayene = returnModel.YapilanKanTestleri[i].KanTesti.Muayeneler
+                    var hedefMuayene = returnModel.YapilanKanTestleri[i].KanDegerleri.Muayeneler
                         .FirstOrDefault(x => x.Muayene != null && x.Muayene.MuayeneId == model.Muayene.MuayeneId);
 
                     if (hedefMuayene != null)
@@ -353,7 +353,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 var yeniKanTesti = new KanTestiMuayene();
                 yeniKanTesti.MuayeneId = muayene.MuayeneId;
                 yeniKanTesti.KanDegeriValue = kanTesti.KanDegeriValue;
-                yeniKanTesti.KanDegerleriId = kanTesti.KanTesti.KanDegerleriId;
+                yeniKanTesti.KanDegerleriId = kanTesti.KanDegerleri.KanDegerleriId;
 
                 yeniKanTestiListesi.Add(yeniKanTesti);
             }

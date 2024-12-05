@@ -37,15 +37,15 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return RollerListesi;
         }
 
-        public async Task<KisiEkleViewModel> KisiOlusturAsync(VeterinerDBContext context, KisiEkleViewModel model)
+        public async Task<KisiEkleViewModel> KisiOlusturAsync(VeterinerDBContext context )
         {
-            UserName = await KullaniciAdiOlustur.GenerateUserNameAsync(model.InsanAdi, model.InsanSoyadi, model.Email, context);
-            InsanAdi = model.InsanAdi.ToUpper();
-            InsanSoyadi = model.InsanSoyadi.ToUpper();
-            InsanTckn = model.InsanTckn;
-            Email = model.Email;
-            PhoneNumber = model.PhoneNumber;
-            DiplomaNo = model.DiplomaNo;
+            UserName = await KullaniciAdiOlustur.GenerateUserNameAsync(InsanAdi,InsanSoyadi, Email, context);
+            InsanAdi = InsanAdi.ToUpper();
+            InsanSoyadi = InsanSoyadi.ToUpper();
+            InsanTckn = InsanTckn;
+            Email = Email;
+            PhoneNumber = PhoneNumber;
+            DiplomaNo = DiplomaNo;
             CalisiyorMu = true;
             SifreOlusturmaTarihi = DateTime.Now;
             SifreGecerlilikTarihi = DateTime.Now.AddDays(120);
@@ -56,10 +56,10 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 
         }
 
-        public async Task<IdentityUserRole<int>> KisininRolunuGetirAsync(VeterinerDBContext _context, KisiEkleViewModel model)
+        public async Task<IdentityUserRole<int>> KisininRolunuGetirAsync(VeterinerDBContext _context)
         {
-            var kullanici = await _context.Users.FirstOrDefaultAsync(x => x.UserName == model.UserName);
-            var userRole = await _context.Roles.FirstOrDefaultAsync(x => x.Id == model.RolId);
+            var kullanici = await _context.Users.FirstOrDefaultAsync(x => x.UserName == UserName);
+            var userRole = await _context.Roles.FirstOrDefaultAsync(x => x.Id == RolId);
             KullaniciRolu = new();
             KullaniciRolu.UserId = kullanici.Id;
             KullaniciRolu.RoleId = userRole.Id;

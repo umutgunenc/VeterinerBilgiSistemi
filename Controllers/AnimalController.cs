@@ -17,7 +17,6 @@ using VeterinerBilgiSistemi.Models.Enum;
 using VeterinerBilgiSistemi.Models.Validators.Animal;
 using VeterinerBilgiSistemi.Models.ViewModel.Animal;
 
-//TODO hayvan bilgilerinde muayene kayıtları var, onu sil, ayrı bir sayfada muayene kayıtlarını göster
 //TODO hayvan ekle kısmında profil fotografı için seç seçeneğin ekle, diğerlerini sil, eklemez ise default foto gelsin
 //TODO kişi ekle kısmında profil fotografı için seç seçeneğin ekle, diğerlerini sil, eklemez ise default foto gelsin
 
@@ -77,7 +76,7 @@ namespace VeterinerBilgiSistemi.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
 
-                model = await model.GeriDonusModeliOlusturAsync(_context, model);
+                model = await model.GeriDonusModeliOlusturAsync(_context);
 
                 return View(model);
 

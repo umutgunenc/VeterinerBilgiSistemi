@@ -25,10 +25,10 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
         public AppUser UpdateOlacakKullanici { get; set; }
 
 
-        public async Task<IdentityUserRole<int>> KullanicininEskiRolunuGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model)
+        public async Task<IdentityUserRole<int>> KullanicininEskiRolunuGetirAsync(VeterinerDBContext context)
         {
 
-            return await context.UserRoles.Where(ur => ur.UserId == model.Id).FirstOrDefaultAsync();
+            return await context.UserRoles.Where(ur => ur.UserId == Id).FirstOrDefaultAsync();
 
 
         }
@@ -56,9 +56,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             }
             return RollerListesi;
         }
-        public async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync(VeterinerDBContext context, KisiSecViewModel model)
+        public async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync(VeterinerDBContext context)
         {
-            var secilenKisi = await context.Users.Where(u => u.InsanTckn == model.InsanTckn).FirstOrDefaultAsync();
+            var secilenKisi = await context.Users.Where(u => u.InsanTckn == InsanTckn).FirstOrDefaultAsync();
 
             this.Id = secilenKisi.Id;
             this.InsanAdi = secilenKisi.InsanAdi;
@@ -81,17 +81,17 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
 
             return this;
         }
-        public async Task<AppUser> UpdateOlacakKullaniciyiGetirAsync(VeterinerDBContext context, KisiDuzenleViewModel model)
+        public async Task<AppUser> UpdateOlacakKullaniciyiGetirAsync(VeterinerDBContext context)
         {
-            var UpdateOlacakKullanici = await context.AppUsers.FindAsync(model.Id);
+            var UpdateOlacakKullanici = await context.AppUsers.FindAsync(Id);
 
-            UpdateOlacakKullanici.InsanAdi = model.InsanAdi.ToUpper();
-            UpdateOlacakKullanici.InsanSoyadi = model.InsanSoyadi.ToUpper();
-            UpdateOlacakKullanici.CalisiyorMu = model.CalisiyorMu;
-            UpdateOlacakKullanici.Email = model.Email.ToLower();
-            UpdateOlacakKullanici.PhoneNumber = model.PhoneNumber;
-            UpdateOlacakKullanici.DiplomaNo = model.DiplomaNo;
-            UpdateOlacakKullanici.UserName = model.UserName.ToUpper();
+            UpdateOlacakKullanici.InsanAdi = InsanAdi.ToUpper();
+            UpdateOlacakKullanici.InsanSoyadi = InsanSoyadi.ToUpper();
+            UpdateOlacakKullanici.CalisiyorMu = CalisiyorMu;
+            UpdateOlacakKullanici.Email = Email.ToLower();
+            UpdateOlacakKullanici.PhoneNumber = PhoneNumber;
+            UpdateOlacakKullanici.DiplomaNo = DiplomaNo;
+            UpdateOlacakKullanici.UserName = UserName.ToUpper();
 
             return UpdateOlacakKullanici;
         }

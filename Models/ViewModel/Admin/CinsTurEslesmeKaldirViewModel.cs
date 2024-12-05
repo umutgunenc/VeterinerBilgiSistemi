@@ -41,20 +41,20 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return CinslerTurlerListesi;
         }
 
-        public async Task<CinsTur> EslesmesiKaldirilacakCinsTuruGetirAsync(CinsTurEslesmeKaldirViewModel model, VeterinerDBContext context)
+        public async Task<CinsTur> EslesmesiKaldirilacakCinsTuruGetirAsync( VeterinerDBContext context)
         {
-            return await context.CinsTur.FirstOrDefaultAsync(c => c.Id == model.Id);
+            return await context.CinsTur.FirstOrDefaultAsync(c => c.Id == Id);
         }
 
-        public async Task<string> EslesmesiKaldirilacakCinsAdiniGetirAsync(CinsTurEslesmeKaldirViewModel model, VeterinerDBContext context)
+        public async Task<string> EslesmesiKaldirilacakCinsAdiniGetirAsync( VeterinerDBContext context)
         {
-            CinsTur cinsTur = await EslesmesiKaldirilacakCinsTuruGetirAsync(model, context);
+            CinsTur cinsTur = await EslesmesiKaldirilacakCinsTuruGetirAsync( context);
             return await context.Cinsler.Where(c => c.CinsId == cinsTur.CinsId).Select(c => c.CinsAdi).FirstOrDefaultAsync();
         }
 
-        public async Task<string> EslesmesiKaldirilacakTurAdiniGetirAsync(CinsTurEslesmeKaldirViewModel model, VeterinerDBContext context)
+        public async Task<string> EslesmesiKaldirilacakTurAdiniGetirAsync( VeterinerDBContext context)
         {
-            CinsTur cinsTur = await EslesmesiKaldirilacakCinsTuruGetirAsync(model, context);
+            CinsTur cinsTur = await EslesmesiKaldirilacakCinsTuruGetirAsync( context);
             return await context.Turler.Where(t => t.TurId == cinsTur.TurId).Select(t => t.TurAdi).FirstOrDefaultAsync();
         }
     }

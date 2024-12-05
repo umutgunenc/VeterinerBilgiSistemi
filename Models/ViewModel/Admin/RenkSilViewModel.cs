@@ -28,9 +28,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return RenklerListesi;
         }
 
-        public async Task<Renk> SilinecekRengiGetirAsync(RenkSilViewModel model,VeterinerDBContext context)
+        public async Task<Renk> SilinecekRengiGetirAsync(VeterinerDBContext context)
         {
-            return await context.Renkler.FindAsync(model.RenkId);
+            return await context.Renkler.FindAsync(RenkId);
         }
 
 

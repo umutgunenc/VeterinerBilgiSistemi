@@ -11,7 +11,6 @@ namespace VeterinerBilgiSistemi.Data
 {
     public class VeterinerDBContext : IdentityDbContext<AppUser, AppRole, int>
     {
-        private readonly IConfiguration _configuration;
         public VeterinerDBContext()
         {
 

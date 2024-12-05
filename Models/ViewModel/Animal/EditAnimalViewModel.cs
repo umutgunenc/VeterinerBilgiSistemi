@@ -228,38 +228,37 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
         /// <summary>
         /// Viewden gelen modeli olusturur. View i tekrardan geriye dondurmek icin kullanilir.
         /// </summary>
-        /// <param name="Model">Viewden gelen model</param>
         /// <param name="User">Sisteme login olmus olan kullanıcı</param>
         /// <returns>EditAnimalView şeklinde viewden denen modeli olusturur.</returns>
-        public async Task<EditAnimalViewModel> ModelOlusturAsync(EditAnimalViewModel model, AppUser user, VeterinerDBContext context)
+        public async Task<EditAnimalViewModel> ModelOlusturAsync( AppUser user, VeterinerDBContext context)
         {
-            var hayvan = await context.Hayvanlar.FindAsync(model.HayvanId);
+            var hayvan = await context.Hayvanlar.FindAsync(HayvanId);
             return new EditAnimalViewModel()
             {
-                HayvanAdi = model.HayvanAdi,
-                HayvanId = model.HayvanId,
+                HayvanAdi = HayvanAdi,
+                HayvanId = HayvanId,
                 Rengi = await RenkAdiniGetirAsync(hayvan, context),
-                RenkId = model.RenkId,
+                RenkId = RenkId,
                 Cinsi = await CinsAdiniGetirAsync(hayvan, context),
                 CinsId = await CinsIdGetirAsync(hayvan, context),
                 Turu = await TurAdiniGetirAsync(hayvan, context),
                 TurId = await TurIdGetirAsync(hayvan, context),
-                HayvanKilo = model.HayvanKilo,
-                HayvanCinsiyet = model.HayvanCinsiyet,
-                HayvanDogumTarihi = model.HayvanDogumTarihi,
-                HayvanOlumTarihi = model.HayvanOlumTarihi,
+                HayvanKilo = HayvanKilo,
+                HayvanCinsiyet = HayvanCinsiyet,
+                HayvanDogumTarihi = HayvanDogumTarihi,
+                HayvanOlumTarihi = HayvanOlumTarihi,
                 SahiplikTarihi = await SahiplikTarihiniGetirAsync(hayvan, context, user),
                 SahiplikCikisTarihi = await SahiplikCikisTarihiniGetirAsync(hayvan, context, user),
-                IsDeath = model.HayvanOlumTarihi == null ? false : true,
-                HayvanAnneId = model.HayvanAnneId,
-                HayvanBabaId = model.HayvanBabaId,
+                IsDeath = HayvanOlumTarihi == null ? false : true,
+                HayvanAnneId = HayvanAnneId,
+                HayvanBabaId = HayvanBabaId,
                 HayvanAnneList = await AnnelerListesiOlusturAsync(context),
                 HayvanBabaList = await BabalarListesiOlusturAsync(context),
                 Cinsler = await CinsAdlariniGetirAsync(context),
                 Turler = await TurAdlariniGetirAsync(context),
                 Renkler = await RenkleriGetirAsync(context),
                 CinsiyetListesi = CinsiyetleriGetir(),
-                ImgUrl = model.ImgUrl,
+                ImgUrl = ImgUrl,
                 Imza = SignatureOlustur(hayvan.HayvanId, hayvan.Sahipler.Where(h => h.HayvanId == hayvan.HayvanId).Select(s => s.AppUser.InsanTckn).FirstOrDefault()),
                 Sahip = user,
                 SahipTckn = user.InsanTckn,

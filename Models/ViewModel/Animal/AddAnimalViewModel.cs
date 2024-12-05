@@ -139,21 +139,21 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
             return this;
         }
 
-        public async Task<AddAnimalViewModel> GeriDonusModeliOlusturAsync(VeterinerDBContext context, AddAnimalViewModel model)
+        public async Task<AddAnimalViewModel> GeriDonusModeliOlusturAsync(VeterinerDBContext context)
         {
             var Model = await ModeliOlusturAsync(context);
 
-            Model.ImgUrl = model.ImgUrl;
-            Model.HayvanAdi = model.HayvanAdi;
-            Model.HayvanKilo = model.HayvanKilo;
-            Model.SecilenCinsId = model.SecilenCinsId;
-            Model.SecilenTurId = model.SecilenTurId;
-            Model.RenkId = model.RenkId;
-            Model.HayvanDogumTarihi = model.HayvanDogumTarihi;
-            Model.HayvanCinsiyet = model.HayvanCinsiyet;
-            Model.SahiplenmeTarihi = model.SahiplenmeTarihi;
-            Model.HayvanAnneId = model.HayvanAnneId;
-            Model.HayvanBabaId = model.HayvanBabaId;
+            Model.ImgUrl = ImgUrl;
+            Model.HayvanAdi = HayvanAdi;
+            Model.HayvanKilo = HayvanKilo;
+            Model.SecilenCinsId = SecilenCinsId;
+            Model.SecilenTurId = SecilenTurId;
+            Model.RenkId = RenkId;
+            Model.HayvanDogumTarihi = HayvanDogumTarihi;
+            Model.HayvanCinsiyet = HayvanCinsiyet;
+            Model.SahiplenmeTarihi = SahiplenmeTarihi;
+            Model.HayvanAnneId = HayvanAnneId;
+            Model.HayvanBabaId = HayvanBabaId;
 
             return Model;
         }

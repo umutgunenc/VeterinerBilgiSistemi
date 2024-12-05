@@ -32,9 +32,9 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return BirimLerListesi;
         }
 
-        public async Task<Birim> SilinecekBirimGetirAsync(VeterinerDBContext context, BirimSilViewModel model)
+        public async Task<Birim> SilinecekBirimGetirAsync(VeterinerDBContext context)
         {
-            SilinecekBirim = await context.Birimler.FindAsync(model.BirimId);
+            SilinecekBirim = await context.Birimler.FindAsync(BirimId);
             return SilinecekBirim;
         }
     }

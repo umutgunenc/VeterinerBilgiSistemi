@@ -56,9 +56,11 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             }
             return RollerListesi;
         }
-        public async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync(VeterinerDBContext context)
+        public async Task<KisiDuzenleViewModel> SecilenKisiyiGetirAsync(VeterinerDBContext context, KisiSecViewModel model)
         {
-            var secilenKisi = await context.Users.Where(u => u.InsanTckn == InsanTckn).FirstOrDefaultAsync();
+            var secilenKisi = await context.Users
+                .Where(u => u.InsanTckn == model.InsanTckn)
+                .FirstOrDefaultAsync();
 
             this.Id = secilenKisi.Id;
             this.InsanAdi = secilenKisi.InsanAdi;

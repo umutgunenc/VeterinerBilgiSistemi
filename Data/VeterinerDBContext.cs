@@ -149,6 +149,9 @@ namespace VeterinerBilgiSistemi.Data
             modelBuilder.Entity<AppRole>()
                 .HasData(new AppRole { Id = 1, Name = "ADMIN", NormalizedName = "ADMIN" });
 
+
+            var passwordHasher = new PasswordHasher<AppUser>();
+
             var admin = new AppUser
             {
                 Id = 1,
@@ -164,11 +167,11 @@ namespace VeterinerBilgiSistemi.Data
                 PhoneNumber = "05300000000",
                 NormalizedUserName = "ADMIN",
                 NormalizedEmail = "UMUTGUNENC@GMAIL.COM",
+                SecurityStamp = Guid.NewGuid().ToString(),
 
             };
-            var passwordHasher = new PasswordHasher<AppUser>();
             admin.PasswordHash = passwordHasher.HashPassword(admin, "123123123");
-            admin.SecurityStamp = Guid.NewGuid().ToString();
+
             modelBuilder.Entity<AppUser>().HasData(admin);
 
             modelBuilder.Entity<IdentityUserRole<int>>().HasData(

@@ -9,11 +9,10 @@ public class SayfalamaListesi<T>
     public int ToplamKayitSayisi { get; private set; }
     public List<T> Veriler { get; private set; }
 
-    public SayfalamaListesi(List<T> veriler, int sayfaNumarasi,int sayfadaGosterilecekKayitSayisi)
+    public SayfalamaListesi(List<T> veriler, int sayfaNumarasi,int sayfadaGosterilecekKayitSayisi,int toplamKayitSayisi)
     {
-        ToplamKayitSayisi =veriler.Count;
         SayfaNumarasi = sayfaNumarasi;
-        ToplamSayfa = (int)Math.Ceiling(ToplamKayitSayisi / (double)sayfadaGosterilecekKayitSayisi);
+        ToplamSayfa = (int)Math.Ceiling(toplamKayitSayisi / (double)sayfadaGosterilecekKayitSayisi);
         Veriler = veriler;
     }
 
@@ -25,6 +24,6 @@ public class SayfalamaListesi<T>
         var toplamKayit = veriler.Count();
         var elemanlar = veriler.Skip((sayfaNumarasi - 1) * sayfadaGosterilecekKayitSayisi).Take(sayfadaGosterilecekKayitSayisi).ToList();
 
-        return new SayfalamaListesi<T>(elemanlar, sayfaNumarasi, sayfadaGosterilecekKayitSayisi);
+        return new SayfalamaListesi<T>(elemanlar, sayfaNumarasi, sayfadaGosterilecekKayitSayisi, toplamKayit);
     }
 }

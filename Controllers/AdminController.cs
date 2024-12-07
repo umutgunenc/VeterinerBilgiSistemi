@@ -579,7 +579,7 @@ namespace VeterinerBilgiSistemi.Controllers
             }
 
             KisiDuzenleViewModel kisiDuzenleViewModel = new();
-            kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext);
+            kisiDuzenleViewModel.SecilenKisi = await kisiDuzenleViewModel.SecilenKisiyiGetirAsync(_veterinerDbContext, model);
             kisiDuzenleViewModel.Signature = Signature.CreateSignature(kisiDuzenleViewModel.Id.ToString(), kisiDuzenleViewModel.InsanTckn);
 
             ViewBag.model = kisiDuzenleViewModel;

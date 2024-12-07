@@ -7,14 +7,12 @@ namespace VeterinerBilgiSistemi.Models.Entity
 {
     public partial class Muayene
     {
-        //TODO stoklar için ara tablo oluştur
         public Muayene()
         {
             StokHareketleri = new HashSet<StokHareket>();
             KanTestleri = new HashSet<KanTestiMuayene>();
         }
         public int MuayeneId { get; set; }
-        public int TedaviId { get; set; }
         public int HayvanId { get; set; }
         public DateTime MuayeneTarihi { get; set; }
         public DateTime? SonrakiMuayeneTarihi { get; set; }

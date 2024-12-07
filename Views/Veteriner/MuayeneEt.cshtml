@@ -204,8 +204,7 @@
                     let row = checkbox.closest("tr"); // Checkbox'ın bulunduğu satır
                     let kanDegerleriId = checkbox.id.split("-")[1]; // ID'den Kan Testi ID'sini al
                     let testSonucuInput = row.querySelector("input[type='number']"); // Test sonucu inputunu seç
-                    let testSonucu = testSonucuInput ? testSonucuInput.value : null; // Sonucu al
-
+                    let testSonucu = testSonucuInput ? parseFloat(testSonucuInput.value) : 0; // Sonucu al
                     seciliKanTestleri.push({
                         KanDegerleriId: kanDegerleriId,
                         TestSonucu: testSonucu || null
@@ -217,28 +216,41 @@
             const jsonData = JSON.stringify(seciliKanTestleri);
 
             // API'ye gönder
-            fetch("http://127.0.0.1:5002/api/tahmin", { // Python API adresinizi buraya yazın
+            fetch("http://127.0.0.1:5002/api/TahminYap", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: jsonData
             })
-                .then(response => response.json())
+                .then(response => {
+                    return response.json(); // JSON formatına ayrıştırma
+                    console.log(response.json);
+                })
                 .then(data => {
-                    console.log("Python API'den gelen cevap:", data);
-                    alert("Tahmin işlemi tamamlandı!");
+                    // Gelen JSON verisini işleme
+                    if (data.status === "success") {
+                        alert(`${data.message.toUpperCase()}\n\nMuayene Tahmini: ${data.tahmin.toUpperCase()}`);
+                    } else if (data.status === "fail") {
+                        if (data.details != null)
+                            alert(`Hata: ${data.message}\n\nDetay: ${data.details || "Detay yok"}`);
+                        else
+                            alert(`Hata: ${data.message}`);
+                    }
+                    else {
+                        alert(`Bilinmeyen bir hata oluştu.`);
+                    }
                 })
                 .catch(error => {
-                    console.error("Hata oluştu:", error);
-                    alert("Tahmin işlemi sırasında bir hata oluştu.");
+                    console.log(error);
+                    // Hataları yakala ve göster
+                    alert(`Bir hata oluştu!\n\nHata Detayı: ${error.message}`);
                 });
-        });
+        });        
+
     </script>
 
 
-
-    
 }
-        
+
 

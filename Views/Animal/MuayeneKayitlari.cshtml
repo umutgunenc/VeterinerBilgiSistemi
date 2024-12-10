@@ -21,7 +21,7 @@
                 <label class="d-block text-white font-weight-bold">&nbsp;</label>
                 <a class="btn btn-warning w-100" href="@Url.Action("MuayeneKayitlari", "Animal", new { MevcutSayfa = 1, HekimAdi = "", ilkTarih = "", sonTarih = "", HayvanId = Model.HayvanId })">Reset</a>
             </div>
-            <input type="hidden" asp-for="HayvanId" />
+            <input type="hidden" asp-for="HayvanId"/>
             <div class="form-group col-auto">
                 <label class="d-block text-white font-weight-bold">&nbsp;</label>
                 <button class="btn btn-primary w-100" type="submit">Filtrele</button>
@@ -34,7 +34,7 @@
     <h3 class="text-white font-weight-bold">
         @if (Model.MuayenelerListesi != null && Model.MuayenelerListesi.Any())
         {
-            var hayvanAdi = Model.MuayenelerListesi.FirstOrDefault()?.Hayvan?.HayvanAdi?.ToUpper();
+            var hayvanAdi = Model.MuayenelerListesi.FirstOrDefault().HayvanAdi;
             <text>@hayvanAdi İsimli Hayvanın Muayene Kayıtları</text>
         }
         else
@@ -61,8 +61,8 @@
                 <th scope="row">@muayene.MuayeneId</th>
                 <td>@muayene.MuayeneTarihi.ToString("dd.MM.yyyy  HH:mm")</td>
                 <td>@muayene.SonrakiMuayeneTarihi?.ToString("dd.MM.yyyy")</td>
-                <td>@muayene.Hastalik.HastalikAdi</td>
-                <td>@muayene.Hekim.InsanAdi.ToUpper() @muayene.Hekim.InsanSoyadi.ToUpper() </td>
+                <td>@muayene.HastalikAdi</td>
+                <td>@muayene.HekimAdiSoyadi</td>
             </tr>
         }
 

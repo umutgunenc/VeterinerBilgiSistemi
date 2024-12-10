@@ -22,9 +22,9 @@
             </div>
             <div class="form-group col-auto">
                 <label class="d-block text-white font-weight-bold">&nbsp;</label>
-                <a class="btn btn-warning w-100" href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = 1, HayvanAdi = "", HekimAdi = "", ilkTarih = "", sonTarih = "",HayvanId="" })">Reset</a>
+                <a class="btn btn-warning w-100" href="@Url.Action("MuayeneKayitlari", "Veteriner", new { MevcutSayfa = 1, HayvanAdi = "", HekimAdi = "", ilkTarih = "", sonTarih = "",HayvanId = Model.HayvanId !=0 ? Model.HayvanId : 0 })">Reset</a>
             </div>
-
+            <input type="hidden" asp-for="HayvanId" />
             <div class="form-group col-auto">
                 <label class="d-block text-white font-weight-bold">&nbsp;</label>
                 <button class="btn btn-primary w-100" type="submit">Filtrele</button>
@@ -51,10 +51,10 @@
             <tr onclick="window.open('@Url.Action("MuayeneNo", "Veteriner", new { id = muayene.MuayeneId })', '_blank')" style="cursor:pointer">
                 <th scope="row">@muayene.MuayeneId</th>
                 <td>@muayene.MuayeneTarihi.ToString("dd.MM.yyyy  HH:mm")</td>
-                <td>@muayene.Hayvan.HayvanAdi</td>
-                <td>@muayene.Hastalik.HastalikAdi</td>
-                <td>@muayene.Hayvan.Sahipler.FirstOrDefault().AppUser.InsanAdi.ToUpper() @muayene.Hayvan.Sahipler.FirstOrDefault().AppUser.InsanSoyadi.ToUpper()</td>
-                <td>@muayene.Hekim.InsanAdi.ToUpper() @muayene.Hekim.InsanSoyadi.ToUpper() </td>
+                <td>@muayene.HayvanAdiTablo</td>
+                <td>@muayene.HastalikAdi</td>
+                <td>@muayene.SahipAdiSoyadi</td>
+                <td>@muayene.HekimAdiSoyadi</td>
             </tr>
         }
 

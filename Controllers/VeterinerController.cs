@@ -184,10 +184,6 @@ namespace VeterinerBilgiSistemi.Controllers
         }
 
 
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> MuayeneKayitlari(MuayeneKayitlariViewModel model)
         {
@@ -199,13 +195,12 @@ namespace VeterinerBilgiSistemi.Controllers
 
             model.HekimAdi = model.HekimAdi?.Trim() ?? string.Empty;
             model.HayvanAdi = model.HayvanAdi?.Trim() ?? string.Empty;
+            model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context);
 
-            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context);
+            model.SonSayfaNumarasi = model.ToplamSayfaSayisiniGetir();
             model.SonSayfaNumarasi = model.SonSayfaNumarasi <= 0 ? 1 : model.SonSayfaNumarasi;
 
             model.MevcutSayfa = model.MevcutSayfa > model.SonSayfaNumarasi ? model.SonSayfaNumarasi : model.MevcutSayfa;
-
-            model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context);
 
 
             return View(model);

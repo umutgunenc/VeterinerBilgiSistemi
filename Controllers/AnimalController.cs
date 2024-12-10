@@ -534,7 +534,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 return View("BadRequest");
 
             model.MuayenelerListesi = await model.MuayeneKayitlariniGetirAsync(_context);
-            model.SonSayfaNumarasi = await model.ToplamSayfaSayisiniGetirAsync(_context);
+            model.SonSayfaNumarasi = model.ToplamSayfaSayisiniGetir();
 
 
             return View(model);

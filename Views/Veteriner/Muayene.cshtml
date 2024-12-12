@@ -3,6 +3,19 @@
 @section VeterinerMenu{
     @await Html.PartialAsync("_VeterinerMenu")
 }
+@if (TempData["YapayZekaError"] != null)
+{
+    <script>
+        alert("Muayene bilgileri kaydedildi.\nLoglama işlemi başarısız oldu.");
+    </script>
+}
+
+@if (ViewBag.tahminEdilenHastalik != null)
+{
+    <script>
+        alert(`Yapay Zekanın Yapmış Olduğu Tahmin: @Html.Raw(ViewBag.tahminEdilenHastalik)`);
+    </script>
+}
 
 
 <form asp-action="KisiSec" asp-controller="Veteriner" method="post">
@@ -27,7 +40,6 @@
     </div>
 
 }
-
 
 @if (ViewBag.model != null)
 {

@@ -39,6 +39,9 @@ public class Startup
         // Email gönderme servisi eklendi
         services.AddTransient<IEmailSender, EmailSender>();
 
+        // Http Client kullanabilmek için
+        services.AddHttpClient();
+
         //Identity servisi eklendi
         services.AddIdentity<AppUser, AppRole>(options =>
         {

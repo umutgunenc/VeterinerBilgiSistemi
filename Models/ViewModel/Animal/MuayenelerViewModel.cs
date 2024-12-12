@@ -12,7 +12,6 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
     {
         public List<MuayenelerViewModel> MuayenelerListesi { get; set; }
         public string HekimAdi { get; set; }
-
         public string HayvanAdi { get; set; }
         public string HekimAdiSoyadi { get; set; }
         public string HastalikAdi { get; set; }
@@ -26,7 +25,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Animal
         {
             if (ilkTarih == null)
                 ilkTarih = new DateTime(1975, 01, 01);
-
+            
             var query = context.Muayeneler
                    .Include(m => m.Hastalik)
                    .Include(m => m.Hekim)

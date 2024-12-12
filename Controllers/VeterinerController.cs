@@ -3,14 +3,18 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using VeterinerBilgiSistemi.Data;
 using VeterinerBilgiSistemi.Fonksiyonlar;
+using VeterinerBilgiSistemi.Models.Classes;
 using VeterinerBilgiSistemi.Models.Entity;
 using VeterinerBilgiSistemi.Models.Validators.Veteriner;
 using VeterinerBilgiSistemi.Models.ViewModel.Veteriner;
@@ -24,11 +28,13 @@ namespace VeterinerBilgiSistemi.Controllers
     {
         private readonly VeterinerDBContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly HttpClient _httpClient;
 
-        public VeterinerController(VeterinerDBContext context, UserManager<AppUser> userManager)
+        public VeterinerController(VeterinerDBContext context, UserManager<AppUser> userManager, HttpClient httpClient)
         {
             _context = context;
             _userManager = userManager;
+            _httpClient = httpClient;
         }
 
         [HttpGet]
@@ -132,7 +138,7 @@ namespace VeterinerBilgiSistemi.Controllers
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
-
+                TempData["modelError"] = "Forma Girilen Bazı Bilgiler Hatalı Girildi./nGirilen Bilgileri Kontrol Ediniz.";
                 return View(model);
             }
 
@@ -148,7 +154,9 @@ namespace VeterinerBilgiSistemi.Controllers
             await _context.Muayeneler.AddAsync(muayene);
             await _context.SaveChangesAsync();
 
-            var stokHarekler = model.MuayenedeKullanilanStoklar
+            if (model.MuayenedeKullanilanStoklar != null)
+            {
+                var stokHarekler = model.MuayenedeKullanilanStoklar
                 .Where(x => x.SeciliMi == true)
                 .Select(x => new StokHareket
                 {
@@ -161,10 +169,13 @@ namespace VeterinerBilgiSistemi.Controllers
                 })
             .ToList();
 
-            await _context.StokHareketler.AddRangeAsync(stokHarekler);
-            await _context.SaveChangesAsync();
+                await _context.StokHareketler.AddRangeAsync(stokHarekler);
+                await _context.SaveChangesAsync();
+            }
 
-            var kanTestleri = model.MuayendeYapilanKanTestleri
+            if (model.MuayendeYapilanKanTestleri != null)
+            {
+                var kanTestleri = model.MuayendeYapilanKanTestleri
                 .Where(x => x.SeciliMi == true)
                 .Select(x => new KanTestiMuayene
                 {
@@ -175,14 +186,65 @@ namespace VeterinerBilgiSistemi.Controllers
                 })
                 .ToList();
 
-            await _context.KanTestiMuayene.AddRangeAsync(kanTestleri);
-            await _context.SaveChangesAsync();
+                await _context.KanTestiMuayene.AddRangeAsync(kanTestleri);
+                await _context.SaveChangesAsync();
+            }
 
-            TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
 
-            return View("Muayene");
+
+            List<KanTestiSonucu> apiRequest = new();
+            foreach (var kanTesti in model.MuayendeYapilanKanTestleri.Where(x => x.SeciliMi == true))
+            {
+                apiRequest.Add(new KanTestiSonucu
+                {
+                    KanDegerleriId = kanTesti.KanDegerleriId,
+                    TestSonucu = kanTesti.KanDegeriValue
+                });
+            }
+
+            try
+            {
+                string jsonRequest = JsonSerializer.Serialize(apiRequest);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync("http://127.0.0.1:5002/api/TahminYap", content);
+
+
+                string responseMessage = await response.Content.ReadAsStringAsync();
+
+                var jsonResponse = JsonSerializer.Deserialize<YapayZekaTahminResponseModel>(responseMessage);
+
+                if (jsonResponse != null && jsonResponse.status == "success")
+                {
+                    muayene.YapayZekaTahminId = jsonResponse.tahminId;
+
+                    _context.Muayeneler.Update(muayene);
+                    await _context.SaveChangesAsync();
+                    if (muayene.HastalikId != muayene.YapayZekaTahminId)
+                    {
+                        ViewBag.tahminEdilenHastalik = jsonResponse.tahmin.ToUpper();
+                    }
+
+                    TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                    return View("Muayene");
+
+                }
+                else
+                {
+                    TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                    TempData["YapayZekaError"] = "Muayene bilgileri kaydedildi, Loglama işlemi başarısız oldu.";
+                    return View("Muayene");
+                }
+
+            }
+            catch (Exception)
+            {
+                TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                TempData["YapayZekaError"] = "Muayene bilgileri kaydedildi, Loglama işlemi başarısız oldu.";
+                return View("Muayene");
+            }
+
         }
-
 
         [HttpGet]
         public async Task<IActionResult> MuayeneKayitlari(MuayeneKayitlariViewModel model)
@@ -231,6 +293,7 @@ namespace VeterinerBilgiSistemi.Controllers
             MuayeneNoValidators validator = new();
             ValidationResult result = validator.Validate(model);
 
+            model.Hayvan = await _context.Hayvanlar.FindAsync(model.HayvanId);
 
             if (!result.IsValid)
             {
@@ -316,54 +379,110 @@ namespace VeterinerBilgiSistemi.Controllers
                 .Where(sh => sh.MuayeneId == muayene.MuayeneId)
                 .ToListAsync();
 
-            List<StokHareket> yeniStokListesi = new();
 
-            foreach (var stokHareket in model.KullanilanIlaclar.Where(ki => ki.YapildiMi == true))
+            if (model.KullanilanIlaclar != null)
             {
-                var yeniStokHareket = new StokHareket();
-                yeniStokHareket.StokCikisAdet = stokHareket.StokCikisAdet;
-                yeniStokHareket.SatisTarihi = muayene.MuayeneTarihi;
-                yeniStokHareket.CalisanId = hekim.Id;
-                yeniStokHareket.MuayeneId = muayene.MuayeneId;
-                yeniStokHareket.StokHareketTarihi = muayene.MuayeneTarihi;
-                yeniStokHareket.StokId = stokHareket.Stok.Id;
+                List<StokHareket> yeniStokListesi = new();
+                foreach (var stokHareket in model.KullanilanIlaclar.Where(ki => ki.YapildiMi == true))
+                {
+                    var yeniStokHareket = new StokHareket();
+                    yeniStokHareket.StokCikisAdet = stokHareket.StokCikisAdet;
+                    yeniStokHareket.SatisTarihi = muayene.MuayeneTarihi;
+                    yeniStokHareket.CalisanId = hekim.Id;
+                    yeniStokHareket.MuayeneId = muayene.MuayeneId;
+                    yeniStokHareket.StokHareketTarihi = muayene.MuayeneTarihi;
+                    yeniStokHareket.StokId = stokHareket.Stok.Id;
 
-                yeniStokListesi.Add(yeniStokHareket);
+                    yeniStokListesi.Add(yeniStokHareket);
+                }
+
+                _context.StokHareketler.RemoveRange(stokHarektler);
+                await _context.SaveChangesAsync();
+
+                await _context.StokHareketler.AddRangeAsync(yeniStokListesi);
+                await _context.SaveChangesAsync();
+
             }
 
-            _context.StokHareketler.RemoveRange(stokHarektler);
-            await _context.SaveChangesAsync();
-
-            await _context.StokHareketler.AddRangeAsync(yeniStokListesi);
-            await _context.SaveChangesAsync();
-
-            var eskiKanDegerleriListesi = await _context.KanTestiMuayene
+            if (model.YapilanKanTestleri != null)
+            {
+                var eskiKanDegerleriListesi = await _context.KanTestiMuayene
                 .Where(ktm => ktm.MuayeneId == muayene.MuayeneId)
                 .ToListAsync();
 
-            List<KanTestiMuayene> yeniKanTestiListesi = new();
+                List<KanTestiMuayene> yeniKanTestiListesi = new();
 
-            foreach (var kanTesti in model.YapilanKanTestleri.Where(x => x.SecildiMi == true))
-            {
-                var yeniKanTesti = new KanTestiMuayene();
-                yeniKanTesti.MuayeneId = muayene.MuayeneId;
-                yeniKanTesti.KanDegeriValue = kanTesti.KanDegeriValue;
-                yeniKanTesti.KanDegerleriId = kanTesti.KanDegerleri.KanDegerleriId;
+                foreach (var kanTesti in model.YapilanKanTestleri.Where(x => x.SecildiMi == true))
+                {
+                    var yeniKanTesti = new KanTestiMuayene();
+                    yeniKanTesti.MuayeneId = muayene.MuayeneId;
+                    yeniKanTesti.KanDegeriValue = kanTesti.KanDegeriValue;
+                    yeniKanTesti.KanDegerleriId = kanTesti.KanDegerleri.KanDegerleriId;
 
-                yeniKanTestiListesi.Add(yeniKanTesti);
+                    yeniKanTestiListesi.Add(yeniKanTesti);
+                }
+
+                _context.KanTestiMuayene.RemoveRange(eskiKanDegerleriListesi);
+                await _context.SaveChangesAsync();
+
+                await _context.KanTestiMuayene.AddRangeAsync(yeniKanTestiListesi);
+                await _context.SaveChangesAsync();
             }
 
-            _context.KanTestiMuayene.RemoveRange(eskiKanDegerleriListesi);
-            await _context.SaveChangesAsync();
+            List<KanTestiSonucu> apiRequest = new();
+            foreach (var kanTesti in model.YapilanKanTestleri.Where(x => x.SecildiMi == true))
+            {
+                apiRequest.Add(new KanTestiSonucu
+                {
+                    KanDegerleriId = kanTesti.KanDegerleri.KanDegerleriId,
+                    TestSonucu = kanTesti.KanDegeriValue
+                });
+            }
 
-            await _context.KanTestiMuayene.AddRangeAsync(yeniKanTestiListesi);
-            await _context.SaveChangesAsync();
+            try
+            {
+                string jsonRequest = JsonSerializer.Serialize(apiRequest);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            TempData["MuayeneGuncellendi"] = "Yapilan değişiklikler başarılı bir şekilde kaydedildi.";
+                HttpResponseMessage response = await _httpClient.PostAsync("http://127.0.0.1:5002/api/TahminYap", content);
 
-            return RedirectToAction("MuayeneNo", new { id = muayene.MuayeneId });
+
+                string responseMessage = await response.Content.ReadAsStringAsync();
+
+                var jsonResponse = JsonSerializer.Deserialize<YapayZekaTahminResponseModel>(responseMessage);
+
+                if (jsonResponse != null && jsonResponse.status == "success")
+                {
+                    muayene.YapayZekaTahminId = jsonResponse.tahminId;
+
+                    _context.Muayeneler.Update(muayene);
+                    await _context.SaveChangesAsync();
+                    if (muayene.HastalikId != muayene.YapayZekaTahminId)
+                        ViewBag.tahminEdilenHastalik = jsonResponse.tahmin.ToUpper();
+
+                    TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                    return View("Muayene");
+
+                }
+                else
+                {
+                    TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                    TempData["YapayZekaError"] = "Muayene bilgileri kaydedildi, Loglama işlemi başarısız oldu.";
+                    return View("Muayene");
+                }
+
+            }
+            catch (Exception)
+            {
+                TempData["MuayeneEdildi"] = $"{model.Hayvan.HayvanAdi.ToUpper()} isimli hayvanin muayenesi tamamlandı.";
+                TempData["YapayZekaError"] = "Muayene bilgileri kaydedildi, Loglama işlemi başarısız oldu.";
+                return View("Muayene");
+            }
+
         }
+
 
     }
 }
+
 

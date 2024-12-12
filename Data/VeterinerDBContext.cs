@@ -122,8 +122,6 @@ namespace VeterinerBilgiSistemi.Data
                 .HasColumnName("KanDegerleriId");
 
 
-
-
             modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
                 .HasKey(ibsm => new { ibsm.IletisimBilgileriId, ibsm.SosyalMedyaId });
 
@@ -144,6 +142,20 @@ namespace VeterinerBilgiSistemi.Data
             modelBuilder.Entity<IletisimBilgileriSosyalMedya>()
                 .Property(ibsm => ibsm.SosyalMedyaId)
                 .HasColumnName("SosyalMedyaId");
+
+
+
+            modelBuilder.Entity<Muayene>()
+                .HasOne(m => m.Hastalik)
+                .WithMany(h => h.Muayeneler)
+                .HasForeignKey(m => m.HastalikId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Muayene>()
+                .HasOne(m => m.YapayZekaTahminHastaligi)
+                .WithMany(m => m.YapayZekaTahminMuayeneleri)
+                .HasForeignKey(m => m.YapayZekaTahminId)
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             modelBuilder.Entity<AppRole>()

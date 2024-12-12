@@ -4,6 +4,14 @@
 }
 
 <div class="container">
+    @if (TempData["modelError"] != null)
+    {
+        <script>
+            alert("Forma Girilen Bazı Bilgiler Hatalı Girildi.\nGirilen Bilgileri Kontrol Ediniz.");
+        </script>
+
+    }
+
     <form asp-action="MuayeneEt" asp-controller="Veteriner" method="post">
 
         <div class="form-group">
@@ -246,7 +254,7 @@
                     // Hataları yakala ve göster
                     alert(`Bir hata oluştu!\n\nHata Detayı: ${error.message}`);
                 });
-        });        
+        });
 
     </script>
 

@@ -77,7 +77,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return ImzaListesi;
         }
 
-        public async Task<Stok> StoguGetirAsync(  VeterinerDBContext context)
+        public async Task<Stok> StoguGetirAsync(VeterinerDBContext context)
         {
             var stok = await context.Stoklar
                 .Where(s => s.Id == StokId)
@@ -85,7 +85,7 @@ namespace VeterinerBilgiSistemi.Models.ViewModel.Admin
             return stok;
         }
 
-        public StokHareket StokHareketBigileriniGetir( AppUser user)
+        public StokHareket StokHareketBigileriniGetir(AppUser user)
         {
             StokHareketTarihi = System.DateTime.Now;
             StokId = StokId;

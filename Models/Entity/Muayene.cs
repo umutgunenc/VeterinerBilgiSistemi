@@ -19,10 +19,13 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public string Aciklama { get; set; }
         public int HekimId { get; set; }
         public int HastalikId { get; set; }
+        public int? YapayZekaTahminId { get; set; }
         public virtual Hayvan Hayvan { get; set; }
         public virtual AppUser Hekim { get; set; }
         public virtual Hastalik Hastalik { get; set; }
+        public virtual Hastalik YapayZekaTahminHastaligi { get; set; }
         public virtual ICollection<KanTestiMuayene> KanTestleri { get; set; }
         public virtual ICollection<StokHareket>? StokHareketleri { get; set; }
+
     }
 }

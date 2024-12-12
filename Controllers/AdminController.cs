@@ -910,6 +910,9 @@ namespace VeterinerBilgiSistemi.Controllers
             model.StokAdi = model.StokAdi.ToUpper();
             if (model.Aciklama != null)
                 model.Aciklama = model.Aciklama.ToUpper();
+            else
+                model.Aciklama = "";
+
             model.StokBarkod = model.StokBarkod.ToUpper();
 
             _veterinerDbContext.Update(model);
@@ -993,6 +996,7 @@ namespace VeterinerBilgiSistemi.Controllers
 
             var user = await _userManager.GetUserAsync(User);
             var stokHareket = model.StokHareketBigileriniGetir(user);
+            
 
             _veterinerDbContext.StokHareketler.Add(stokHareket);
             await _veterinerDbContext.SaveChangesAsync();

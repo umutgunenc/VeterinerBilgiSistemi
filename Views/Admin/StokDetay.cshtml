@@ -5,14 +5,22 @@
 <div id="radioButtons">
 
 </div>
+<div clas="container-fluid p-0">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark text-center mb-2">
+                    <thead id="tableHeader">
 
-<table class="table table-responsive table-hover table-dark text-left mb-2 rounded-top-md">
-    <thead id="tableHeader">
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-</table>
 
 <div id="table-controls">
 
@@ -47,7 +55,7 @@
                             liste = response.stokHareketDetayListesi;
                             tabloyuDoldurHepsi();
                             bilgileriGetir(response);
-
+                            console.log(response);
                         } else {
                             console.error("stokHareketDetayListesi boş ya da undefined.");
                         }
@@ -65,33 +73,32 @@
                 var aktifMi = response.aktifMi ? "Güncel" : "Güncel Değil"
                 var birimAdi = response.birimAdi;
                 var kategoriAdi = response.kategoriAdi;
-                var ortalamaAlisFiyati = response.ortalamaAlisFiyati;
                 var stokAdi = response.stokAdi;
                 var stokBarkod = response.stokBarkod;
                 var stokSayisi = response.stokSayisi;
 
                 var p = `<p class="text-white text-monospace font-weight-bold">Ürün Adı:\xa0${stokAdi} \xa0\xa0\ Barkod Numarası:\xa0${stokBarkod} \xa0\xa0\ Kategorisi:\xa0${kategoriAdi} </p>
-                                                                         <hr style="border-color:white;">
-                                                                         <p class="text-white text-monospace font-weight-bold">Stok Miktarı:\xa0${stokSayisi} ${birimAdi}\xa0\xa0Ortalama Alış Fiyatı:\xa0${ortalamaAlisFiyati}₺\xa0\xa0Stok Durumu:\xa0${aktifMi}</p>
-                                                                         <hr style="border-color:white;">
-                                                                         <p class="text-white text-monospace font-weight-bold">Açıklama:\xa0${aciklama}</p>`
+                                                                                             <hr style="border-color:white;">
+                                                                                             <p class="text-white text-monospace font-weight-bold">Stok Miktarı:\xa0${stokSayisi} ${birimAdi}\xa0\xa0Stok Durumu:\xa0${aktifMi}</p>
+                                                                                             <hr style="border-color:white;">
+                                                                                             <p class="text-white text-monospace font-weight-bold">Açıklama:\xa0${aciklama}</p>`
                 bilgiBody.innerHTML = p;
 
                 var radioButtons = $("#radioButtons")
                 radioButtons.html(`<div class="mb-2">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="hepsiniGoster" checked="checked">
-                                            <label class="form-check-label" for="hepsiniGoster">Hepsini Göster</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="alislariGoster">
-                                            <label class="form-check-label" for="alislariGoster">Alışları Göster</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioButton" id="satislariGoster">
-                                            <label class="form-check-label" for="satislariGoster">Satışları Göster</label>
-                                        </div>
-                                    </div>`
+                                               <div class="form-check form-check-inline">
+                                                   <input class="form-check-input" type="radio" name="radioButton" id="hepsiniGoster" checked="checked">
+                                                   <label class="form-check-label" for="hepsiniGoster">Hepsini Göster</label>
+                                               </div>
+                                               <div class="form-check form-check-inline">
+                                                   <input class="form-check-input" type="radio" name="radioButton" id="alislariGoster">
+                                                   <label class="form-check-label" for="alislariGoster">Alışları Göster</label>
+                                               </div>
+                                               <div class="form-check form-check-inline">
+                                                   <input class="form-check-input" type="radio" name="radioButton" id="satislariGoster">
+                                                   <label class="form-check-label" for="satislariGoster">Satışları Göster</label>
+                                               </div>
+                                           </div>`
                 );
             }
 
@@ -99,54 +106,41 @@
                 var tableHeader = $('#tableHeader');
                 tableHeader.empty();
                 var tableHeaderRow = `<tr>
-                                          <th scope="col" class="text-center p-0 py-2 pl-1">
-                                              <span role="button" id="stokHareketId">
-                                                  İşlem No <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="alisFiyati">
-                                                  Alış Fiyatı <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="alisTarihi">
-                                                  Alış Tarihi <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="stokGirisAdet">
-                                                  Adet <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="satisFiyati">
-                                                  Satış Fiyatı <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="satisTarihi">
-                                                  Satış Tarihi <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="stokCikisAdet">
-                                                  Adet <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      
-                                          <th scope="col" class="text-center p-0 py-2">
-                                              <span role="button" id="calisanAdi">
-                                                  Çalışan <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      </tr>`
+                                                 <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                     <span role="button" id="stokHareketId">
+                                                         İşlem No <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="alisTarihi">
+                                                         Alış Tarihi <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="stokGirisAdet">
+                                                         Adet <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="satisTarihi">
+                                                         Satış Tarihi <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="stokCikisAdet">
+                                                         Adet <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="calisanAdi">
+                                                         Çalışan <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                             </tr>`
                 tableHeader.append(tableHeaderRow);
 
                 var tableBody = $('#tableBody');
@@ -171,24 +165,20 @@
 
 
                     var stokHareketId = stokHareket.stokHareketId;
-                    var alisFiyati = stokHareket.alisFiyati || " ";
                     var alisTarihi = formatDate(stokHareket.alisTarihi);
                     var stokGirisAdet = stokHareket.stokGirisAdet || " ";
-                    var satisFiyati = stokHareket.satisFiyati || " ";
                     var satisTarihi = formatDate(stokHareket.satisTarihi);
                     var stokCikisAdet = stokHareket.stokCikisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
                     var row = `<tr>
-                                                   <td class="col-1 text-center">${stokHareketId}</td>
-                                                   <td class="col-2 text-center">${alisFiyati}</td>
-                                                   <td class="col-2 text-center">${alisTarihi}</td>
-                                                   <td class="col-1 text-center">${stokGirisAdet}</td>
-                                                   <td class="col-2 text-center">${satisFiyati}</td>
-                                                   <td class="col-2 text-center">${satisTarihi}</td>
-                                                   <td class="col-1 text-center">${stokCikisAdet}</td>
-                                                   <td class="col-1 text-center">${calisanAdi} ${calisanSoyadi}</td>
-                                               </tr>`;
+                                              <td class="text-center" style="width:10%">${stokHareketId}</td>
+                                              <td class="text-center" style="width:20%">${alisTarihi}</td>
+                                              <td class="text-center" style="width:10%">${stokGirisAdet}</td>
+                                              <td class="text-center" style="width:20%">${satisTarihi}</td>
+                                              <td class="text-center" style="width:10%">${stokCikisAdet}</td>
+                                              <td class="text-center" style="width:20%">${calisanAdi} ${calisanSoyadi}</td>
+                                      </tr>`;
                     tableBody.append(row);
                 }
 
@@ -201,36 +191,28 @@
                 var tableHeader = $('#tableHeader');
                 tableHeader.empty();
                 var tableHeaderRow = `<tr>
-                                                          <th scope="col" class="text-center p-0 py-2 pl-1">
-                                                              <span role="button" id="stokHareketId">
-                                                                  İşlem No <i class="fa-solid fa-sort"></i>
-                                                              </span>
-                                                          </th>
+                                                  <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                      <span role="button" id="stokHareketId">
+                                                          İşlem No <i class="fa-solid fa-sort"></i>
+                                                      </span>
+                                                  </th>
 
-                                                          <th scope="col" class="text-center  p-0 py-2">
-                                                              <span role="button" id="alisFiyati">
-                                                                  Alış Fiyatı <i class="fa-solid fa-sort"></i>
-                                                              </span>
-                                                          </th>
-
-                                                          <th scope="col" class="text-center  p-0 py-2">
-                                                              <span role="button" id="alisTarihi">
-                                                                  Alış Tarihi <i class="fa-solid fa-sort"></i>
-                                                              </span>
-                                                          </th>
-
-                                                          <th scope="col" class="text-center  p-0 py-2">
-                                                              <span role="button" id="stokGirisAdet">
-                                                                  Adet <i class="fa-solid fa-sort"></i>
-                                                              </span>
-                                                          </th>
-
-                                                          <th scope="col" class="text-center p-0 py-2">
-                                                              <span role="button" id="calisanAdi">
-                                                                  Çalışan <i class="fa-solid fa-sort"></i>
-                                                              </span>
-                                                          </th>
-                                                      </tr>`
+                                                  <th scope="col" class="text-center p-0 py-2">
+                                                      <span role="button" id="alisTarihi">
+                                                          Alış Tarihi <i class="fa-solid fa-sort"></i>
+                                                      </span>
+                                                  </th>
+                                                  <th scope="col" class="text-center p-0 py-2">
+                                                      <span role="button" id="stokGirisAdet">
+                                                          Adet <i class="fa-solid fa-sort"></i>
+                                                      </span>
+                                                  </th>
+                                                  <th scope="col" class="text-center p-0 py-2">
+                                                      <span role="button" id="calisanAdi">
+                                                          Çalışan <i class="fa-solid fa-sort"></i>
+                                                      </span>
+                                                  </th>
+                                             </tr>`
                 tableHeader.append(tableHeaderRow);
 
 
@@ -240,7 +222,7 @@
                 gosterilecekItemListesi = [];
 
                 for (var i = 0; i < liste.length; i++) {
-                    if (liste[i].alisFiyati == null || liste[i].alisTarihi == null || liste[i].stokGirisAdet == null) {
+                    if (liste[i].alisTarihi == null || liste[i].stokGirisAdet == null) {
                         continue;
                     }
                     gosterilecekItemListesi.push(liste[i]);
@@ -254,18 +236,16 @@
                     stokHareket = [];
                     stokHareket = gosterilecekItemListesi[i];
                     var stokHareketId = stokHareket.stokHareketId;
-                    var alisFiyati = stokHareket.alisFiyati || " ";
                     var alisTarihi = formatDate(stokHareket.alisTarihi);
                     var stokGirisAdet = stokHareket.stokGirisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
                     var row = `<tr>
-                                  <td class="col-sm-1 text-center">${stokHareketId}</td>
-                                  <td class="col-sm-2 text-center">${alisFiyati}</td>
-                                  <td class="col-sm-4 text-center">${alisTarihi}</td>
-                                  <td class="col-sm-2 text-center">${stokGirisAdet}</td>
-                                  <td class="col-sm-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
-                              </tr>`;
+                                          <td class="text-center" style="width:15%">${stokHareketId}</td>
+                                          <td class="text-center" style="width:35%">${alisTarihi}</td>
+                                          <td class="text-center" style="width:15%">${stokGirisAdet}</td>
+                                          <td class="text-center" style="width:35%">${calisanAdi} ${calisanSoyadi}</td>
+                                      </tr>`;
                     tableBody.append(row);
                 }
 
@@ -278,36 +258,27 @@
                 var tableHeader = $('#tableHeader');
                 tableHeader.empty();
                 var tableHeaderRow = `<tr>
-                                          <th scope="col" class="text-center p-0 py-2 pl-1">
-                                              <span role="button" id="stokHareketId">
-                                                  İşlem No <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="satisFiyati">
-                                                  Satış Fiyatı <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="satisTarihi">
-                                                  Satış Tarihi <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-
-                                          <th scope="col" class="text-center  p-0 py-2">
-                                              <span role="button" id="stokCikisAdet">
-                                                  Adet <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-
-                                          <th scope="col" class="text-center p-0 py-2">
-                                              <span role="button" id="calisanAdi">
-                                                  Çalışan <i class="fa-solid fa-sort"></i>
-                                              </span>
-                                          </th>
-                                      </tr>`
+                                                 <th scope="col" class="text-center p-0 py-2 pl-1">
+                                                     <span role="button" id="stokHareketId">
+                                                         İşlem No <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                                 <th scope="col" class="text-center  p-0 py-2">
+                                                     <span role="button" id="satisTarihi">
+                                                         Satış Tarihi <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                                 <th scope="col" class="text-center  p-0 py-2">
+                                                     <span role="button" id="stokCikisAdet">
+                                                         Adet <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                                 <th scope="col" class="text-center p-0 py-2">
+                                                     <span role="button" id="calisanAdi">
+                                                         Çalışan <i class="fa-solid fa-sort"></i>
+                                                     </span>
+                                                 </th>
+                                             </tr>`
                 tableHeader.append(tableHeaderRow);
                 var tableBody = $('#tableBody');
                 tableBody.empty();
@@ -315,7 +286,7 @@
                 gosterilecekItemListesi = [];
 
                 for (var i = 0; i < liste.length; i++) {
-                    if (liste[i].satisFiyati == null || liste[i].satisTarihi == null || liste[i].stokCikisAdet == null) {
+                    if (liste[i].satisTarihi == null || liste[i].stokCikisAdet == null) {
                         continue;
                     }
                     gosterilecekItemListesi.push(liste[i]);
@@ -329,18 +300,16 @@
                     stokHareket = [];
                     stokHareket = gosterilecekItemListesi[i];
                     var stokHareketId = stokHareket.stokHareketId;
-                    var satisFiyati = stokHareket.satisFiyati || " ";
                     var satisTarihi = formatDate(stokHareket.satisTarihi);
                     var stokCikisAdet = stokHareket.stokCikisAdet || " ";
                     var calisanAdi = stokHareket.calisanAdi;
                     var calisanSoyadi = stokHareket.calisanSoyadi
                     var row = `<tr>
-                                  <td class="col-2 text-center">${stokHareketId}</td>
-                                  <td class="col-2 text-center">${satisFiyati}</td>
-                                  <td class="col-3 text-center">${satisTarihi}</td>
-                                  <td class="col-2 text-center">${stokCikisAdet}</td>
-                                  <td class="col-3 text-center">${calisanAdi} ${calisanSoyadi}</td>
-                              </tr>`;
+                                          <td class="text-center" style="width:15%">${stokHareketId}</td>
+                                          <td class="text-center" style="width:35%">${satisTarihi}</td>
+                                          <td class="text-center" style="width:15%">${stokCikisAdet}</td>
+                                          <td class="text-center" style="width:35%">${calisanAdi} ${calisanSoyadi}</td>
+                                      </tr>`;
                     tableBody.append(row);
                 }
 
@@ -446,10 +415,10 @@
             }
 
             // Gösterim seçeneklerinin değişmesi
-            $(document).on('change', '#showCount' , function () {
+            $(document).on('change', '#showCount', function () {
                 itemsPerPage = parseInt($(this).val(), 10);
-                kayitlarBilgileriniGetir(kayitlarBilgileriniGetir,startIndex,endIndex);
-                sayfaGuncelle(1); 
+                kayitlarBilgileriniGetir(kayitlarBilgileriniGetir, startIndex, endIndex);
+                sayfaGuncelle(1);
             });
 
             $(document).on('click', '#firstPage', function () {
@@ -458,19 +427,19 @@
                 }
             });
 
-            $(document).on('click','#prevPage', function () {
+            $(document).on('click', '#prevPage', function () {
                 if (!$(this).prop('disabled')) {
                     sayfaGuncelle(currentPage - 1);
                 }
             });
 
-            $(document).on('click', '#nextPage',function () {
+            $(document).on('click', '#nextPage', function () {
                 if (!$(this).prop('disabled')) {
                     sayfaGuncelle(currentPage + 1);
                 }
             });
 
-            $(document).on('click', '#lastPage',function () {
+            $(document).on('click', '#lastPage', function () {
                 if (!$(this).prop('disabled')) {
                     console.log("son")
                     sayfaGuncelle(Math.ceil(liste.length / itemsPerPage));
@@ -487,20 +456,12 @@
                 sirala('stokHareketId');
             });
 
-            $(document).on('click', '#alisFiyati', function (e) {
-                sirala('alisFiyati');
-            });
-
             $(document).on('click', '#alisTarihi', function (e) {
                 sirala('alisTarihi');
             });
 
             $(document).on('click', '#stokGirisAdet', function (e) {
                 sirala('stokGirisAdet');
-            });
-
-            $(document).on('click', '#satisFiyati', function (e) {
-                sirala('satisFiyati');
             });
 
             $(document).on('click', '#satisTarihi', function (e) {
@@ -541,24 +502,24 @@
 
 
                 kayitBilgileri.html(`
-                    <div class="show-options">
-                        <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
-                        <select id="showCount">
-                            <option value="10" ${selectedCount == 10 ? 'selected' : ''}>10</option>
-                            <option value="20" ${selectedCount == 20 ? 'selected' : ''}>20</option>
-                            <option value="50" ${selectedCount == 50 ? 'selected' : ''}>50</option>
-                        </select>
-                        <span id="totalCount">Toplam ${kayitListesi.length} kayıt bulunmuştur. ${ilkSayfadakiKayitSayisi + 1}. kayıttan ${sonSayfadakiKayitSayisi}. kayıta kadar gösterilmektedir.</span>
-                    </div>
+                                        <div class="show-options">
+                                            <label for="showCount">Sayfada Gösterilecek Kayıt Sayısı:</label>
+                                            <select id="showCount">
+                                                <option value="10" ${selectedCount == 10 ? 'selected' : ''}>10</option>
+                                                <option value="20" ${selectedCount == 20 ? 'selected' : ''}>20</option>
+                                                <option value="50" ${selectedCount == 50 ? 'selected' : ''}>50</option>
+                                            </select>
+                                            <span id="totalCount">Toplam ${kayitListesi.length} kayıt bulunmuştur. ${ilkSayfadakiKayitSayisi + 1}. kayıttan ${sonSayfadakiKayitSayisi}. kayıta kadar gösterilmektedir.</span>
+                                        </div>
 
-                    <div class="pagination">
-                        <button id="firstPage" disabled>İlk</button>
-                        <button id="prevPage" disabled>Önceki</button>
-                        <span id="pageNumbers"></span>
-                        <button id="nextPage" disabled>Sonraki</button>
-                        <button id="lastPage" disabled>Son</button>
-                    </div>
-                `);
+                                        <div class="pagination">
+                                            <button id="firstPage" disabled>İlk</button>
+                                            <button id="prevPage" disabled>Önceki</button>
+                                            <span id="pageNumbers"></span>
+                                            <button id="nextPage" disabled>Sonraki</button>
+                                            <button id="lastPage" disabled>Son</button>
+                                        </div>
+                                    `);
                 sayfaNumaralarınıGuncelle()
             }
         });

@@ -24,7 +24,6 @@ namespace VeterinerBilgiSistemi.Controllers
     //bu alanları kaldır
     //stokhareketdetay listesinde ortalama alış fiyatını sil
     //Stok ile ilgili viewlerde kategori listesi şeklinde bir ifade var, onu kategoriler olarak değiştir
-    //stok detay sayfasında alışlar ve satışlar gözükmüyor, düzelt
     //Sosyal medya duzenle sayfası yapıldı
 
     [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
@@ -1724,6 +1723,7 @@ namespace VeterinerBilgiSistemi.Controllers
             returnModel.IletisimBilgileriListesi = await returnModel.IletisimBilgileriListesiniGetirAsync(_veterinerDbContext);
             return View("AdresDuzenle", returnModel);
         }
+
     }
 }
 

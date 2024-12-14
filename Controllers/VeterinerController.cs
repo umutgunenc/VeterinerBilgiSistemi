@@ -23,7 +23,7 @@ using VeterinerBilgiSistemi.Models.ViewModel.Veteriner;
 
 namespace VeterinerBilgiSistemi.Controllers
 {
-    [Authorize(Roles = "VETERİNER,VETERINER")]
+    [Authorize(Roles = "VETERINER")]
     public class VeterinerController : Controller
     {
         private readonly VeterinerDBContext _context;

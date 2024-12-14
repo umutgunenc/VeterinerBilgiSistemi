@@ -2,7 +2,6 @@
 
 namespace VeterinerBilgiSistemi.Models.Entity
 {
-    //TODO kan tahlilleri admin menusunden eklensin
     public class KanDegerleri
     {
         public KanDegerleri()

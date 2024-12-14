@@ -1,0 +1,212 @@
+﻿@model StokRaporlariViewModel
+
+<div class="d-inline justify-content-between">
+    <form asp-controller="Raporlar" asp-action="RaporSonucu" method="post">
+        <div class="form-row">
+            <div class="form-group col-md">
+                <label for="baslangicTarihi" class="text-white font-weight-bold">Başlangıç Tarihi</label>
+                <input type="date" class="form-control" id="baslangicTarihi" asp-for="IlkTarih">
+            </div>
+            <div class="form-group col-md">
+                <label for="bitisTarihi" class="text-white font-weight-bold">Bitiş Tarihi</label>
+                <input type="date" class="form-control" id="bitisTarihi" asp-for="SonTarih">
+            </div>
+            <div class="form-group col-md">
+                <label for="Id" class="text-white font-weight-bold">Stok Seçiniz</label>
+                <select class="form-control" asp-for="Id" asp-items="Model.SelectListItems">
+                    <option selected value="">Bütün Stoklarin Satışları</option>
+                </select>
+            </div>
+            <input type="hidden" asp-for="RaporTuru" />
+            <div class="form-group col-auto">
+                <label class="d-block text-white font-weight-bold">&nbsp;</label>
+                <a class="btn btn-warning w-100"
+                   href="@Url.Action("StokRaporlari", "Raporlar", new { IlkTarih = "", SonTarih = "", Id = "" })">Reset</a>
+            </div>
+            <div class="form-group col-auto">
+                <label class="d-block text-white font-weight-bold">&nbsp;</label>
+                <button class="btn btn-primary w-100" type="submit">Raporla</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div id="bos">
+
+</div>
+
+@if (Model.RaporVerisi != null && Model.Id != null)
+{
+    <div>
+        <canvas class="mb-3" id="grafik" style="width: 100%"></canvas>
+    </div>
+
+    @section scripts{
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+
+            let jsonData = @Html.Raw(Model.RaporVerisi);
+            let ilkTarih = '@Model.IlkTarih?.ToString("dd.MM.yyyy")';
+            let sonTarih = '@Model.SonTarih?.ToString("dd.MM.yyyy")';
+            let tarih = `${ilkTarih} - ${sonTarih}`;
+            let isim = jsonData[0].StokAdi;
+
+            if (jsonData.length > 0) {
+                let etiketler = jsonData.map(item => item.SatisTarihi);
+                let veriler = jsonData.map(item => item.SatisSayisi);
+                let baslik = isim;
+
+                let grafik = document.getElementById('grafik');
+
+                new Chart(grafik, {
+                    type: 'line',
+                    data: {
+                        labels: etiketler,
+                        datasets: [{
+                            label: baslik,
+                            data: veriler,
+                            borderColor: ['#0a0a0a'],
+                            borderWidth: 1,
+                            fill:true,
+                            tension: 0.15
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: 'White'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'White',
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bolder'
+                                    },
+                                    color: 'White'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: `${isim} İsimli Ürünün ${tarih} Tarihleri Arasındaki Satış Sayısı`,
+                                color: 'darkblue',
+                                font: {
+                                    size: 26,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+            } else{
+                let mesajDiv = document.getElementById('bos');
+                mesajDiv.style.color = 'white';
+                mesajDiv.style.fontSize = '18px';
+                mesajDiv.style.marginTop = '20px';
+                mesajDiv.innerHTML = `<p>${tarih} tarihleri arasında bir kayıt bulunamamıştır.</p>`;
+                body.appendChild(mesajDiv);
+            }
+
+        </script>
+
+    }
+}
+
+
+@if (Model.RaporVerisi != null && Model.Id == null)
+{
+    <div>
+        <canvas class="mb-3" id="grafik" style="max-width: 100%; max-height: 400px;"></canvas>
+    </div>
+
+    @section scripts{
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+
+            let jsonData = @Html.Raw(Model.RaporVerisi);
+            let ilkTarih = '@Model.IlkTarih?.ToString("dd.MM.yyyy")';
+            let sonTarih = '@Model.SonTarih?.ToString("dd.MM.yyyy")';
+            let tarih = `${ilkTarih} - ${sonTarih}`;
+
+
+            if (jsonData.length > 0) {
+                let etiketler = jsonData.map(item => item.StokAdi);
+                let veriler = jsonData.map(item => item.SatisSayisi);
+
+                let grafik = document.getElementById('grafik');
+                function rastgeleRenkOlustur(adet) {
+                    let renkler = [];
+                    for (let i = 0; i < adet; i++) {
+                        let renk = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.7)`;
+                        renkler.push(renk);
+                    }
+                    return renkler;
+                }
+
+                let renkler = rastgeleRenkOlustur(jsonData.length);
+
+                new Chart(grafik, {
+                    type: 'pie',
+                    data: {
+                        labels: etiketler,
+                        datasets: [{
+                            data: veriler,
+                            backgroundColor: renkler,
+                            borderColor: ['#0a0a0a'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: 'black',
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: `${tarih} Tarihleri Arasındaki Satışlar`,
+                                color: 'darkblue',
+                                font: {
+                                    size: 28,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+
+            } else {
+                let mesajDiv = document.getElementById('bos');
+                mesajDiv.style.color = 'white';
+                mesajDiv.style.fontSize = '18px';
+                mesajDiv.style.marginTop = '20px';
+                mesajDiv.innerHTML = `<p>${tarih} tarihleri arasında bir kayıt bulunamamıştır.</p>`;
+                body.appendChild(mesajDiv);
+            }
+
+        </script>
+
+    }
+}
+

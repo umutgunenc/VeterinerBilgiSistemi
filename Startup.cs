@@ -31,7 +31,6 @@ public class Startup
         services.AddControllersWithViews()
             .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
 
-
         //DB bağlantısı için servis eklendi
         services.AddDbContext<VeterinerDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));

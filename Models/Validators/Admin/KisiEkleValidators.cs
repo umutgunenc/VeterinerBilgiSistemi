@@ -62,7 +62,6 @@ namespace VeterinerBilgiSistemi.Models.Validators.Admin
                 .NotNull().WithMessage("Çalışanın kullanıcı adını giriniz.")
                 .Must(FunctionsValidator.BeUniqueKullaniciAdi).WithMessage("Sistemde bu isimde bir kullanici adi mevcut. Farkli bir kullanıcı adı seçiniz.");
 
-
             RuleFor(x => x.RolId)
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                .NotNull().WithMessage("Çalışan için bir görev seçiniz.");

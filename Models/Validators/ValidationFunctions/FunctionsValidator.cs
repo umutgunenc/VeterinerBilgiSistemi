@@ -102,12 +102,12 @@ namespace VeterinerBilgiSistemi.Models.Validators.ValidateFunctions
         {
             return _context.Roles.Any(x => x.Id == rolId);
         }
-        public static bool BeAllowedRol(string roller)
+        public static bool BeAllowedRol(string rol)
         {
-            if (string.IsNullOrEmpty(roller))
+            if (string.IsNullOrEmpty(rol))
                 return true;
-            roller = roller.ToUpper();
-            if (roller == "admin".ToUpper() || roller == "veteriner".ToUpper() || roller == "çalışan".ToUpper() || roller == "müşteri".ToUpper())
+            rol = rol.ToUpper();
+            if (rol == "admin".ToUpper() || rol == "veteriner".ToUpper() ||  rol == "müşteri".ToUpper())
                 return true;
             return false;
         }

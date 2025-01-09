@@ -72,11 +72,11 @@ namespace VeterinerBilgiSistemi.Models.Validators.Admin
                    .Must((model, CalisiyorMu) => !(FunctionsValidator.IsRoleMatching(model.RolId, new List<string> { "müşteri" }) && CalisiyorMu))
                    .WithMessage("Müşteriler çalışmıyor olarak işaretlenmelidir.");
 
-            
+
             RuleFor(x => x.RolId)
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
                 .NotNull().WithMessage("Çalışan için bir görev seçiniz.")
-                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "çalışan", "veteriner" }));
+                .When(x => FunctionsValidator.IsRoleMatching(x.RolId, new List<string> { "admin", "veteriner" }));
 
             RuleFor(x => x.RolId)
                 .NotNull().WithMessage("Müşteri tanımlaması yapınız.")

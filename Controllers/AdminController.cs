@@ -1244,37 +1244,37 @@ namespace VeterinerBilgiSistemi.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> KanTahliliSil()
-        {
-            KanTahlilleriniGetirViewModel model = new();
-            model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
+        //[HttpGet]
+        //public async Task<IActionResult> KanTahliliSil()
+        //{
+        //    KanTahlilleriniGetirViewModel model = new();
+        //    model.KanTahlilleriListesi = await model.KanTahlilleriListesiniGetirAsnyc(_veterinerDbContext);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> KanTahliliSil(KanTahlilleriniGetirViewModel model)
-        {
-            KanTahliliSilValidators validator = new();
-            ValidationResult result = validator.Validate(model);
+        //[HttpPost]
+        //public async Task<IActionResult> KanTahliliSil(KanTahlilleriniGetirViewModel model)
+        //{
+        //    KanTahliliSilValidators validator = new();
+        //    ValidationResult result = validator.Validate(model);
 
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.ErrorMessage);
-                }
-                return View();
-            }
+        //    if (!result.IsValid)
+        //    {
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.ErrorMessage);
+        //        }
+        //        return View();
+        //    }
 
-            var silinecekKanTahlili = await model.SilinecekKanTahliliniGetirAsync(_veterinerDbContext);
-            _veterinerDbContext.Remove(silinecekKanTahlili);
-            await _veterinerDbContext.SaveChangesAsync();
+        //    var silinecekKanTahlili = await model.SilinecekKanTahliliniGetirAsync(_veterinerDbContext);
+        //    _veterinerDbContext.Remove(silinecekKanTahlili);
+        //    await _veterinerDbContext.SaveChangesAsync();
 
-            TempData["KanTahliliSilindi"] = $"{silinecekKanTahlili.KanTestiAdi.ToUpper()} isimli kan tahlili sistemden silindi";
-            return RedirectToAction();
-        }
+        //    TempData["KanTahliliSilindi"] = $"{silinecekKanTahlili.KanTestiAdi.ToUpper()} isimli kan tahlili sistemden silindi";
+        //    return RedirectToAction();
+        //}
 
         [HttpGet]
         public IActionResult FotografEkle()

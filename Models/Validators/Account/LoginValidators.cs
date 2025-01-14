@@ -16,8 +16,7 @@ namespace VeterinerBilgiSistemi.Models.Validators.Account
         {
 
             RuleFor(x => x.UserName)
-                .NotEmpty().WithMessage("Kullanıcı adı boş olamaz.")
-                .NotNull().WithMessage("Kullanıcı adı boş olamaz.");
+                .NotEmpty().WithMessage("Kullanıcı adı boş olamaz.");
 
             RuleFor(x => x.PasswordHash)
                 .NotEmpty().WithMessage("Şifre boş olamaz.");

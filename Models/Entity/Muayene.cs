@@ -20,12 +20,21 @@ namespace VeterinerBilgiSistemi.Models.Entity
         public int HekimId { get; set; }
         public int HastalikId { get; set; }
         public int? YapayZekaTahminId { get; set; }
+        // Bir muayenede bir hayvan muayene edilir
         public virtual Hayvan Hayvan { get; set; }
+        // Bir muayeneyi bir hekim yapar
         public virtual AppUser Hekim { get; set; }
+        // Bir muayenede bir hastalık teshisi konur
         public virtual Hastalik Hastalik { get; set; }
+        // Bir muayende bir YapayZeka Tahmini olabilir
         public virtual Hastalik YapayZekaTahminHastaligi { get; set; }
+
+        //Kan Testi Tablosu ile n-n ilişki Ara Tablo Olarak KanTestiMuayene
         public virtual ICollection<KanTestiMuayene> KanTestleri { get; set; }
-        public virtual ICollection<StokHareket>? StokHareketleri { get; set; }
+
+        //Stok Hareket tablosu ile 1-n ilişki 
+        //Bir Muayenede birden fazla stok hareket olabilir
+        public virtual ICollection<StokHareket>? StokHareketleri { get; set; } 
 
     }
 }

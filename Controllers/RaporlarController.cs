@@ -10,7 +10,7 @@ using VeterinerBilgiSistemi.Models.ViewModel.Raporlar;
 
 namespace VeterinerBilgiSistemi.Controllers
 {
-    [Authorize(Roles = "ADMIN,VETERINER")]
+    [Authorize(Roles = "ADMIN")]
 
     public class RaporlarController : Controller
     {

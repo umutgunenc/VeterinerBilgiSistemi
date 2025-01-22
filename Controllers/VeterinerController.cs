@@ -114,7 +114,6 @@ namespace VeterinerBilgiSistemi.Controllers
             return View(model);
         }
 
-        //TODO validation mesajları için alert ekle
         [HttpPost]
         public async Task<IActionResult> MuayeneEt(MuayeneEtViewModel model)
         {

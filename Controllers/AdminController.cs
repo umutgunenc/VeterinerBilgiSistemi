@@ -26,7 +26,7 @@ namespace VeterinerBilgiSistemi.Controllers
     //Stok ile ilgili viewlerde kategori listesi şeklinde bir ifade var, onu kategoriler olarak değiştir
     //Sosyal medya duzenle sayfası yapıldı
 
-    [Authorize(Roles = "ADMIN,ADMİN,admin,admın")]
+    [Authorize(Roles = "ADMIN")]
     public class AdminController : Controller
     {
         private readonly VeterinerDBContext _veterinerDbContext;

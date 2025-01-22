@@ -1,0 +1,59 @@
+﻿
+<h3 class="font-weight-bold text-white">
+    Yapay Zekayı Eğit   <i class="fa-solid fa-hexagon-nodes-bolt"></i>
+    <hr />
+</h3>
+
+<p class="text-white">
+    Sisteme yeni bir hastalık veya kan testi eklendiği zaman, yapay zeka modelini tekrardan eğitiniz.
+</p>
+
+
+
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
+    Yapay Zeka Modelini Eğit
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Yapay Zeka Modelini Eğit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalMessage">
+                Yapay Zeka Modelini Yeniden Eğitmek İstediğinize Emin Misiniz ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="egitBtn">Yeniden Eğit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#egitBtn').on('click', function () {
+            $('#modalMessage').text("Model eğitiliyor, lütfen bekleyin...");
+
+            $.ajax({
+                url: 'http://localhost:5002/api/ModeliEgit', 
+                method: 'GET',
+                success: function (response) {
+                    $('#modalMessage').text(response.message);
+                },
+                error: function (xhr, status, error) {
+                    $('#modalMessage').text("Bir hata oluştu: " + xhr.responseText || status);
+                }
+            });
+        });
+    });</script>
+
+}
